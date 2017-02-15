@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/playlist_b_background"
+                android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/list_disk"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:divider="@null"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/playlist_bottom_background"/>
+
+    <!-- 쓰이지 않는 것 같은데 일단 둠-->
+    <TextView
+        android:id="@+id/music_name"
+        android:layout_width="300dp"
+        android:layout_height="26dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>
+

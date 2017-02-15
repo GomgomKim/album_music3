@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ll_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="130dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/button_write"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/review_button_write"
+                android:scaleType="fitXY"/>
+
+            <ImageButton
+                android:id="@+id/button_edit"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/review_button_edit"
+                android:scaleType="fitXY"/>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lv_comments"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#696969"
+            android:padding="5dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/view_write_comment"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom"
+        android:background="#f0f0f0"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="한마디"
+            android:textColor="#563C2C"
+            android:textSize="32dp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/orange_background"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <EditText
+                android:id="@+id/edittext_name"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:ems="5"
+                android:focusable="true"
+                android:hint="작성자 입력"
+                android:longClickable="false"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textSize="24dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E6A57A"/>
+
+            <EditText
+                android:id="@+id/edittext_comment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:ems="10"
+                android:hint="댓글 내용 입력"
+                android:longClickable="false"
+                android:maxLength="60"
+                android:maxLines="2"
+                android:textSize="24dp"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/button_send"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/send_review_button"/>
+    </LinearLayout>
+</FrameLayout>

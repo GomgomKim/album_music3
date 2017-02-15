@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/album_music2.iml" filepath="$PROJECT_DIR$/album_music2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IntLib_music_base/intlib_music_base.iml" filepath="$PROJECT_DIR$/IntLib_music_base/intlib_music_base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/music_app_hanyang/music_app_hanyang.iml" filepath="$PROJECT_DIR$/music_app_hanyang/music_app_hanyang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/music_resource_hanyang/music_resource_hanyang.iml" filepath="$PROJECT_DIR$/music_resource_hanyang/music_resource_hanyang.iml" />
+    </modules>
+  </component>
+</project>
