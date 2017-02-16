@@ -5,7 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.bitlworks.music._common.StaticValues;
+
+import com.bitlworks.intlib_music_base.common.StaticValues;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -142,7 +143,7 @@ public class DAOSqlite {
 
 	/** 테마 정보를 반환하는 메소드 **/
 	synchronized public VOTheme getTheme(int themeId) {
-		Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " getTheme()");
+		Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " getPhotos()");
 		VOTheme result = null;
 
 		SQLiteDatabase db = DBHelper.getReadableDatabase();
@@ -163,7 +164,7 @@ public class DAOSqlite {
 		db.close();
 
 		return result;
-	} // END getTheme();
+	} // END getPhotos();
 ////////////////////////////
 	/** 테마 정보를 반환하는 메소드 **/
 	/*
@@ -208,7 +209,7 @@ public class DAOSqlite {
 		db.close();
 
 		return result;
-	} // END getTheme();
+	} // END getPhotos();
 /*
 "CREATE TABLE mobile_music("
 				+ "mobile_music_id INTEGER primary key,"
@@ -261,7 +262,7 @@ public class DAOSqlite {
 		db.close();
 
 		return result;
-	} // END getTheme();
+	} // END getPhotos();
 	/////////////////////////////
 	/*
 	"CREATE TABLE photo("
@@ -469,9 +470,9 @@ public class DAOSqlite {
 				+"comment_contents TEXT,"
 				+"album_id INTEGER );";
 	*/
-	synchronized public ArrayList<VOComment2> getcommentList(int album_id) {
+	synchronized public ArrayList<VOComment> getcommentList(int album_id) {
 		Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " getcommentList()");
-		ArrayList<VOComment2> result = new ArrayList<VOComment2>();
+		ArrayList<VOComment> result = new ArrayList<VOComment>();
 
 
 		SQLiteDatabase db = DBHelper.getReadableDatabase();
@@ -481,7 +482,7 @@ public class DAOSqlite {
 						+ " WHERE album_id="+album_id+" ORDER BY comment_id ASC ;", null);
 		while (cursor.moveToNext()) {
 			int i = 0;
-			VOComment2 vo = new VOComment2(cursor.getInt(i++), cursor.getInt(i++), cursor.getString(i++), cursor.getString(i++),
+			VOComment vo = new VOComment(cursor.getInt(i++), cursor.getInt(i++), cursor.getString(i++), cursor.getString(i++),
 					cursor.getString(i++),cursor.getInt(i++));
 			result.add(vo);
 		}
@@ -1303,7 +1304,7 @@ CREATE TABLE song("
 	/////////////////////
 	/////////////////////
 	/** 사진 데이터를 DB에 넣습니다 (Transection 처리됨) **/
-	synchronized public void insertcommentList(ArrayList<VOComment2> commentList) {
+	synchronized public void insertcommentList(ArrayList<VOComment> commentList) {
 		Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " insertcommentList ("
 				+ commentList.size() + ")");
 		SQLiteDatabase db = DBHelper.getWritableDatabase();
@@ -1327,7 +1328,7 @@ CREATE TABLE song("
 		db.beginTransaction();
 		try {
 			db.execSQL("DELETE FROM comment ;");
-			for (VOComment2 voComment : commentList) {
+			for (VOComment voComment : commentList) {
 				String sql = "INSERT INTO comment(comment_id, user_id, user_name, comment_time, comment_contents, album_id) "
 						+ " VALUES ("
 						+ voComment.comment_id

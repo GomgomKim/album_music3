@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.bitlworks.music._common.StaticValues;
+import com.bitlworks.intlib_music_base.common.StaticValues;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,7 +19,6 @@ public class NetThreadFileDownload extends Thread {
     String ServerUrl;
     String LocalPath;
     final Handler mHandler;
-    Message msg = new Message();
     private final int retryCount;
 
     public NetThreadFileDownload(String serverPath, String localPath, Handler h, int retryCount) {

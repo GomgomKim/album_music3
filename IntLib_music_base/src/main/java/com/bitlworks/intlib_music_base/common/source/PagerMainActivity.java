@@ -34,14 +34,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.common.StaticValues;
-import com.bitlworks.intlib_music_base.common.source.ready.ActivityStartLoading;
+import com.bitlworks.intlib_music_base.common.data.VOSong;
+import com.bitlworks.intlib_music_base.common.data.VOdisk;
+import com.bitlworks.intlib_music_base.common.source.ready.LoadingActivity;
 import com.bitlworks.intlib_music_base.common.source.ready.AuthCheckActivity;
-import com.bitlworks.music._common.data.VOSong;
-import com.bitlworks.music._common.data.VOdisk;
-import com.bitlworks.music._common.setting.HomeView;
-import com.bitlworks.music._common.setting.SettingView;
-import com.bitlworks.wedding.resources.StudioValues;
+import com.bitlworks.intlib_music_base.common.source.setting.SettingView;
+import com.bitlworks.music_resource_hanyang.AlbumValue;
 
 public class PagerMainActivity extends ActionBarActivity implements
     SeekBar.OnSeekBarChangeListener,
@@ -104,7 +104,7 @@ public class PagerMainActivity extends ActionBarActivity implements
     startService(playIntent);
 
 
-    viewPager = (CustomViewPager) findViewById(R.id.pager_main);
+    viewPager = (ViewPager) findViewById(R.id.pager_main);
     pagerAdapter = new CustomPagerAdapter(PagerMainActivity.this);
     viewPager.setAdapter(pagerAdapter);
 
@@ -195,13 +195,14 @@ public class PagerMainActivity extends ActionBarActivity implements
       }
     });
 
-    if (StaticValues.disk_name.equals("A")) {
+    String diskName = StaticValues.selectedDisk.disk_name;
+    if (diskName.equals("A")) {
       song_title.setText("DISK 1");
       songListImage.setImageResource(R.drawable.song_button_playlist_disk1);
-    } else if (StaticValues.disk_name.equals("B")) {
+    } else if (diskName.equals("B")) {
       song_title.setText("DISK 2");
       songListImage.setImageResource(R.drawable.song_button_playlist_disk2);
-    } else if (StaticValues.disk_name.equals("C")) {
+    } else if (diskName.equals("C")) {
       song_title.setText("DISK 3");
       songListImage.setImageResource(R.drawable.song_button_playlist_disk3);
     }
@@ -215,7 +216,7 @@ public class PagerMainActivity extends ActionBarActivity implements
   @Override
   public void onClickDisk(VOdisk disk) {
     int id = disk.disk_id;
-    if (id == StaticValues.disk_id) {
+    if (id == StaticValues.selectedDisk.disk_id) {
       Toast.makeText(this, "이미 선택된 디스크입니다.", Toast.LENGTH_SHORT).show();
       return;
     }
@@ -230,16 +231,9 @@ public class PagerMainActivity extends ActionBarActivity implements
     nPanel.notificationCancel();
 
     StaticValues.first_check = 0;
-    StudioValues.MOBILE_MUSIC_ID = id;
-    StaticValues.disk_id = id;
-    StaticValues.album_id = StudioValues.album_id;
-    StaticValues.disk_name = disk.disk_name;
+    StaticValues.selectedDisk = disk;
 
-    Intent i = new Intent(this, ActivityStartLoading.class);
-    i.putExtra(ActivityStartLoading.PARAM_NEXT_ACTIVITY, PagerMainActivity.class);
-    i.putExtra(ActivityStartLoading.PARAM_STUDIO_NO, StudioValues.STUDIO_ID);
-    i.putExtra(ActivityStartLoading.PARAM_DEFAULT_ALBUM_NO, StudioValues.DEFAULT_ALBUM_ID);
-    i.putExtra(ActivityStartLoading.PARAM_MUSIC_ID, StudioValues.MOBILE_MUSIC_ID);
+    Intent i = new Intent(this, LoadingActivity.class);
     startActivity(i);
     finish();
   }
@@ -408,15 +402,15 @@ public class PagerMainActivity extends ActionBarActivity implements
   }
 
   private int songIndexToPagerIndex(int index) {
-    return StudioValues.isSingle ? index + 2 : index + 3;
+    return AlbumValue.isSingle ? index + 2 : index + 3;
   }
 
   private int pagerIndexToSongIndex(int index) {
-    return StudioValues.isSingle ? index - 2 : index - 3;
+    return AlbumValue.isSingle ? index - 2 : index - 3;
   }
 
   private int getPageCount() {
-    return StudioValues.isSingle
+    return AlbumValue.isSingle
         ? StaticValues.songList.size() + 4 : StaticValues.songList.size() + 5;
   }
 

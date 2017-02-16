@@ -1,6 +1,5 @@
 package com.bitlworks.intlib_music_base.common.source.ready;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -12,34 +11,31 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.bitlworks.WeddingAlbum.DataNet.*;
+import com.bitlworks.intlib_music_base.R;
+import com.bitlworks.intlib_music_base.common.AlbumUtils;
+import com.bitlworks.intlib_music_base.common.CommonUtils;
+import com.bitlworks.intlib_music_base.common.MusicClient;
 import com.bitlworks.intlib_music_base.common.StaticValues;
+import com.bitlworks.intlib_music_base.common.data.DAOSqlite;
+import com.bitlworks.intlib_music_base.common.data.DataNetUtils;
+import com.bitlworks.intlib_music_base.common.data.VOAlbum;
+import com.bitlworks.intlib_music_base.common.data.VOUser;
+import com.bitlworks.intlib_music_base.common.data.VOdisk;
+import com.bitlworks.intlib_music_base.common.gcm.GcmRegistration;
 import com.bitlworks.intlib_music_base.common.source.PagerMainActivity;
-import com.bitlworks.music._common.data.DAOSqlite;
-import com.bitlworks.music._common.data.DataNetUtils;
-import com.bitlworks.music._common.data.VOUser;
-import com.bitlworks.music._common.data.VOdisk;
-import com.bitlworks.music._common.network.NETgetUserInfo;
-import com.bitlworks.music._common.network.NETupdateRegid;
-import com.bitlworks.music._common.network.Network;
-import com.bitlworks.music.common.Static;
-import com.bitlworks.music.gcm.GcmRegistration;
-import com.bitlworks.music.utils.CommonUtils;
-import com.bitlworks.wedding.resources.StudioValues;
+import com.bitlworks.music_resource_hanyang.AlbumValue;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import org.apache.http.client.ClientProtocolException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AuthCheckActivity extends Activity {
 
@@ -48,25 +44,21 @@ public class AuthCheckActivity extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    StaticValues.SERVICE_URL = StaticValues.getServiceUrl(this);
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_authcheck);
 
-    Intent iin = getIntent();
-    Bundle bundle = iin.getExtras();
-
+    Intent intent = getIntent();
+    Bundle bundle = intent.getExtras();
     if (bundle != null) {
-      Log.d("Main Activity hyuk", "check is true");
       finish();
       System.exit(0);
       Boolean j = (Boolean) bundle.get("exit");
-
       if (j) {
         finish();
         Log.d("Main Activity hyuk", "check is true");
       } else {
         Log.d("Main Activity hyuk", "check is false");
       }
-    } else {
-      Log.d("Main Activity hyuk", "check is true22222222222222");
     }
 
     if (StaticValues.nework_check == 100) {
@@ -74,24 +66,14 @@ public class AuthCheckActivity extends Activity {
     }
 
     sqlDAO = DAOSqlite.getInstance(this);
-    requestWindowFeature(Window.FEATURE_NO_TITLE);
-    getWindow().setFlags(
-        WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    setContentView(R.layout.activity_startloading);
-    super.onCreate(savedInstanceState);
 
     handler = new Handler();
     handler.postDelayed(versionCheckRunnable, 1000);
   }
 
   private void checkGCMRegID() {
-    String saved_regid = StaticValues.myInfo.user_regid;//.getUser_regid();
-    String saved_uuid = StaticValues.myInfo.user_uuid;//.getUser_uuid();
-    String saved_appver = StaticValues.myInfo.user_appver;//.getUser_appver();
-
     String now_uuid = CommonUtils.getDevicesUUID(AuthCheckActivity.this);
     String now_appver = getAppVersion(AuthCheckActivity.this) + "";
-
     registerGCMid(now_uuid, now_appver);
   }
 
@@ -106,43 +88,43 @@ public class AuthCheckActivity extends Activity {
   }
 
   private void registerGCMid(String uuid, String appver) {
-
-    Log.w("T_T", "registerGCMid()");
-    // GCM등록ID 구하기
     GcmRegistration gr = new GcmRegistration(AuthCheckActivity.this);
     String regId = gr.registerGCM(uuid, appver);
-
-    new NETupdateRegid(StaticValues.myInfo.user_id, uuid, appver, regId, afterUpdateRegid);
+    updateRegid(uuid, appver, regId);
   }
 
-  @SuppressLint("HandlerLeak")
-  private final Handler afterUpdateRegid = new Handler() {
-    @Override
-    public void handleMessage(Message msg) {
-      if (msg.what == -1) {
-        Toast.makeText(AuthCheckActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
-      } else {
-        try {
-          final JSONObject obj = new JSONObject(msg.obj.toString());
+  private void updateRegid(String uuid, String appver, String regId) {
+    final ProgressDialog progressDialog = new ProgressDialog(AuthCheckActivity.this);
+    progressDialog.setCancelable(false);
+    progressDialog.show();
 
-          final VOUser me = new VOUser(
-              obj.getInt("user_id"),
-              obj.getString("user_name"),
-              obj.getInt("album_id"),
-              obj.getString("user_phone_number"),
-              obj.getString("user_appver"),
-              obj.getString("user_uuid"),
-              obj.getString("user_regid"), obj.getInt("user_level"));
+    Call<JsonObject> call = MusicClient.getInstance().getService().updateRegid(StaticValues.user.user_id, uuid, appver, regId);
+    call.enqueue(new Callback<JsonObject>() {
+      @Override
+      public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+        progressDialog.dismiss();
+        JsonObject object = response.body().getAsJsonObject();
+        VOUser user = new VOUser(
+            object.get("user_id").getAsInt(),
+            object.get("user_name").getAsString(),
+            object.get("album_id").getAsInt(),
+            object.get("user_phone_number").getAsString(),
+            object.get("user_appver").getAsString(),
+            object.get("user_uuid").getAsString(),
+            object.get("user_regid").getAsString(),
+            object.get("user_level").getAsInt());
 
-          // parse JSON -> preference store & static obj
-          StaticValues.myInfo = me;
+        CommonUtils.setMyID(AuthCheckActivity.this, user.user_id);
+        StaticValues.user = user;
+        sqlDAO.insertUser(StaticValues.user);
+      }
 
-        } catch (JSONException e) {
-          Log.i(StaticValues.LOG_TAG, e.toString());
-        }
-      } // END if
-    }
-  };
+      @Override
+      public void onFailure(Call<JsonObject> call, Throwable t) {
+        Log.e("onFailure", t.getMessage());
+      }
+    });
+  }
 
   @Override
   public void onBackPressed() {
@@ -161,7 +143,7 @@ public class AuthCheckActivity extends Activity {
 
     @Override
     protected Integer doInBackground(Void... params) {
-      if (StudioValues.IS_SAMPLE_PROJECT) {
+      if (AlbumValue.IS_SAMPLE_PROJECT) {
         AlbumUtils.createAuth(AuthCheckActivity.this, "Y", "0123456789");
       }
       return 1;
@@ -169,162 +151,168 @@ public class AuthCheckActivity extends Activity {
 
     @Override
     protected void onPostExecute(Integer result) {
-      if (StudioValues.IS_SAMPLE_PROJECT || result > 0) {
+      if (AlbumValue.IS_SAMPLE_PROJECT || result > 0) {
 
-        final int MY_ID = CommonUtils.getMyID(AuthCheckActivity.this);
-        // 인증 된 회원이 아니라면 가입으로 연결
-        if (MY_ID < 1) {
-          Intent intent = new Intent(AuthCheckActivity.this, Register.class);
+        final int userId = CommonUtils.getMyID(AuthCheckActivity.this);
+        if (userId < 1) {
+          Intent intent = new Intent(AuthCheckActivity.this, RegisterActivity.class);
           startActivity(intent);
           finish();
           return;
         }
-        if (!DataNetUtils.isNetworkConnect(AuthCheckActivity.this)) {
-          StaticValues.myInfo = sqlDAO.getUser();
-          StaticValues.diskList = sqlDAO.getdiskList();
-          VOdisk item2 = StaticValues.diskList.get(0);
-          DataNetUtils.setSelectedCoupleId(AuthCheckActivity.this, item2.disk_id);
-          Log.d("hyuk>>", "cid>>" + item2.disk_id);
 
-          StudioValues.MOBILE_MUSIC_ID = item2.disk_id;
-          StudioValues.disk_id = item2.disk_id;
-          StaticValues.disk_id = item2.disk_id;
-          StaticValues.album_id = StudioValues.album_id;
-          StaticValues.disk_name = item2.disk_name;
-
-          StaticValues.nework_check = 0;
-          Intent i = new Intent(AuthCheckActivity.this, ActivityStartLoading.class);
-          i.putExtra(ActivityStartLoading.PARAM_NEXT_ACTIVITY, PagerMainActivity.class);
-          i.putExtra(ActivityStartLoading.PARAM_STUDIO_NO, StudioValues.STUDIO_ID);
-          i.putExtra(ActivityStartLoading.PARAM_DEFAULT_ALBUM_NO, StudioValues.DEFAULT_ALBUM_ID);
-          i.putExtra(ActivityStartLoading.PARAM_MUSIC_ID, StudioValues.MOBILE_MUSIC_ID);
-          startActivity(i);
-          finish();
-        } else {
+        if (DataNetUtils.isNetworkConnect(AuthCheckActivity.this)) {
           StaticValues.nework_check = 100;
-          new NETgetUserInfo(MY_ID, afterGetUserInfo);
+          getUser(userId);
+          return;
         }
-      } else {
-        new AlertDialog.Builder(AuthCheckActivity.this)
-            .setMessage("업데이트가 필요합니다")
-            .setCancelable(false)
-            .setNeutralButton("확인",
-                new DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int id) {
+
+        StaticValues.user = sqlDAO.getUser();
+        StaticValues.album = sqlDAO.getalbum();
+        StaticValues.diskList = sqlDAO.getdiskList();
+        StaticValues.selectedDisk = StaticValues.diskList.get(0);
+        DataNetUtils.setSelectedDiskId(AuthCheckActivity.this, StaticValues.selectedDisk.disk_id);
+        StaticValues.nework_check = 0;
+        Intent i = new Intent(AuthCheckActivity.this, LoadingActivity.class);
+        i.putExtra(LoadingActivity.PARAM_NEXT_ACTIVITY, PagerMainActivity.class);
+        i.putExtra(LoadingActivity.PARAM_STUDIO_NO, AlbumValue.STUDIO_ID);
+        i.putExtra(LoadingActivity.PARAM_DEFAULT_ALBUM_NO, AlbumValue.DEFAULT_ALBUM_ID);
+        i.putExtra(LoadingActivity.PARAM_MUSIC_ID, AlbumValue.disk_id);
+        startActivity(i);
+        finish();
+
+        return;
+
+      }
+      new AlertDialog.Builder(AuthCheckActivity.this)
+          .setMessage("업데이트가 필요합니다")
+          .setCancelable(false)
+          .setNeutralButton("확인",
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
 //                    Intent intent = new Intent(
 //                        Intent.ACTION_VIEW, Uri.parse(Value.getAlbumStoreUrl()));
 //                    startActivity(intent);
 //                    finish();
-                  }
-                }).show();
-      }
+                }
+              }).show();
+
     }
 
-    @SuppressLint("HandlerLeak")
-    private final Handler afterGetUserInfo = new Handler() {
-      @Override
-      public void handleMessage(Message msg) {
-        if (msg.what == -1) {
-          Toast.makeText(AuthCheckActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
-        } else {
-          try {
-            final JSONObject obj = new JSONObject(msg.obj.toString());
-            final VOUser me = new VOUser(
-                obj.getInt("user_id"),
-                obj.getString("user_name"),
-                obj.getInt("album_id"),
-                obj.getString("user_phone_number"),
-                obj.getString("user_appver"),
-                obj.getString("user_uuid"),
-                obj.getString("user_regid"),
-                obj.getInt("user_level")
-            );
+    private void getUser(int userId) {
+      final ProgressDialog progressDialog = new ProgressDialog(AuthCheckActivity.this);
+      progressDialog.setCancelable(false);
+      progressDialog.show();
 
-            CommonUtils.setMyID(AuthCheckActivity.this, me.user_id);
-            StaticValues.myInfo = me;
-            sqlDAO.insertUser(StaticValues.myInfo);
-          } catch (JSONException e) {
-            Log.i(Static.LOG_TAG, e.toString());
+      Call<JsonObject> call = MusicClient.getInstance().getService().getUser(userId);
+      call.enqueue(new Callback<JsonObject>() {
+        @Override
+        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+          progressDialog.dismiss();
+          JsonObject object = response.body().getAsJsonObject();
+          VOUser user = new VOUser(
+              object.get("user_id").getAsInt(),
+              object.get("user_name").getAsString(),
+              object.get("album_id").getAsInt(),
+              object.get("user_phone_number").getAsString(),
+              object.get("user_appver").getAsString(),
+              object.get("user_uuid").getAsString(),
+              object.get("user_regid").getAsString(),
+              object.get("user_level").getAsInt());
+
+          CommonUtils.setMyID(AuthCheckActivity.this, user.user_id);
+          StaticValues.user = user;
+          sqlDAO.insertUser(StaticValues.user);
+          getAlbum();
+        }
+
+        @Override
+        public void onFailure(Call<JsonObject> call, Throwable t) {
+          Log.e("onFailure", t.getMessage());
+        }
+      });
+    }
+
+    private void getAlbum() {
+      final ProgressDialog progressDialog = new ProgressDialog(AuthCheckActivity.this);
+      progressDialog.setCancelable(false);
+      progressDialog.show();
+
+      Call<JsonObject> call = MusicClient.getInstance().getService().getAlbum(AlbumValue.album_id);
+      call.enqueue(
+          new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+              progressDialog.dismiss();
+              JsonObject object = response.body().getAsJsonObject();
+              VOAlbum album = new VOAlbum(
+                  object.get("album_id").getAsInt(),
+                  object.get("album_name").getAsString(),
+                  object.get("singer_id_list").getAsString(),
+                  object.get("album_type").getAsString(),
+                  object.get("album_genre").getAsString(),
+                  object.get("album_company").getAsString(),
+                  object.get("album_intro").getAsString(),
+                  object.get("album_time").getAsString(),
+                  object.get("album_invitemsg").getAsString(),
+                  object.get("album_inviteurl").getAsString());
+              StaticValues.album = album;
+              sqlDAO.insertalbum(StaticValues.album);
+              getDisks();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+              Log.e("onFailure", t.getMessage());
+            }
           }
-
-          new SearchAlbumTask(AuthCheckActivity.this, StudioValues.album_id).execute();
-        }
-      }
-    };
-  }
-
-  class SearchAlbumTask extends AsyncTask<Void, Void, Integer> {
-    Context mContext;
-    String url;
-    ProgressDialog pDlg;
-    ArrayList<VOdisk> mCoupleResultArray;
-
-    public SearchAlbumTask(Context context, int albumId) {
-      mContext = context;
-      mCoupleResultArray = new ArrayList<VOdisk>();
-      pDlg = new ProgressDialog(mContext);
-      pDlg.setCancelable(false);
-      url = AlbumUtils.getServiceUrl(mContext) + "getMusicAlbumList.php?album_id=" + albumId;
+      );
     }
 
-    @Override
-    protected void onPreExecute() {
-      pDlg.show();
-    }
 
-    @Override
-    protected Integer doInBackground(Void... params) {
-      try {
-        JSONArray jResultArray = Network.getInstance().getJsonArrayFromUrl(mContext, url);
-        for (int i = 0; i < jResultArray.length(); i++) {
-          JSONObject jCouple = jResultArray.getJSONObject(i);
-          VOdisk couple = new VOdisk(jCouple.getInt("disk_id"), jCouple.getString("disk_name"),
-              jCouple.getInt("album_id")
-          );
-          mCoupleResultArray.add(couple);
-        }
-      } catch (ClientProtocolException e) {
-        e.printStackTrace();
-      } catch (IllegalStateException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-      return null;
-    }
+    private void getDisks() {
+      final ProgressDialog progressDialog = new ProgressDialog(AuthCheckActivity.this);
+      progressDialog.setCancelable(false);
+      progressDialog.show();
 
-    @Override
-    protected void onPostExecute(Integer result) {
-      pDlg.dismiss();
-      if (mCoupleResultArray.size() > 0) {
-        StaticValues.diskList = mCoupleResultArray;
-        /////////
+      Call<JsonArray> call = MusicClient.getInstance().getService().getDisks(AlbumValue.album_id);
+      call.enqueue(
+          new Callback<JsonArray>() {
+            @Override
+            public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+              progressDialog.dismiss();
+              ArrayList<VOdisk> disks = new ArrayList<>();
+              JsonArray array = response.body().getAsJsonArray();
+              for (JsonElement object : array) {
+                VOdisk disk = new VOdisk(
+                    object.getAsJsonObject().get("disk_id").getAsInt(),
+                    object.getAsJsonObject().get("disk_name").getAsString(),
+                    object.getAsJsonObject().get("album_id").getAsInt());
+                disks.add(disk);
+              }
 
-        DAOSqlite.getInstance(AuthCheckActivity.this).insertDiskList(StaticValues.diskList);
-        VOdisk item2 = StaticValues.diskList.get(0);
-        DataNetUtils.setSelectedCoupleId(AuthCheckActivity.this, item2.disk_id);
-        Log.d("hyuk>>", "cid>>" + item2.disk_id);
-        StudioValues.MOBILE_MUSIC_ID = item2.disk_id;
-        StudioValues.disk_id = item2.disk_id;
+              if (array.size() == 0) {
+                Toast.makeText(
+                    getApplicationContext(), "해당 앨범을 찾을 수 없습니다", Toast.LENGTH_LONG).show();
+                return;
+              }
 
-        StaticValues.disk_id = item2.disk_id;
-        StaticValues.album_id = StudioValues.album_id;
+              StaticValues.diskList.addAll(disks);
+              StaticValues.selectedDisk = disks.get(0);
+              sqlDAO.insertDiskList(StaticValues.diskList);
+              DataNetUtils.setSelectedDiskId(AuthCheckActivity.this, StaticValues.selectedDisk.disk_id);
 
-        StaticValues.disk_name = item2.disk_name;
+              Intent intent = new Intent(AuthCheckActivity.this, LoadingActivity.class);
+              startActivity(intent);
+              finish();
+            }
 
-        Intent i = new Intent(AuthCheckActivity.this, ActivityStartLoading.class);
-        i.putExtra(ActivityStartLoading.PARAM_NEXT_ACTIVITY, PagerMainActivity.class);
-        i.putExtra(ActivityStartLoading.PARAM_STUDIO_NO, StudioValues.STUDIO_ID);
-        i.putExtra(ActivityStartLoading.PARAM_DEFAULT_ALBUM_NO, StudioValues.DEFAULT_ALBUM_ID);
-        i.putExtra(ActivityStartLoading.PARAM_MUSIC_ID, StudioValues.MOBILE_MUSIC_ID);
-        startActivity(i);
-        finish();
-      } else {
-        Toast.makeText(getApplicationContext(), "해당 앨범을 찾을 수 없습니다", Toast.LENGTH_LONG).show();
-      }
-      Log.i("bitlworks", "search result : " + mCoupleResultArray.size());
+            @Override
+            public void onFailure(Call<JsonArray> call, Throwable t) {
+              Log.e("onFailure", t.getMessage());
+            }
+          }
+      );
     }
   }
 }

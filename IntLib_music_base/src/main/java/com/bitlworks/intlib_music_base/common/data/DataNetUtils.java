@@ -8,7 +8,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.os.Environment;
 
-import com.bitlworks.WeddingAlbum.DataNet.StaticValues;
+import com.bitlworks.intlib_music_base.common.StaticValues;
+
 
 /** 웨딩 앨범에 필요한 유용한 메소드&변수 집합 **/
 public class DataNetUtils {
@@ -51,7 +52,7 @@ public class DataNetUtils {
 	}
 
 	/** 프리퍼런스에 커플 아이디(선택할 앨범)를 설정하는 메소드 **/
-	public static void setSelectedCoupleId(Context c, int coupleId) {
+	public static void setSelectedDiskId(Context c, int coupleId) {
 		DataNetUtils.setStringPref(c,
 				StaticValues.PREFERENCE_NAME_SELECTED_ALBUM, "" + coupleId);
 		return;

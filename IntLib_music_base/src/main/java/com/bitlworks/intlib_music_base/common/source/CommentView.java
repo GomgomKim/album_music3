@@ -1,10 +1,9 @@
 package com.bitlworks.intlib_music_base.common.source;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +13,20 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bitlworks.intlib_music_base.R;
+import com.bitlworks.intlib_music_base.common.MusicClient;
 import com.bitlworks.intlib_music_base.common.StaticValues;
-import com.bitlworks.music.R;
-import com.bitlworks.music._common.data.VOComment2;
-import com.bitlworks.music._common.network.NetInsertComment;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.bitlworks.intlib_music_base.common.data.VOComment;
+import com.bitlworks.intlib_music_base.common.source.ready.LoadingActivity;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
 import java.io.File;
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CommentView extends LinearLayout implements
     CommentAdapter.CommentAdapterListener,
@@ -90,7 +93,8 @@ public class CommentView extends LinearLayout implements
 
     final EditText nameEditText = (EditText) v.findViewById(R.id.edittext_name);
 //    nameEditText.setTypeface(ff2);
-    nameEditText.setText(AlbumUtils.getDefaultAuthorName(getContext()));
+
+    nameEditText.setText("");
     final EditText commentEditText = (EditText) v.findViewById(R.id.edittext_comment);
 //    commentEditText.setTypeface(ff2);
     v.findViewById(R.id.button_send).setOnClickListener(new OnClickListener() {
@@ -107,118 +111,24 @@ public class CommentView extends LinearLayout implements
           Toast.makeText(getContext(), "보낼 메세지가 너무 짧아요.", Toast.LENGTH_SHORT).show();
           return;
         }
-        new NetInsertComment(
-            StaticValues.album_id, StaticValues.myInfo.user_id, comment, name, netHandlerInsertCommentList);
-
+        insertComment(name, comment);
         commentEditText.getText().clear();
         writeCommentView.setVisibility(View.GONE);
 
-        AlbumUtils.saveDefaultAuthorName(getContext(), comment);
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getWindowToken(), 0);
       }
     });
   }
 
-  Handler netHandlerInsertCommentList = new Handler() {
-    private final String LOG_TAG_NAVI = "<netHandlerGetSampleId.Handler>";
-
-    public void handleMessage(Message msg) {
-
-      final String resultString = (String) msg.obj;
-      try {
-
-        JSONArray result = new JSONArray(resultString);
-        StaticValues.commentList.clear();
-        for (int i = 0; i < result.length(); i++) {
-          JSONObject obj = (JSONObject) result.get(i);
-          VOComment2 voSong = new VOComment2(
-              obj.getInt("comment_id"),
-              obj.getInt("user_id"),
-              obj.getString("user_name"),
-              obj.getString("comment_time"),
-              obj.getString("comment_contents"),
-              obj.getInt("album_id")
-
-          );
-          StaticValues.commentList.add(voSong);
-        }
-        commentAdapter.notifyDataSetChanged();
-
-
-      } catch (JSONException e) {
-        Log.e(StaticValues.LOG_TAG, LOG_TAG_NAVI + e.toString());
-      }
-    }
-  };
-
-  Handler netHandlerDelCommentList = new Handler() {
-    private final String LOG_TAG_NAVI = "<netHandlerGetSampleId.Handler>";
-
-    public void handleMessage(Message msg) {
-
-      final String resultString = (String) msg.obj;
-      try {
-        JSONArray result = new JSONArray(resultString);
-        StaticValues.commentList.clear();
-        for (int i = 0; i < result.length(); i++) {
-          JSONObject obj = (JSONObject) result.get(i);
-          VOComment2 voSong = new VOComment2(
-              obj.getInt("comment_id"),
-              obj.getInt("user_id"),
-              obj.getString("user_name"),
-              obj.getString("comment_time"),
-              obj.getString("comment_contents"),
-              obj.getInt("album_id")
-          );
-          StaticValues.commentList.add(voSong);
-        }
-        commentAdapter.notifyDataSetChanged();
-      } catch (JSONException e) {
-        Log.e(StaticValues.LOG_TAG, LOG_TAG_NAVI + e.toString());
-        StaticValues.commentList.clear();
-        commentAdapter.notifyDataSetChanged();
-      }
-    }
-  };
-
-  Handler netHandlerGetCommentList = new Handler() {
-    private final String LOG_TAG_NAVI = "<netHandlerGetSampleId.Handler>";
-
-    public void handleMessage(Message msg) {
-
-      final String resultString = (String) msg.obj;
-      try {
-        JSONArray result = new JSONArray(resultString);
-        StaticValues.commentList.clear();
-        for (int i = 0; i < result.length(); i++) {
-          JSONObject obj = (JSONObject) result.get(i);
-          VOComment2 voSong = new VOComment2(
-              obj.getInt("comment_id"),
-              obj.getInt("user_id"),
-              obj.getString("user_name"),
-              obj.getString("comment_time"),
-              obj.getString("comment_contents"),
-              obj.getInt("mobile_music_id")
-
-          );
-          StaticValues.commentList.add(voSong);
-        }
-        commentAdapter.notifyDataSetChanged();
-      } catch (JSONException e) {
-        Log.e(StaticValues.LOG_TAG, LOG_TAG_NAVI + e.toString());
-      }
-    }
-  };
-
   @Override
   public void onClickComment(int commentId) {
-    new NETdelComment(StaticValues.album_id, commentId, netHandlerDelCommentList);
+    deleteComment(commentId);
   }
 
   @Override
   public void updateCommentList() {
-    new NetGetCommentList(StaticValues.album_id, netHandlerGetCommentList);
+    getComments();
   }
 
   @Override
@@ -226,5 +136,113 @@ public class CommentView extends LinearLayout implements
     if (writeCommentView.getVisibility() == VISIBLE) {
       writeCommentView.setVisibility(GONE);
     }
+  }
+
+  private void getComments() {
+    final ProgressDialog progressDialog = new ProgressDialog(getContext());
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+
+    Call<JsonArray> call = MusicClient.getInstance().getService().getComments(StaticValues.album.album_id);
+    call.enqueue(
+        new Callback<JsonArray>() {
+          @Override
+          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+            progressDialog.dismiss();
+            ArrayList<VOComment> comments = new ArrayList<>();
+            JsonArray array = response.body().getAsJsonArray();
+            for (JsonElement object : array) {
+              VOComment comment = new VOComment(
+                  object.getAsJsonObject().get("comment_id").getAsInt(),
+                  object.getAsJsonObject().get("user_id").getAsInt(),
+                  object.getAsJsonObject().get("user_name").getAsString(),
+                  object.getAsJsonObject().get("comment_time").getAsString(),
+                  object.getAsJsonObject().get("comment_contents").getAsString(),
+                  object.getAsJsonObject().get("album_id").getAsInt());
+              comments.add(comment);
+            }
+
+            StaticValues.commentList.addAll(comments);
+            commentAdapter.notifyDataSetChanged();
+          }
+
+          @Override
+          public void onFailure(Call<JsonArray> call, Throwable t) {
+            Log.e("onFailure", t.getMessage());
+          }
+        }
+    );
+  }
+
+  private void insertComment(String name, String contents) {
+    final ProgressDialog progressDialog = new ProgressDialog(getContext());
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+
+    Call<JsonArray> call = MusicClient.getInstance().getService().insertComment(StaticValues.album.album_id, StaticValues.user.user_id, name, contents);
+    call.enqueue(
+        new Callback<JsonArray>() {
+          @Override
+          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+            progressDialog.dismiss();
+            ArrayList<VOComment> comments = new ArrayList<>();
+            JsonArray array = response.body().getAsJsonArray();
+            for (JsonElement object : array) {
+              VOComment comment = new VOComment(
+                  object.getAsJsonObject().get("comment_id").getAsInt(),
+                  object.getAsJsonObject().get("user_id").getAsInt(),
+                  object.getAsJsonObject().get("user_name").getAsString(),
+                  object.getAsJsonObject().get("comment_time").getAsString(),
+                  object.getAsJsonObject().get("comment_contents").getAsString(),
+                  object.getAsJsonObject().get("album_id").getAsInt());
+              comments.add(comment);
+            }
+
+            StaticValues.commentList.addAll(comments);
+            commentAdapter.notifyDataSetChanged();
+          }
+
+          @Override
+          public void onFailure(Call<JsonArray> call, Throwable t) {
+            Log.e("onFailure", t.getMessage());
+          }
+        }
+    );
+  }
+
+  private void deleteComment(int commentId) {
+    final ProgressDialog progressDialog = new ProgressDialog(getContext());
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+
+    Call<JsonArray> call = MusicClient.getInstance().getService().deleteComment(StaticValues.album.album_id, commentId);
+    call.enqueue(
+        new Callback<JsonArray>() {
+          @Override
+          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+            progressDialog.dismiss();
+            ArrayList<VOComment> comments = new ArrayList<>();
+            JsonArray array = response.body().getAsJsonArray();
+            for (JsonElement object : array) {
+              VOComment comment = new VOComment(
+                  object.getAsJsonObject().get("comment_id").getAsInt(),
+                  object.getAsJsonObject().get("user_id").getAsInt(),
+                  object.getAsJsonObject().get("user_name").getAsString(),
+                  object.getAsJsonObject().get("comment_time").getAsString(),
+                  object.getAsJsonObject().get("comment_contents").getAsString(),
+                  object.getAsJsonObject().get("album_id").getAsInt());
+              comments.add(comment);
+            }
+
+            StaticValues.commentList.addAll(comments);
+            commentAdapter.notifyDataSetChanged();
+          }
+
+          @Override
+          public void onFailure(Call<JsonArray> call, Throwable t) {
+            Log.e("onFailure", t.getMessage());
+          }
+        }
+    );
   }
 }

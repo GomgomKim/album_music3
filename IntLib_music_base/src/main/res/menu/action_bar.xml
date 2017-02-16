@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/homebar_button_home"
+        android:title="홈"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_song_list"
+        android:icon="@drawable/homebar_button_list"
+        android:title="앨범"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_guest_book"
+        android:icon="@drawable/homebar_button_review"
+        android:title="방명록"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_setting"
+        android:icon="@drawable/homebar_button_setting"
+        android:title="설정"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_sound"
+        android:icon="@drawable/actionbar_button_sound_on"
+        android:title="사운드"
+        app:showAsAction="always"/>
+
+</menu>

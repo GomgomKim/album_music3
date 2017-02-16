@@ -7,10 +7,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.bitlworks.WeddingAlbum.DataNet.StaticValues;
+import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.common.StaticValues;
-import com.bitlworks.music.R;
-import com.bitlworks.music._common.data.VOdisk;
+import com.bitlworks.intlib_music_base.common.data.VOdisk;
 
 import java.util.ArrayList;
 
@@ -32,19 +31,20 @@ public class SongListView extends LinearLayout {
     addView(v);
 
     ImageView selectedDiskImage = (ImageView) v.findViewById(R.id.image_selected_disk);
-    if (StaticValues.disk_name.equals("A")) {
+    String diskName = StaticValues.selectedDisk.disk_name;
+    if (diskName.equals("A")) {
       selectedDiskImage.setImageResource(R.drawable.playlist_button_disk1);
-    } else if (StaticValues.disk_name.equals("B")) {
+    } else if (diskName.equals("B")) {
       selectedDiskImage.setImageResource(R.drawable.playlist_button_disk2);
-    } else if (StaticValues.disk_name.equals("C")) {
+    } else if (diskName.equals("C")) {
       selectedDiskImage.setImageResource(R.drawable.playlist_button_disk3);
     }
 
     ListView diskListView = (ListView) findViewById(R.id.list_disk);
 
     ArrayList<VOdisk> otherDiskList = new ArrayList<>();
-    for (VOdisk disk : StaticValues.musicList) {
-      if (disk.disk_id == StaticValues.disk_id) {
+    for (VOdisk disk : StaticValues.diskList) {
+      if (disk.disk_id == StaticValues.selectedDisk.disk_id) {
         continue;
       }
       otherDiskList.add(disk);

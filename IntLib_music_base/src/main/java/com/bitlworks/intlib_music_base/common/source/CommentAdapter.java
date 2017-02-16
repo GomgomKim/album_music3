@@ -4,16 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.common.StaticValues;
-import com.bitlworks.music.R;
-import com.bitlworks.music._common.data.VOComment2;
+import com.bitlworks.intlib_music_base.common.data.VOComment;
 
 import java.util.ArrayList;
 
-public class CommentAdapter extends ArrayAdapter<VOComment2> {
+public class CommentAdapter extends ArrayAdapter<VOComment> {
 
   public interface CommentAdapterListener {
     void onClickComment(int commentId);
@@ -24,7 +25,7 @@ public class CommentAdapter extends ArrayAdapter<VOComment2> {
   private ViewHolder viewHolder = null;
   private CommentAdapterListener listener;
 
-  public CommentAdapter(Context context, ArrayList<VOComment2> arrayList) {
+  public CommentAdapter(Context context, ArrayList<VOComment> arrayList) {
     super(context, 0, arrayList);
     this.inflater = LayoutInflater.from(context);
     this.context = context;
@@ -48,13 +49,13 @@ public class CommentAdapter extends ArrayAdapter<VOComment2> {
       viewHolder = (ViewHolder) convertView.getTag();
     }
 
-    final VOComment2 item = getItem(position);
+    final VOComment item = getItem(position);
 //    viewHolder.comment_contents.setTypeface(ff);
     viewHolder.comment_contents.setText(item.comment_contents);
 //    viewHolder.user_name.setTypeface(ff, Typeface.BOLD);
     viewHolder.user_name.setText("-" + item.user_name + "-");
 
-    if (item.user_id == StaticValues.myInfo.user_id || StaticValues.myInfo.user_level == 9) {
+    if (item.user_id == StaticValues.user.user_id || StaticValues.user.user_level == 9) {
       viewHolder.del.setVisibility(View.VISIBLE);
       viewHolder.del.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -75,7 +76,7 @@ public class CommentAdapter extends ArrayAdapter<VOComment2> {
   }
 
   @Override
-  public VOComment2 getItem(int position) {
+  public VOComment getItem(int position) {
     return super.getItem(position);
   }
 

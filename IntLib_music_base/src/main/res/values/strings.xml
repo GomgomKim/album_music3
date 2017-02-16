@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">album_music2</string>
+    <string name="bitlworks_cs_call">bitlworks_cs_call</string>
+    <string name="bitlworks_cs_email">bitlworks_cs_email</string>
 </resources>

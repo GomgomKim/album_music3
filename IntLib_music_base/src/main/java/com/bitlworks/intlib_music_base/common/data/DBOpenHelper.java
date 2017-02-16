@@ -5,7 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.bitlworks.music._common.StaticValues;
+import com.bitlworks.intlib_music_base.common.StaticValues;
+
 
 public class DBOpenHelper extends SQLiteOpenHelper {
 	private final String LOG_TAG_NAVI = "<DBOpenHelper.class>";

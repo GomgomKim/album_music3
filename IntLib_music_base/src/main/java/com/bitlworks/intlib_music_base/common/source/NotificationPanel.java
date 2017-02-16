@@ -7,9 +7,8 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
+import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.common.StaticValues;
-import com.bitlworks.music.R;
-import com.bitlworks.music._common.StaticValues;
 
 public class NotificationPanel {
 

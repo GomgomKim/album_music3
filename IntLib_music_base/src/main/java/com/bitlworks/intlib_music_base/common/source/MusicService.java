@@ -10,7 +10,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.bitlworks.intlib_music_base.common.StaticValues;
-import com.bitlworks.music.common.Static;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,9 +78,9 @@ public class MusicService extends Service {
         public void onPrepared(MediaPlayer mp) {
           Log.e("ab1233", "BaseActivity onPrepared");
           player.start();
-          Static.pp.songProgressBar.setProgress(0);
-          Static.pp.songProgressBar.setMax(100);
-          Static.pp.updateProgressBar();
+          StaticValues.pagerMainActivity.songProgressBar.setProgress(0);
+          StaticValues.pagerMainActivity.songProgressBar.setMax(100);
+          StaticValues.pagerMainActivity.updateProgressBar();
         }
       });
 

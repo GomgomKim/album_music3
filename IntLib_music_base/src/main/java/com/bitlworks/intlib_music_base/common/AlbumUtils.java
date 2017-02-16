@@ -40,12 +40,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -195,20 +189,6 @@ public class AlbumUtils {
 		}
 	}
 
-	public static String makePhotoUrl(String serviceUrl, String dirName,
-																		String name) {
-		try {
-			String url = serviceUrl + "/wedding" + StaticObjects.sCoupleDir
-					+ "/"
-					// + dirName + "/" + name;
-					+ URLEncoder.encode(dirName, "UTF-8") + "/"
-					+ URLEncoder.encode(name, "UTF-8");
-			return url;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
 
 	public static void openShareMessageIntent(final Activity activity,
 			String message) {
@@ -279,21 +259,6 @@ public class AlbumUtils {
 		return metrics;
 	}
 
-	public static String getLineNumber(Context context) {
-		String mobile = AlbumUtils.getStringPref(context,
-				AlbumConstants.PREF_NAME_USER_MOBILE, "");
-		if (mobile.length() > 0) {
-			return mobile;
-		}
-		TelephonyManager tm = (TelephonyManager) context
-				.getSystemService(Context.TELEPHONY_SERVICE);
-		String number = tm.getLine1Number();
-		if (number == null || number.length() < 4) {
-			return "null";
-		}
-		number = number.replace("+82", "0");
-		return number;
-	}
 
 	public static int getRawContactId(Context context, long contactId) {
 		Cursor c2 = context.getContentResolver().query(RawContacts.CONTENT_URI,
@@ -345,13 +310,9 @@ public class AlbumUtils {
 
 	public static void createAuth(Context context, String id, String mobile) {
 		setStringPref(context, "User.id", id);
-		setStringPref(context, AlbumConstants.PREF_NAME_USER_MOBILE, mobile);
+//		setStringPref(context, AlbumConstants.PREF_NAME_USER_MOBILE, mobile);
 	}
 
-	public static void removeAuth(Context context) {
-		setStringPref(context, "User.id", null);
-		setStringPref(context, AlbumConstants.PREF_NAME_USER_MOBILE, null);
-	}
 
 	public static String getStringPref(Context context, String name, String def) {
 		SharedPreferences prefs = context.getSharedPreferences(
@@ -384,29 +345,6 @@ public class AlbumUtils {
 		}
 	}
 
-	public static String getDefaultAuthorName(Context context) {
-		// String myNumber = getLineNumber(context);
-		String tail4Number = "";
-		// if (myNumber.length() > 4) {
-		// tail4Number = getLineNumber(context).substring(
-		// myNumber.length() - 4, myNumber.length());
-		// }
-		return getStringPref(context, AlbumConstants.PREF_NAME_DEFAULT_AUTHOR,
-				tail4Number);
-	}
-
-	public static void saveDefaultAuthorName(Context context, String name) {
-		setStringPref(context, AlbumConstants.PREF_NAME_DEFAULT_AUTHOR, name);
-	}
-
-	public static String getSessionId(Context context) {
-
-		return getStringPref(context, AlbumConstants.PREF_NAME_SESSION_ID, "");
-	}
-
-	public static void saveSessionId(Context context, String sessionId) {
-		setStringPref(context, AlbumConstants.PREF_NAME_SESSION_ID, sessionId);
-	}
 
 	public static String getVideoPath() {
 		String path = Environment.getExternalStorageDirectory()
@@ -591,46 +529,6 @@ public class AlbumUtils {
 		sbWeddingClock.append(" : ");
 		sbWeddingClock.append(String.format("%02d", weddingMinute));
 		return sbWeddingClock.toString();
-	}
-
-	public static Bitmap downloadBitmap(String url) {
-		final HttpClient client = new DefaultHttpClient();
-		final HttpGet getRequest = new HttpGet(url);
-
-		try {
-			HttpResponse response = client.execute(getRequest);
-			final int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				Log.w("downloadBitmap", "Error " + statusCode
-						+ " while retrieving bitmap from " + url);
-				return null;
-			}
-
-			final HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream inputStream = null;
-				// BitmapFactory.Options options = new BitmapFactory.Options();
-				// options.inSampleSize = 2;
-
-				try {
-					inputStream = entity.getContent();
-					final Bitmap bitmap = BitmapFactory
-							.decodeStream(new FlushedInputStream(inputStream));
-					// final Bitmap bitmap = BitmapFactory.decodeStream(new
-					// FlushedInputStream(inputStream), null, options);
-					Log.i("Network", "Bitmap Download Complete");
-					return bitmap;
-				} finally {
-					if (inputStream != null) {
-						inputStream.close();
-					}
-					entity.consumeContent();
-				}
-			}
-		} catch (Exception e) {
-			getRequest.abort();
-		}
-		return null;
 	}
 
 	static class FlushedInputStream extends FilterInputStream {

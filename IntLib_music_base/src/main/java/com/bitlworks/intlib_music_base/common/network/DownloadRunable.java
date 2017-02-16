@@ -3,7 +3,7 @@ package com.bitlworks.intlib_music_base.common.network;
 import android.os.Handler;
 import android.util.Log;
 
-import com.bitlworks.music._common.StaticValues;
+import com.bitlworks.intlib_music_base.common.StaticValues;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,42 +31,6 @@ public class DownloadRunable implements Runnable {
         	if ( localFile.exists() ) {
 				Log.d("local file check,,,","hello hyuk,,,,");
 				return;
-				/*
-		    	// Set HttpParams
-				DefaultHttpClient httpClient = new DefaultHttpClient();
-				BasicHttpContext httpContext = new BasicHttpContext();
-				HttpParams httpParams = httpClient.getParams();
-				HttpConnectionParams.setConnectionTimeout(httpParams, 10000);
-				HttpConnectionParams.setSoTimeout(httpParams, 10000);
-				
-				// Set RequsetParams 
-				StringBuffer sb = new StringBuffer();
-				sb.append(StaticValues.SERVICE_URL + "checkFile.php"); 
-				sb.append("?size=" + fileSize );
-				sb.append("&path=" + ServerUrl.replace(StaticValues.SERVICE_URL, "") );
-				final String surl = sb.toString();
-				Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " requestUrl=" + surl);
-				HttpGet httpReq = new HttpGet(surl);
-				
-				// Execute
-				HttpResponse res = httpClient.execute(httpReq, httpContext);
-				int statusCode = res.getStatusLine().getStatusCode();
-				Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " statusCode=" + statusCode);
-				if (statusCode != 200) throw new RuntimeException("HTTP response code is not 200 OK");
-		
-				// Set ResaltStream
-				BufferedReader rd = new BufferedReader(
-						new InputStreamReader(res.getEntity().getContent()));			
-				String line = "";
-				sb = new StringBuffer();
-				while ((line = rd.readLine()) != null) {
-					sb.append(line);
-				}
-				
-				// Result Process
-				final String result = sb.toString();
-				if( !result.trim().equals("1") ) return;
-				*/
 	        }
         	// 파일 다운로드 
 	        URL fileurl;

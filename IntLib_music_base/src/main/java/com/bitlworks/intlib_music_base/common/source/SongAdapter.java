@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.bitlworks.music._common.data.VOSong;
+import com.bitlworks.intlib_music_base.R;
+import com.bitlworks.intlib_music_base.common.data.VOSong;
 
 import java.util.ArrayList;
+
 
 public class SongAdapter extends ArrayAdapter<VOSong> {
 

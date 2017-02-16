@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-import com.bitlworks.music._common.data.VOdisk;
+
+import com.bitlworks.intlib_music_base.R;
+import com.bitlworks.intlib_music_base.common.data.VOdisk;
 
 import java.util.ArrayList;
 
