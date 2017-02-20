@@ -10,7 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface Service {
-  String ROOT = "http://music.bitlworks.co.kr/API/";
+  String ROOT = "http://music.bitlworks.co.kr/mobilemusic/API/";
 
   @GET("getUserInfo.php")
   Call<JsonObject> getUser(@Query("u") int userId);
@@ -24,7 +24,7 @@ public interface Service {
   @GET("updateRegid.php")
   Call<JsonObject> updateRegid(@Query("i") int userId, @Query("u") String uuid, @Query("a") String appver, @Query("r") String redId);
 
-  @GET("getAlbumInfo.php")
+  @GET("GetAlbumInfo.php")
   Call<JsonObject> getAlbum(@Query("album_id") int albumId);
 
   @GET("getMusicAlbumList.php")

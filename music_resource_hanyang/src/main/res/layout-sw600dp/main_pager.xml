@@ -1,14 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/inner_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/song_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.bitlworks.music.views.CustomViewPager
+        <android.support.v4.view.ViewPager
             android:id="@+id/pager_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -18,7 +16,8 @@
         android:id="@+id/view_song_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,17 +35,17 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/song_name"
+                    android:id="@+id/text_song_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:text="노래 이름"
                     android:textColor="#000000"
-                    android:textSize="24dp"/>
+                    android:textSize="36sp"/>
 
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="16dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/song_woman_background"/>
@@ -71,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:textColor="#000000"
-                    android:textSize="30dp"/>
+                    android:textSize="30sp"/>
 
                 <View
                     android:layout_width="250dp"
@@ -86,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:textColor="#676567"
-                    android:textSize="20dp"/>
+                    android:textSize="20sp"/>
 
             </LinearLayout>
 
@@ -94,11 +93,11 @@
         </LinearLayout>
 
         <ScrollView
-            android:id="@+id/s_bar"
-            android:layout_width="500dp"
+            android:id="@+id/view_lyric"
+            android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/music_player_view_height"
+            android:layout_marginBottom="112dp"
             android:background="@drawable/song_lyrics_background"
             android:visibility="gone">
 
@@ -109,16 +108,16 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:paddingBottom="40dp">
+                android:paddingBottom="24dp">
 
                 <TextView
-                    android:id="@+id/song_name_text"
+                    android:id="@+id/text_song_name_lyric"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="34dp"
                     android:text="song name"
                     android:textColor="#FFFFFF"
-                    android:textSize="40dp"/>
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/song_lyric_text"
@@ -129,44 +128,46 @@
                     android:lineSpacingExtra="10dp"
                     android:text="Description"
                     android:textColor="#FFFFFF"
-                    android:textSize="24dp"/>
+                    android:textSize="12sp"/>
             </LinearLayout>
         </ScrollView>
 
         <LinearLayout
             android:id="@+id/view_song_list"
-            android:layout_width="400dp"
+            android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/music_player_view_height"
+            android:layout_marginBottom="112dp"
             android:background="@drawable/song_button_playlist_playlistbackground"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/song_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="200dp"
+                android:layout_marginTop="110dp"
                 android:ellipsize="marquee"
                 android:maxLines="1"
-                android:textColor="#606060"
-                android:textSize="30sp"/>
+                android:text="DISK 1"
+                android:textColor="#000000"
+                android:textSize="18sp"/>
 
             <ListView
                 android:id="@+id/list_song"
-                android:layout_width="350dp"
-                android:layout_height="390dp"
+                android:layout_width="150dp"
+                android:layout_height="270dp"
                 android:layout_marginTop="20dp"
                 android:divider="@null"
                 android:paddingLeft="30dp"/>
         </LinearLayout>
 
+
         <LinearLayout
             android:id="@+id/view_music_player"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="112dp"
             android:layout_alignParentBottom="true"
             android:background="@drawable/song_background"
             android:orientation="vertical">
@@ -179,39 +180,38 @@
 
                 <ImageView
                     android:id="@+id/image_song_list"
-                    android:layout_width="100dp"
+                    android:layout_width="72dp"
                     android:layout_height="100dp"
                     android:layout_marginRight="32dp"
-                    android:layout_marginTop="-10dp"
                     android:layout_weight="1"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/song_button_playlist_disk1"/>
 
                 <ImageView
                     android:id="@+id/song_button_prev"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginTop="16dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/song_button_prev"/>
 
                 <View
-                    android:layout_width="188dp"
+                    android:layout_width="180dp"
                     android:layout_height="48dp"/>
 
                 <ImageView
                     android:id="@+id/song_button_next"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginTop="16dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/song_button_next"/>
 
                 <ImageView
                     android:id="@+id/view_song_lyric"
-                    android:layout_width="100dp"
+                    android:layout_width="72dp"
                     android:layout_height="100dp"
                     android:layout_marginLeft="32dp"
-                    android:layout_marginTop="-10dp"
                     android:layout_weight="1"
                     android:src="@drawable/song_button_lyrics"/>
             </LinearLayout>
@@ -219,7 +219,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -264,14 +264,13 @@
 
         <ImageView
             android:id="@+id/button_play_song"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
             android:layout_above="@id/view_music_player"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="-88dp"
+            android:layout_marginBottom="-80dp"
             android:scaleType="fitXY"
             android:src="@drawable/song_play_button"/>
     </RelativeLayout>
-
 
 </RelativeLayout>

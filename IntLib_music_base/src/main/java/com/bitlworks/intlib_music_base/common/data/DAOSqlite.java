@@ -210,39 +210,7 @@ public class DAOSqlite {
 
 		return result;
 	} // END getPhotos();
-/*
-"CREATE TABLE mobile_music("
-				+ "mobile_music_id INTEGER primary key,"
-				+ "mobile_music_name TEXT,"
-				+ "singer_id_list TEXT,"
-		        + "album_type TEXT," +
-				"album_genre TEXT," +
-				"album_company TEXT," +
-				"album_intro TEXT," +
-				"album_time TEXT);";
 
-				public int id;
-    public String name;
-    public String singer_list;
-    public String album_type;
-    public String album_genre;
-    public String album_company;
-    public String album_intro;
-    public String album_time;
-
-    sql = "CREATE TABLE album("
-				+ "album_id INTEGER primary key,"
-				+ "album_name TEXT,"
-				+ "singer_id_list TEXT,"
-		        + "album_type TEXT," +
-				"album_genre TEXT," +
-				"album_company TEXT," +
-				"album_intro TEXT," +
-				"album_time TEXT);";
-
-				int album_id, String album_name, String singer_id_list,
-                         String album_type, String album_genre, String album_company, String album_intro, String album_time
-	*/
 	synchronized public VOAlbum getalbum() {
 		Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " getalbum()");
 		VOAlbum result = null;
@@ -250,13 +218,15 @@ public class DAOSqlite {
 		SQLiteDatabase db = DBHelper.getReadableDatabase();
 		Cursor cursor = db.rawQuery(
 				"SELECT album_id, album_name, singer_id_list, album_type, "
-						+ "album_genre, album_company, album_intro,album_time"
+						+ "album_genre, album_company, album_intro,album_time, album_invitemsg, album_inviteurl"
 						+ " FROM album;"	, null);
 		while (cursor.moveToNext()) {
 			int i = 0;
-			result = new VOAlbum(cursor.getInt(i++), cursor.getString(i++),
-					cursor.getString(i++), cursor.getString(i++),
-					cursor.getString(i++), cursor.getString(i++),cursor.getString(i++),cursor.getString(i++),cursor.getString(i++),cursor.getString(i++));
+			result = new VOAlbum(
+					cursor.getInt(i++),
+					cursor.getString(i++), cursor.getString(i++), cursor.getString(i++), cursor.getString(i++),
+					cursor.getString(i++), cursor.getString(i++), cursor.getString(i++), cursor.getString(i++),
+					cursor.getString(i++));
 		}
 		cursor.close();
 		db.close();
@@ -264,31 +234,7 @@ public class DAOSqlite {
 		return result;
 	} // END getPhotos();
 	/////////////////////////////
-	/*
-	"CREATE TABLE photo("
-				+"photo_id INTEGER primary key,"
-				+"mobile_music_id INTEGER ,"
-				+"song_video_id INTEGER ,"
-				+"type INTEGER ,"
-				+"photo_file_name TEXT,"
-				+"photo_order INTEGER);";
 
-				public int photo_id;
-    public int mobile_music_id;
-    public int song_video_id;
-    public int type;
-    public String photo_file_name;
-    public int photo_order
-
-    +"photo_id INTEGER primary key,"
-				+"disk_id INTEGER ,"
-				+"song_video_id INTEGER ,"
-				+"type INTEGER ,"
-				+"photo_file_name TEXT,"
-				+"album_id INTEGER,"
-				+"photo_order INTEGER);";
-
-	*/
 	/** 테마 목록을 반환하는 메소드 **/
 	synchronized public ArrayList<VOPhotoM> getphotoList(int disk_id, int album_id) {
 		Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " getphotoList()");

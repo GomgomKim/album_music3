@@ -70,7 +70,7 @@ public class LoadingActivity extends Activity {
 
     sqlDAO = DAOSqlite.getInstance(this);
 
-    if (DataNetUtils.isNetworkConnect(LoadingActivity.this)) {
+    if (!DataNetUtils.isNetworkConnect(LoadingActivity.this)) {
       offlineMode2();
       return;
     }

@@ -28,14 +28,14 @@ public class StaticValues {
   public static int playIndex = 0;
   public static VOUser user;
   public static VOAlbum album;
-  public static ArrayList<VOdisk> diskList;
+  public static ArrayList<VOdisk> diskList = new ArrayList<>();
   public static VOdisk selectedDisk;
-  public static ArrayList<VOSong> songList;
-  public static ArrayList<VOComment> commentList;
-  public static ArrayList<VOPhotoM> photoList;
-  public static ArrayList<VOVideo> videoList;
-  public static ArrayList<VOSinger> singerList;
-  public static ArrayList<VONewInfo> newinfoList;
+  public static ArrayList<VOSong> songList = new ArrayList<>();
+  public static ArrayList<VOComment> commentList = new ArrayList<>();
+  public static ArrayList<VOPhotoM> photoList = new ArrayList<>();
+  public static ArrayList<VOVideo> videoList = new ArrayList<>();
+  public static ArrayList<VOSinger> singerList = new ArrayList<>();
+  public static ArrayList<VONewInfo> newinfoList = new ArrayList<>();
   public static int unread_count=0;
 
   // Reference
