@@ -10,7 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/IntLib_music_base" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/intlib_bitlworks" />
             <option value="$PROJECT_DIR$/music_app_hanyang" />
             <option value="$PROJECT_DIR$/music_resource_hanyang" />
           </set>

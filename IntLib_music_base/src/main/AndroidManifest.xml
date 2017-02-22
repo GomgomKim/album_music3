@@ -6,9 +6,11 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".common.MusicClient"
+        android:name=".MusicClient"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,44 +18,20 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".common.source.ready.AuthCheckActivity"
+            android:name=".source.ready.AuthCheckActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"/>
 
         <activity
-            android:name=".common.source.ready.LoadingActivity"
+            android:name=".source.ready.LoadingActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"/>
 
         <activity
-            android:name=".common.source.ready.RegisterActivity"
+            android:name=".source.PagerMainActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:theme="@style/AppTheme"/>
 
-        <activity
-            android:name=".common.source.ready.TermActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"/>
-
-        <activity
-            android:name=".common.source.setting.CSNoticeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"/>
-
-        <activity
-            android:name=".common.source.setting.ProInviteActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"/>
-
-        <activity
-            android:name=".common.source.PagerMainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"/>
-
-        <activity
-            android:name=".common.gcm.GCMActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"/>
 
     </application>
 

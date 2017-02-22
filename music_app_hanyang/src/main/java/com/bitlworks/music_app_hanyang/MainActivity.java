@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.bitlworks.intlib_music_base.common.source.ready.AuthCheckActivity;
+import com.bitlworks.intlib_music_base.source.ready.AuthCheckActivity;
 
 public class MainActivity extends AppCompatActivity {
 
