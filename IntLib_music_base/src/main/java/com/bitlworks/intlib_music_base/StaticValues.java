@@ -20,10 +20,10 @@ public class StaticValues {
 
   public static final String LOG_TAG = "비틀웍스";
   private static final String SERVICE_URL = "http://music.bitlworks.co.kr/API/";
-
+  public static final int NOTIFICATION_ID = 1;
 
   // 앱 실행 중 쓰이는 값들
-  public static int playIndex = 0;
+  public static int playIndex = -1;
   public static VOUser user;
   public static VOAlbum album;
   public static ArrayList<VOdisk> diskList = new ArrayList<>();

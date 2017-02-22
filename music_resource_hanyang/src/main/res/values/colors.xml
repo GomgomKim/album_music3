@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="tablet_setting_menu_text_size">32sp</dimen>
+
+    <color name="setting_menu_text">#515151</color>
+
 </resources>

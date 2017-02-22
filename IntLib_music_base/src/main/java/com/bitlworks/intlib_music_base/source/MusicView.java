@@ -13,37 +13,38 @@ import com.bitlworks.intlib_music_base.StaticValues;
 
 import java.io.File;
 
-public class HomeView extends LinearLayout {
+public class MusicView extends LinearLayout {
 
-  public HomeView(Context context) {
+  public MusicView(Context context, int index) {
     super(context);
     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View v = li.inflate(R.layout.layout_home, this, true);
-//    addView(v);
+    View v = li.inflate(R.layout.layout_music, this, true);
 
-    ImageView homeImage = (ImageView) v.findViewById(R.id.image_home);
     String in_file = "";
+    int check_count = 0;
     for (int i = 0; i < StaticValues.photoList.size(); i++) {
-      if (StaticValues.photoList.get(i).type == 3 && StaticValues.photoList.get(i).photo_order == 1) {
-        in_file = StaticValues.photoList.get(i).photo_file_name;
-        break;
+      if (StaticValues.photoList.get(i).type == 1) {
+        //check_count++;
+        if (check_count == index) {
+          in_file = StaticValues.photoList.get(i).photo_file_name;
+          break;
+        }
+        check_count++;
       }
     }
+
     String rootPath = "/mnt/sdcard/";
     // 내부 저장소 경로 구하기
     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
       rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
     }
-
     // 폴더 존재 확인 및 생성
-    rootPath += "bitlworks/";
-    //checkFolder(rootPath);
-    rootPath += "mobilemusic/";
-
+    rootPath += "bitlworks/mobilemusic/";
     final String LocalPath = rootPath + in_file;
-
     File file = new File(LocalPath);
     Uri uri = Uri.fromFile(file);
+
+    ImageView homeImage = (ImageView) v.findViewById(R.id.image_music);
     homeImage.setImageURI(uri);
     homeImage.setScaleType(ImageView.ScaleType.FIT_XY);
   }

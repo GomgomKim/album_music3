@@ -2,20 +2,22 @@ package com.bitlworks.intlib_music_base.source;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
+
+import com.bitlworks.intlib_music_base.R;
 
 public class SettingView extends LinearLayout {
 
   public SettingView(Context context) {
     super(context);
+    LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View v = li.inflate(R.layout.layout_setting, this, true);
+
     initView();
   }
 
   private void initView() {
-    String infService = Context.LAYOUT_INFLATER_SERVICE;
-    LayoutInflater li = (LayoutInflater) getContext().getSystemService(infService);
-//    View v = li.inflate(R.layout.layout_setting, this, false);
-//    addView(v);
 //    TextView album_time = (TextView) findViewById(R.id.album_time);
 ////    album_time.setTypeface(tf);
 //    album_time.setText(StaticValues.album.album_time);
