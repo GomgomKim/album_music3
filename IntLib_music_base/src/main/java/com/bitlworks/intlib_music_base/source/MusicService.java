@@ -24,6 +24,7 @@ public class MusicService extends Service implements
   private Context context;
   private MediaPlayer mediaPlayer;
 
+  MusicService() {}
   MusicService(Context context) {
     this.context = context;
     mediaPlayer = new MediaPlayer();

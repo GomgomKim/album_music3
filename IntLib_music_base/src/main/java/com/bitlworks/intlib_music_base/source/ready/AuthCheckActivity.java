@@ -16,14 +16,14 @@ import com.bitlworks.intlib_music_base.data.DAOSqlite;
 import com.bitlworks.intlib_music_base.data.VOUser;
 import com.bitlworks.music_resource_hanyang.AlbumValue;
 import com.google.gson.JsonObject;
-import com.ucom.intlib_bitlworks.CommonUtils;
-import com.ucom.intlib_bitlworks.auth.RegisterFragment;
+import com.bitlworks.intlib_bitlworks.CommonUtils;
+import com.bitlworks.intlib_bitlworks.auth.RegisterFragment;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AuthCheckActivity extends Activity implements RegisterFragment.RegisterListener, AuthFragment.AuthListener {
+public class AuthCheckActivity extends Activity implements RegisterFragment.Listener, AuthFragment.AuthListener {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

@@ -17,7 +17,7 @@ import com.bitlworks.intlib_music_base.data.DAOSqlite;
 import com.bitlworks.intlib_music_base.data.DataNetUtils;
 import com.bitlworks.intlib_music_base.data.VOUser;
 import com.google.gson.JsonObject;
-import com.ucom.intlib_bitlworks.CommonUtils;
+import com.bitlworks.intlib_bitlworks.CommonUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;

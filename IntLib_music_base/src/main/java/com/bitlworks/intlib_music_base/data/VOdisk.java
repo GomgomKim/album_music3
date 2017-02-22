@@ -1,17 +1,8 @@
 package com.bitlworks.intlib_music_base.data;
 
-/**
- * Created by 강혁 on 2016-12-15.
- */
-/*
-disk
-[[
-disk_id,
-disk_name,
-album_id,
-]]
-*/
-public class VOdisk {
+import java.io.Serializable;
+
+public class VOdisk implements Serializable {
     public int disk_id;
     public String disk_name;
     public int album_id;

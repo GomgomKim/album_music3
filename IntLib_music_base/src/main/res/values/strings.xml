@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">album_music2</string>
-
+    <string name="kakao_app_key">057cdf6f2cc8875054e634a0d1fcd3c0</string>
+    <string name="kakao_scheme">kakao057cdf6f2cc8875054e634a0d1fcd3c0</string>
+    <string name="kakaolink_host">kakaolink</string>
+    <string name="title_activity_base_actiity">BaseActiity</string>
 </resources>

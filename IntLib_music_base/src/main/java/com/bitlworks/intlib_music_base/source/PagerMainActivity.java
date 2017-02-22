@@ -35,7 +35,8 @@ import com.bitlworks.intlib_music_base.data.VOSong;
 import com.bitlworks.intlib_music_base.data.VOdisk;
 import com.bitlworks.intlib_music_base.source.ready.LoadingActivity;
 import com.bitlworks.music_resource_hanyang.AlbumValue;
-import com.ucom.intlib_bitlworks.CommonUtils;
+import com.bitlworks.intlib_bitlworks.CommonUtils;
+import com.tsengvn.typekit.TypekitContextWrapper;
 
 public class PagerMainActivity extends AppCompatActivity implements
     SeekBar.OnSeekBarChangeListener,
@@ -45,14 +46,12 @@ public class PagerMainActivity extends AppCompatActivity implements
 
   private MusicService musicService;
   private MusicNotification musicNotification;
-  public Listener listener;
-  public TextView singerText, songMakerText;
-  public ImageView playSongButton;
-  public SeekBar songProgressBar;
-  public Typeface tf, ff, ff2;
+  private Listener listener;
+  private ImageView playSongButton;
+  private SeekBar songProgressBar;
 
   private ViewPager viewPager;
-  private TextView songNameText;
+  private TextView songNameText, singerText, songMakerText;
   private TextView lyrics, lyricSongNameText;
   private View songInfoView, lyricsView, songListView;
   private TextView songCurrentDurationText;
@@ -118,17 +117,19 @@ public class PagerMainActivity extends AppCompatActivity implements
     }
   };
 
-
+  @Override
+  protected void attachBaseContext(Context newBase) {
+    super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-    PagerMainActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     setContentView(R.layout.activity_mainpager);
 
-    if (StaticValues.songList == null) {
+    if (StaticValues.songList.size() == 0) {
       finish();
     }
 
@@ -144,8 +145,6 @@ public class PagerMainActivity extends AppCompatActivity implements
     intentFilter.addAction("end");
     registerReceiver(musicReceiver, intentFilter);
 
-    tf = Typeface.createFromAsset(getAssets(), "bbb.otf");
-    ff = Typeface.createFromAsset(getAssets(), "aaf.ttf");
     StaticValues.pagerMainActivity = this;
     viewPager = (ViewPager) findViewById(R.id.pager_main);
     viewPager.setAdapter(new CustomPagerAdapter());
@@ -153,13 +152,9 @@ public class PagerMainActivity extends AppCompatActivity implements
 
     songInfoView = findViewById(R.id.view_song_info);
     TextView song_title = (TextView) findViewById(R.id.song_title);
-    song_title.setTypeface(ff);
     songNameText = (TextView) findViewById(R.id.text_song_name);
-    songNameText.setTypeface(ff2);
     singerText = (TextView) findViewById(R.id.text_singer);
-    singerText.setTypeface(ff);
     songMakerText = (TextView) findViewById(R.id.text_song_maker);
-    songMakerText.setTypeface(ff);
     songProgressBar = (SeekBar) findViewById(R.id.songProgressBar);
     songProgressBar.setOnSeekBarChangeListener(this);
     songProgressBar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
@@ -203,9 +198,7 @@ public class PagerMainActivity extends AppCompatActivity implements
 
     lyricsView = findViewById(R.id.view_lyric);
     lyrics = (TextView) findViewById(R.id.song_lyric_text);
-    lyrics.setTypeface(ff);
     lyricSongNameText = (TextView) findViewById(R.id.text_song_name_lyric);
-    lyricSongNameText.setTypeface(ff, Typeface.BOLD);
     findViewById(R.id.view_song_lyric).setOnClickListener(new OnClickListener() {
 
       @Override
@@ -261,6 +254,7 @@ public class PagerMainActivity extends AppCompatActivity implements
     musicNotification.notificationCancel();
     musicService.releaseMusic();
     unregisterReceiver(musicReceiver);
+    StaticValues.playIndex = -1;
   }
 
   @Override
@@ -348,9 +342,10 @@ public class PagerMainActivity extends AppCompatActivity implements
     StaticValues.first_check = 0;
     StaticValues.selectedDisk = disk;
 
-    Intent i = new Intent(this, LoadingActivity.class);
-    startActivity(i);
     finish();
+    Intent i = new Intent(this, LoadingActivity.class);
+    i.putExtra("DISK", disk);
+    startActivity(i);
   }
 
   @Override

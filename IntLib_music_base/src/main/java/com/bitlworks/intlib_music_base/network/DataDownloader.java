@@ -36,7 +36,7 @@ public class DataDownloader { // 일종의 Logic class
 
     Message msg = new Message();
     msg.what = 0;
-    msg.arg1 = StaticValues.photoList.size() + StaticValues.songList.size() + StaticValues.newinfoList.size();
+    msg.arg1 = StaticValues.photoList.size() + StaticValues.songList.size();
     if (mHandler != null) mHandler.sendMessage(msg);
 
 
@@ -86,13 +86,6 @@ public class DataDownloader { // 일종의 Logic class
       firstPhotoCount++;
     }
 
-    for (int i = 0; i < StaticValues.newinfoList.size(); i++) {
-      String url = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/news/"
-          + StaticValues.newinfoList.get(i).image_data;
-      final String LocalPath = rootPath + StaticValues.newinfoList.get(i).image_data;
-      executorService.execute(new DownloadRunable(url, LocalPath, mHandler));
-      firstPhotoCount++;
-    }
     executorService.shutdown();
   }
 

@@ -35,7 +35,7 @@ public class SongAdapter extends ArrayAdapter<VOSong> {
   @Override
   public View getView(final int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
-      convertView = inflater.inflate(R.layout.listitem_song, null);
+      convertView = inflater.inflate(R.layout.item_song, null);
       viewHolder = new ViewHolder();
       viewHolder.songNameText = (TextView) convertView.findViewById(R.id.song_name);
 //      viewHolder.songNameText.setTypeface(ff);

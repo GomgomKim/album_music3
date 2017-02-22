@@ -13,10 +13,6 @@ public class DiskListView extends LinearLayout {
 
   public DiskListView(Context context, DiskAdapter.AlbumListListener listener) {
     super(context);
-    initView(listener);
-  }
-
-  private void initView(DiskAdapter.AlbumListListener listener) {
     String infService = Context.LAYOUT_INFLATER_SERVICE;
     LayoutInflater li = (LayoutInflater) getContext().getSystemService(infService);
     View v = li.inflate(R.layout.layout_disk_list, this, false);

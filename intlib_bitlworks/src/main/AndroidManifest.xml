@@ -1,27 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.ucom.intlib_bitlworks">
-
+          package="com.bitlworks.intlib_bitlworks">
     <application android:allowBackup="true"
                  android:label="@string/app_name"
-                 android:supportsRtl="true"
-    >
-
+                 android:supportsRtl="true">
         <activity
-            android:name="com.ucom.intlib_bitlworks.auth.TermActivity"
+            android:name="com.bitlworks.intlib_bitlworks.setting.CSActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"/>
 
         <activity
-            android:name="com.ucom.intlib_bitlworks.setting.CSNoticeActivity"
+            android:name="com.bitlworks.intlib_bitlworks.auth.TermActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"/>
-
-        <activity
-            android:name="com.ucom.intlib_bitlworks.setting.CSActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"/>
-
     </application>
-
-
 </manifest>

@@ -33,7 +33,6 @@ public class StaticValues {
   public static ArrayList<VOPhotoM> photoList = new ArrayList<>();
   public static ArrayList<VOVideo> videoList = new ArrayList<>();
   public static ArrayList<VOSinger> singerList = new ArrayList<>();
-  public static ArrayList<VONewInfo> newinfoList = new ArrayList<>();
   public static int unread_count=0;
 
   // Reference

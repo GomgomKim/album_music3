@@ -63,11 +63,26 @@ public class LoadingActivity extends Activity {
     tvLog = (TextView) findViewById(R.id.tv_log);
     progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
+    if (getIntent().getSerializableExtra("DISK") == null) {
+      if (!DataNetUtils.isNetworkConnect(LoadingActivity.this)) {
+        startOfflineMode();
+        return;
+      }
+      getAlbum();
+      return;
+    }
+
+    getDiskData((VOdisk) getIntent().getSerializableExtra("DISK"));
+  }
+
+  public void getDiskData(VOdisk disk) {
+    StaticValues.selectedDisk = disk;
+    DataNetUtils.setSelectedDiskId(LoadingActivity.this, StaticValues.selectedDisk.disk_id);
     if (!DataNetUtils.isNetworkConnect(LoadingActivity.this)) {
       startOfflineMode();
       return;
     }
-    getAlbum();
+    getSongs();
   }
 
   private void getAlbum() {
@@ -95,7 +110,7 @@ public class LoadingActivity extends Activity {
                 object.get("album_inviteurl").getAsString());
             StaticValues.album = album;
             sqlDAO.insertalbum(StaticValues.album);
-            getDisks();
+            getComments();
           }
 
           @Override
@@ -106,155 +121,32 @@ public class LoadingActivity extends Activity {
     );
   }
 
-  private void getDisks() {
-    final ProgressDialog progressDialog = new ProgressDialog(this);
+  private void getComments() {
+    final ProgressDialog progressDialog = new ProgressDialog(LoadingActivity.this);
     progressDialog.setCancelable(false);
     progressDialog.show();
 
-    Call<JsonArray> call = MusicClient.getInstance().getService().getDisks(AlbumValue.album_id);
+    Call<JsonArray> call = MusicClient.getInstance().getService().getComments(StaticValues.album.album_id);
     call.enqueue(
         new Callback<JsonArray>() {
           @Override
           public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
             progressDialog.dismiss();
-            ArrayList<VOdisk> disks = new ArrayList<>();
+            ArrayList<VOComment> comments = new ArrayList<>();
             JsonArray array = response.body().getAsJsonArray();
             for (JsonElement object : array) {
-              VOdisk disk = new VOdisk(
-                  object.getAsJsonObject().get("disk_id").getAsInt(),
-                  object.getAsJsonObject().get("disk_name").getAsString(),
+              VOComment comment = new VOComment(
+                  object.getAsJsonObject().get("comment_id").getAsInt(),
+                  object.getAsJsonObject().get("user_id").getAsInt(),
+                  object.getAsJsonObject().get("user_name").getAsString(),
+                  object.getAsJsonObject().get("comment_time").getAsString(),
+                  object.getAsJsonObject().get("comment_contents").getAsString(),
                   object.getAsJsonObject().get("album_id").getAsInt());
-              disks.add(disk);
+              comments.add(comment);
             }
 
-            if (array.size() == 0) {
-              Toast.makeText(
-                  getApplicationContext(), "해당 앨범을 찾을 수 없습니다", Toast.LENGTH_LONG).show();
-              return;
-            }
-
-            StaticValues.diskList.addAll(disks);
-            StaticValues.selectedDisk = disks.get(0);
-            sqlDAO.insertDiskList(StaticValues.diskList);
-            DataNetUtils.setSelectedDiskId(LoadingActivity.this, StaticValues.selectedDisk.disk_id);
-
-            getPhotos();
-          }
-
-          @Override
-          public void onFailure(Call<JsonArray> call, Throwable t) {
-            Log.e("onFailure", t.getMessage());
-          }
-        }
-    );
-
-  }
-
-  private void getPhotos() {
-    final ProgressDialog progressDialog = new ProgressDialog(LoadingActivity.this);
-    progressDialog.setCancelable(false);
-    progressDialog.show();
-
-    Call<JsonArray> call = MusicClient.getInstance().getService().getPhotos(AlbumValue.album_id, StaticValues.selectedDisk.disk_id);
-    call.enqueue(
-        new Callback<JsonArray>() {
-          @Override
-          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
-            progressDialog.dismiss();
-            ArrayList<VOPhotoM> photos = new ArrayList<>();
-            JsonArray array = response.body().getAsJsonArray();
-            for (JsonElement object : array) {
-              VOPhotoM photo = new VOPhotoM(
-                  object.getAsJsonObject().get("photo_id").getAsInt(),
-                  object.getAsJsonObject().get("disk_id").getAsInt(),
-                  object.getAsJsonObject().get("song_video_id").getAsInt(),
-                  object.getAsJsonObject().get("type").getAsInt(),
-                  object.getAsJsonObject().get("photo_file_name").getAsString(),
-                  object.getAsJsonObject().get("album_id").getAsInt(),
-                  object.getAsJsonObject().get("photo_order").getAsInt());
-              photos.add(photo);
-            }
-
-            StaticValues.photoList.addAll(photos);
-            sqlDAO.insertPhotoMList(StaticValues.photoList, StaticValues.selectedDisk.disk_id, StaticValues.album.album_id);
-            getNewInfos();
-          }
-
-          @Override
-          public void onFailure(Call<JsonArray> call, Throwable t) {
-            Log.e("onFailure", t.getMessage());
-          }
-        }
-    );
-  }
-
-  private void getNewInfos() {
-    final ProgressDialog progressDialog = new ProgressDialog(LoadingActivity.this);
-    progressDialog.setCancelable(false);
-    progressDialog.show();
-
-    Call<JsonArray> call = MusicClient.getInstance().getService().getNewInfos(AlbumValue.album_id);
-    call.enqueue(
-        new Callback<JsonArray>() {
-          @Override
-          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
-            progressDialog.dismiss();
-            ArrayList<VONewInfo> newInfos = new ArrayList<>();
-            JsonArray array = response.body().getAsJsonArray();
-            for (JsonElement object : array) {
-              VONewInfo info = new VONewInfo(
-                  object.getAsJsonObject().get("info_id").getAsInt(),
-                  object.getAsJsonObject().get("album_id").getAsInt(),
-                  object.getAsJsonObject().get("main_subject").getAsString(),
-                  object.getAsJsonObject().get("time").getAsString(),
-                  object.getAsJsonObject().get("image_data").getAsString(),
-                  object.getAsJsonObject().get("contents").getAsString(),
-                  object.getAsJsonObject().get("link_url").getAsString());
-              newInfos.add(info);
-            }
-
-            StaticValues.newinfoList.addAll(newInfos);
-            sqlDAO.insertnewInfoList(StaticValues.newinfoList);
-            getSongs();
-          }
-
-          @Override
-          public void onFailure(Call<JsonArray> call, Throwable t) {
-            Log.e("onFailure", t.getMessage());
-          }
-        }
-    );
-  }
-
-  private void getSongs() {
-    final ProgressDialog progressDialog = new ProgressDialog(LoadingActivity.this);
-    progressDialog.setCancelable(false);
-    progressDialog.show();
-
-    Call<JsonArray> call = MusicClient.getInstance().getService().getSongs(StaticValues.selectedDisk.disk_id);
-    call.enqueue(
-        new Callback<JsonArray>() {
-          @Override
-          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
-            progressDialog.dismiss();
-            ArrayList<VOSong> songs = new ArrayList<>();
-            JsonArray array = response.body().getAsJsonArray();
-            for (JsonElement object : array) {
-              VOSong song = new VOSong(
-                  object.getAsJsonObject().get("song_id").getAsInt(),
-                  object.getAsJsonObject().get("song_name").getAsString(),
-                  object.getAsJsonObject().get("disk_id").getAsInt(),
-                  object.getAsJsonObject().get("song_file_name").getAsString(),
-                  object.getAsJsonObject().get("photo_id").getAsInt(),
-                  object.getAsJsonObject().get("song_lyric").getAsString(),
-                  object.getAsJsonObject().get("msg1").getAsString(),
-                  object.getAsJsonObject().get("msg2").getAsString(),
-                  object.getAsJsonObject().get("song_order").getAsInt());
-              songs.add(song);
-            }
-
-            StaticValues.songList.addAll(songs);
-            sqlDAO.insertsongList(StaticValues.songList, StaticValues.selectedDisk.disk_id);
+            StaticValues.commentList.addAll(comments);
+            sqlDAO.insertcommentList(StaticValues.commentList);
             getVideos();
           }
 
@@ -292,7 +184,7 @@ public class LoadingActivity extends Activity {
 
             StaticValues.videoList.addAll(videos);
             sqlDAO.insertvideoList(StaticValues.videoList);
-            getComments();
+            getDisks();
           }
 
           @Override
@@ -303,32 +195,117 @@ public class LoadingActivity extends Activity {
     );
   }
 
-  private void getComments() {
-    final ProgressDialog progressDialog = new ProgressDialog(LoadingActivity.this);
+  private void getDisks() {
+    final ProgressDialog progressDialog = new ProgressDialog(this);
     progressDialog.setCancelable(false);
     progressDialog.show();
 
-    Call<JsonArray> call = MusicClient.getInstance().getService().getComments(StaticValues.album.album_id);
+    Call<JsonArray> call = MusicClient.getInstance().getService().getDisks(AlbumValue.album_id);
     call.enqueue(
         new Callback<JsonArray>() {
           @Override
           public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
             progressDialog.dismiss();
-            ArrayList<VOComment> comments = new ArrayList<>();
+            ArrayList<VOdisk> disks = new ArrayList<>();
             JsonArray array = response.body().getAsJsonArray();
             for (JsonElement object : array) {
-              VOComment comment = new VOComment(
-                  object.getAsJsonObject().get("comment_id").getAsInt(),
-                  object.getAsJsonObject().get("user_id").getAsInt(),
-                  object.getAsJsonObject().get("user_name").getAsString(),
-                  object.getAsJsonObject().get("comment_time").getAsString(),
-                  object.getAsJsonObject().get("comment_contents").getAsString(),
+              VOdisk disk = new VOdisk(
+                  object.getAsJsonObject().get("disk_id").getAsInt(),
+                  object.getAsJsonObject().get("disk_name").getAsString(),
                   object.getAsJsonObject().get("album_id").getAsInt());
-              comments.add(comment);
+              disks.add(disk);
             }
 
-            StaticValues.commentList.addAll(comments);
-            sqlDAO.insertcommentList(StaticValues.commentList);
+            if (array.size() == 0) {
+              Toast.makeText(
+                  getApplicationContext(), "해당 앨범을 찾을 수 없습니다", Toast.LENGTH_LONG).show();
+              return;
+            }
+
+            StaticValues.diskList.addAll(disks);
+            sqlDAO.insertDiskList(StaticValues.diskList);
+            getDiskData(disks.get(0));
+          }
+
+          @Override
+          public void onFailure(Call<JsonArray> call, Throwable t) {
+            Log.e("onFailure", t.getMessage());
+          }
+        }
+    );
+  }
+
+
+
+  private void getSongs() {
+    final ProgressDialog progressDialog = new ProgressDialog(LoadingActivity.this);
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+
+    Call<JsonArray> call = MusicClient.getInstance().getService().getSongs(StaticValues.selectedDisk.disk_id);
+    call.enqueue(
+        new Callback<JsonArray>() {
+          @Override
+          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+            progressDialog.dismiss();
+            ArrayList<VOSong> songs = new ArrayList<>();
+            JsonArray array = response.body().getAsJsonArray();
+            for (JsonElement object : array) {
+              VOSong song = new VOSong(
+                  object.getAsJsonObject().get("song_id").getAsInt(),
+                  object.getAsJsonObject().get("song_name").getAsString(),
+                  object.getAsJsonObject().get("disk_id").getAsInt(),
+                  object.getAsJsonObject().get("song_file_name").getAsString(),
+                  object.getAsJsonObject().get("photo_id").getAsInt(),
+                  object.getAsJsonObject().get("song_lyric").getAsString(),
+                  object.getAsJsonObject().get("msg1").getAsString(),
+                  object.getAsJsonObject().get("msg2").getAsString(),
+                  object.getAsJsonObject().get("song_order").getAsInt());
+              songs.add(song);
+            }
+
+            StaticValues.songList.clear();
+            StaticValues.songList.addAll(songs);
+            sqlDAO.insertsongList(StaticValues.songList, StaticValues.selectedDisk.disk_id);
+            getPhotos();
+          }
+
+          @Override
+          public void onFailure(Call<JsonArray> call, Throwable t) {
+            Log.e("onFailure", t.getMessage());
+          }
+        }
+    );
+  }
+
+  private void getPhotos() {
+    final ProgressDialog progressDialog = new ProgressDialog(LoadingActivity.this);
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+
+    Call<JsonArray> call = MusicClient.getInstance().getService().getPhotos(AlbumValue.album_id, StaticValues.selectedDisk.disk_id);
+    call.enqueue(
+        new Callback<JsonArray>() {
+          @Override
+          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+            progressDialog.dismiss();
+            ArrayList<VOPhotoM> photos = new ArrayList<>();
+            JsonArray array = response.body().getAsJsonArray();
+            for (JsonElement object : array) {
+              VOPhotoM photo = new VOPhotoM(
+                  object.getAsJsonObject().get("photo_id").getAsInt(),
+                  object.getAsJsonObject().get("disk_id").getAsInt(),
+                  object.getAsJsonObject().get("song_video_id").getAsInt(),
+                  object.getAsJsonObject().get("type").getAsInt(),
+                  object.getAsJsonObject().get("photo_file_name").getAsString(),
+                  object.getAsJsonObject().get("album_id").getAsInt(),
+                  object.getAsJsonObject().get("photo_order").getAsInt());
+              photos.add(photo);
+            }
+
+            StaticValues.photoList.clear();
+            StaticValues.photoList.addAll(photos);
+            sqlDAO.insertPhotoMList(StaticValues.photoList, StaticValues.selectedDisk.disk_id, StaticValues.album.album_id);
             new DataDownloader(getApplicationContext(), netHandlerPhotoDonwAfter);
           }
 
@@ -339,6 +316,7 @@ public class LoadingActivity extends Activity {
         }
     );
   }
+
 
 
 

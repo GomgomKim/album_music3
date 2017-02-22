@@ -1141,26 +1141,6 @@ CREATE TABLE singer("
 		Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " insertsongList ("
 				+ songList.size() + ")");
 		SQLiteDatabase db = DBHelper.getWritableDatabase();
-/*
-CREATE TABLE song("
-				+"song_id INTEGER primary key,"
-				+"song_name TEXT ,"
-				+"mobile_music_id INTEGER ,"
-				+"song_file_name TEXT,"
-				+"photo_id INTEGER,"
-				+"song_lyric TEXT);";
-
-				sql = "CREATE TABLE song("
-				+"song_id INTEGER primary key,"
-				+"song_name TEXT ,"
-				+"disk_id INTEGER ,"
-				+"song_file_name TEXT,"
-				+"photo_id INTEGER,"
-				+"song_order INTEGER,"
-				+"msg1 TEXT,"
-				+"msg2 TEXT,"
-				+"song_lyric TEXT);";
-		*/
 		db.beginTransaction();
 		try {
 			db.execSQL("DELETE FROM song WHERE disk_id="+disk_id+";");

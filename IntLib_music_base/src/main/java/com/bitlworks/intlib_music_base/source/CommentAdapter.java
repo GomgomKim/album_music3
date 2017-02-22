@@ -39,7 +39,7 @@ public class CommentAdapter extends ArrayAdapter<VOComment> {
   public View getView(final int position, View convertView, ViewGroup parent) {
 
     if (convertView == null) {
-      convertView = inflater.inflate(R.layout.listitem_comment, null);
+      convertView = inflater.inflate(R.layout.item_comment, null);
       viewHolder = new ViewHolder();
       viewHolder.comment_contents = (TextView) convertView.findViewById(R.id.comment_contents);
       viewHolder.user_name = (TextView) convertView.findViewById(R.id.user);

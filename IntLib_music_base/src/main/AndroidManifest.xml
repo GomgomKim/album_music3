@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.bitlworks.intlib_music_base">
 
@@ -8,7 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:name=".MusicClient"
@@ -18,24 +19,49 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".source.ready.AuthCheckActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"/>
-
         <activity
             android:name=".source.ready.LoadingActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"/>
-
         <activity
             android:name=".source.PagerMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".source.setting.KaKaoTalkActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
 
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="@string/kakaolink_host"
+                    android:scheme="@string/kakao_scheme"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".source.setting.NewInfoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity
+            android:name=".source.setting.MsgActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"/>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="057cdf6f2cc8875054e634a0d1fcd3c0"/>
 
     </application>
-
 
 </manifest>

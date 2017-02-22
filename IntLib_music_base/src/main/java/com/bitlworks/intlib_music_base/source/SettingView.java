@@ -9,8 +9,9 @@ import android.widget.TextView;
 
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
-import com.ucom.intlib_bitlworks.setting.CSActivity;
-import com.ucom.intlib_bitlworks.setting.ProInviteDialog;
+import com.bitlworks.intlib_bitlworks.setting.CSActivity;
+import com.bitlworks.intlib_music_base.source.setting.NewInfoActivity;
+import com.bitlworks.intlib_music_base.source.setting.ProInviteDialog;
 
 public class SettingView extends LinearLayout {
 
@@ -24,7 +25,6 @@ public class SettingView extends LinearLayout {
       @Override
       public void onClick(View view) {
         Intent i = new Intent(getContext(), NewInfoActivity.class);
-        i.putExtra("NEW_INFO_LIST", StaticValues.newinfoList);
         getContext().startActivity(i);
       }
     });
