@@ -1,11 +1,16 @@
 package com.bitlworks.intlib_music_base.source;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bitlworks.intlib_music_base.R;
+import com.bitlworks.intlib_music_base.StaticValues;
+import com.ucom.intlib_bitlworks.setting.CSActivity;
+import com.ucom.intlib_bitlworks.setting.ProInviteDialog;
 
 public class SettingView extends LinearLayout {
 
@@ -14,7 +19,33 @@ public class SettingView extends LinearLayout {
     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = li.inflate(R.layout.layout_setting, this, true);
 
-    initView();
+    TextView newInfoText = (TextView) v.findViewById(R.id.text_new_info);
+    newInfoText.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent i = new Intent(getContext(), NewInfoActivity.class);
+        i.putExtra("NEW_INFO_LIST", StaticValues.newinfoList);
+        getContext().startActivity(i);
+      }
+    });
+
+    TextView inviteText = (TextView) v.findViewById(R.id.text_invite);
+    inviteText.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        ProInviteDialog dialog = new ProInviteDialog(getContext());
+        dialog.show();
+      }
+    });
+
+    TextView customerCenterText = (TextView) v.findViewById(R.id.text_customer_center);
+    customerCenterText.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent i = new Intent(getContext(), CSActivity.class);
+        getContext().startActivity(i);
+      }
+    });
   }
 
   private void initView() {
@@ -54,37 +85,6 @@ public class SettingView extends LinearLayout {
 //    TextView albumIntroText = (TextView) findViewById(R.id.text_album_intro);
 ////    albumIntroText.setTypeface(ff);
 //    albumIntroText.setText(StaticValues.album.album_intro);
-//
-//    TextView newInfoText = (TextView) findViewById(R.id.text_new_info);
-////    newInfoText.setTypeface(ff);
-//    newInfoText.setOnClickListener(new OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        Intent i = new Intent(getContext(), ShowNewInfo.class);
-//        getContext().startActivity(i);
-//      }
-//    });
-//
-//    TextView inviteText = (TextView) v.findViewById(R.id.text_invite);
-////    inviteText.setTypeface(ff);
-//    inviteText.setOnClickListener(new OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        Intent i = new Intent(getContext(), ProInviteActivity.class);
-//        getContext().startActivity(i);
-//      }
-//    });
-//
-//    TextView customerCenterText = (TextView) v.findViewById(R.id.text_customer_center);
-////    customerCenterText.setTypeface(ff);
-//    customerCenterText.setOnClickListener(new OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        Intent i = new Intent(getContext(), CSActivity.class);
-//        i.putExtra(CSActivity.PARAM_IS_ALBUM, true);
-//        i.putExtra(CSActivity.PARAM_IS_NEW_NOTICE, false);
-//        getContext().startActivity(i);
-//      }
-//    });
+
   }
 }

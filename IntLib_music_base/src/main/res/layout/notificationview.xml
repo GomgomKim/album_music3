@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="66dp"
-              android:orientation="horizontal"
               android:background="#303030"
+              android:orientation="horizontal"
               android:padding="8dp">
 
     <ImageView
@@ -16,15 +16,16 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="4dp">
 
         <TextView
             android:id="@+id/text_album_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="marquee"
             android:gravity="center_horizontal"
             android:singleLine="true"
-            android:ellipsize="marquee"
             android:text="Mobile Music"/>
 
         <TextView
@@ -32,9 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:singleLine="true"
             android:ellipsize="marquee"
             android:gravity="center_horizontal"
+            android:singleLine="true"
             android:text="Mobile Music"
             android:textSize="12sp"/>
     </LinearLayout>

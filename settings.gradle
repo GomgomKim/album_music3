@@ -1,1 +1,1 @@
-include ':music_resource_hanyang', ':intlib_music_base', ':music_app_hanyang', ':intlib_bitlworks'
+include ':music_resource_hanyang', ':intlib_music_base', ':music_app_hanyang', ':intlib_bitlworks', ':util', ':kakaolink'

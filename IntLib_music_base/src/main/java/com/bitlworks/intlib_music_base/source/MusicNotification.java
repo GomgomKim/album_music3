@@ -2,12 +2,8 @@ package com.bitlworks.intlib_music_base.source;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.service.notification.NotificationListenerService;
-import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
@@ -23,7 +19,10 @@ public class MusicNotification {
 
   public MusicNotification(Context parent) {
     this.parent = parent;
-    nBuilder = new NotificationCompat.Builder(parent).setOngoing(true);
+    nBuilder = new NotificationCompat.Builder(parent)
+        .setContentTitle("Mobile Music")
+        .setSmallIcon(R.drawable.gallery_icon)
+        .setOngoing(true);
 
     remoteView = new RemoteViews(parent.getPackageName(), R.layout.notificationview);
     String title = StaticValues.album == null

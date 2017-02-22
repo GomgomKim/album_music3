@@ -17,7 +17,7 @@
             android:theme="@android:style/Theme.NoTitleBar"/>
 
         <activity
-            android:name="com.ucom.intlib_bitlworks.setting.ProInviteActivity"
+            android:name="com.ucom.intlib_bitlworks.setting.CSActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"/>
 

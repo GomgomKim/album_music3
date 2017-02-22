@@ -80,15 +80,45 @@ public class PagerMainActivity extends AppCompatActivity implements
       handler.postDelayed(this, 100);
     }
   };
+  private BroadcastReceiver musicReceiver = new BroadcastReceiver() {
 
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    viewPager.removeOnPageChangeListener(this);
-    handler.removeCallbacks(updateProgressRunnable);
-    musicNotification.notificationCancel();
-    musicService.releaseMusic();
-  }
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (intent.getAction().equals("play")) {
+        if (musicService.isPlaying()) {
+          musicService.pauseMusic();
+          musicNotification.updatePause();
+          togglePlayerButton(true);
+        } else {
+          musicService.restartMusic();
+          musicNotification.updatePlay();
+          togglePlayerButton(false);
+        }
+        return;
+      }
+
+      if (intent.getAction().equals("prev")) {
+        if (StaticValues.playIndex == 0) {
+          return;
+        }
+        viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex - 1));
+        return;
+      }
+
+      if (intent.getAction().equals("next")) {
+        if (StaticValues.playIndex == StaticValues.songList.size() - 1) {
+          return;
+        }
+        viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
+      }
+
+      if (intent.getAction().equals("end")) {
+        finish();
+      }
+    }
+  };
+
+
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -112,43 +142,7 @@ public class PagerMainActivity extends AppCompatActivity implements
     intentFilter.addAction("prev");
     intentFilter.addAction("next");
     intentFilter.addAction("end");
-    registerReceiver(new BroadcastReceiver() {
-
-      @Override
-      public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals("play")) {
-          if (musicService.isPlaying()) {
-            musicService.pauseMusic();
-            musicNotification.updatePause();
-            togglePlayerButton(true);
-          } else {
-            musicService.restartMusic();
-            musicNotification.updatePlay();
-            togglePlayerButton(false);
-          }
-          return;
-        }
-
-        if (intent.getAction().equals("prev")) {
-          if (StaticValues.playIndex == 0) {
-            return;
-          }
-          viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex - 1));
-          return;
-        }
-
-        if (intent.getAction().equals("next")) {
-          if (StaticValues.playIndex == StaticValues.songList.size() - 1) {
-            return;
-          }
-          viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
-        }
-
-        if (intent.getAction().equals("end")) {
-          finish();
-        }
-      }
-    }, intentFilter);
+    registerReceiver(musicReceiver, intentFilter);
 
     tf = Typeface.createFromAsset(getAssets(), "bbb.otf");
     ff = Typeface.createFromAsset(getAssets(), "aaf.ttf");
@@ -260,27 +254,13 @@ public class PagerMainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onClickDisk(VOdisk disk) {
-    int id = disk.disk_id;
-    if (id == StaticValues.selectedDisk.disk_id) {
-      Toast.makeText(this, "이미 선택된 디스크입니다.", Toast.LENGTH_SHORT).show();
-      return;
-    }
-
+  protected void onDestroy() {
+    super.onDestroy();
+    viewPager.removeOnPageChangeListener(this);
     handler.removeCallbacks(updateProgressRunnable);
-
-    StaticValues.first_check = 0;
-    StaticValues.selectedDisk = disk;
-
-    Intent i = new Intent(this, LoadingActivity.class);
-    startActivity(i);
-    finish();
-  }
-
-  @Override
-  public void onClickSong(int position) {
-    musicService.startMusic(position);
-    viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex));
+    musicNotification.notificationCancel();
+    musicService.releaseMusic();
+    unregisterReceiver(musicReceiver);
   }
 
   @Override
@@ -311,6 +291,14 @@ public class PagerMainActivity extends AppCompatActivity implements
               public void onClick(DialogInterface dialog, int id) {
               }
             }).show();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.action_bar, menu);
+    MenuItem item = menu.findItem(R.id.menu_sound);
+    item.setIcon(R.drawable.actionbar_button_sound_on);
+    return true;
   }
 
   @Override
@@ -348,12 +336,30 @@ public class PagerMainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.action_bar, menu);
-    MenuItem item = menu.findItem(R.id.menu_sound);
-    item.setIcon(R.drawable.actionbar_button_sound_on);
-    return true;
+  public void onClickDisk(VOdisk disk) {
+    int id = disk.disk_id;
+    if (id == StaticValues.selectedDisk.disk_id) {
+      Toast.makeText(this, "이미 선택된 디스크입니다.", Toast.LENGTH_SHORT).show();
+      return;
+    }
+
+    handler.removeCallbacks(updateProgressRunnable);
+
+    StaticValues.first_check = 0;
+    StaticValues.selectedDisk = disk;
+
+    Intent i = new Intent(this, LoadingActivity.class);
+    startActivity(i);
+    finish();
   }
+
+  @Override
+  public void onClickSong(int position) {
+    musicService.startMusic(position);
+    viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex));
+  }
+
+
 
   @Override
   public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
@@ -380,7 +386,7 @@ public class PagerMainActivity extends AppCompatActivity implements
     startUpdatingProgress();
   }
 
-  public void initActionBar() {
+  private void initActionBar() {
     ActionBar actionBar = getSupportActionBar();
     actionBar.setTitle("");
     actionBar.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.home_bar_background));
