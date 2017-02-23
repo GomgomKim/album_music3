@@ -184,7 +184,7 @@ public class LoadingActivity extends Activity {
 
             StaticValues.videoList.addAll(videos);
             sqlDAO.insertvideoList(StaticValues.videoList);
-            getDisks();
+            getNewInfos();
           }
 
           @Override
@@ -194,6 +194,46 @@ public class LoadingActivity extends Activity {
         }
     );
   }
+
+  private void getNewInfos() {
+    final ProgressDialog progressDialog = new ProgressDialog(this);
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+
+    Call<JsonArray> call = MusicClient.getInstance().getService().getNewInfos(AlbumValue.album_id);
+    call.enqueue(
+        new Callback<JsonArray>() {
+          @Override
+          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+            progressDialog.dismiss();
+            ArrayList<VONewInfo> newInfos = new ArrayList<>();
+            JsonArray array = response.body().getAsJsonArray();
+            for (JsonElement object : array) {
+              VONewInfo info = new VONewInfo(
+                  object.getAsJsonObject().get("info_id").getAsInt(),
+                  object.getAsJsonObject().get("album_id").getAsInt(),
+                  object.getAsJsonObject().get("mainSubjectText").getAsString(),
+                  object.getAsJsonObject().get("timeText").getAsString(),
+                  object.getAsJsonObject().get("subjectImage").getAsString(),
+                  object.getAsJsonObject().get("contentText").getAsString(),
+                  object.getAsJsonObject().get("link_url").getAsString());
+              newInfos.add(info);
+            }
+
+            StaticValues.newInfos.addAll(newInfos);
+            sqlDAO.insertnewInfoList(newInfos);
+            getDisks();
+          }
+
+          @Override
+          public void onFailure(Call<JsonArray> call, Throwable t) {
+            progressDialog.dismiss();
+            Log.e("onFailure", t.getMessage());
+          }
+        }
+    );
+  }
+
 
   private void getDisks() {
     final ProgressDialog progressDialog = new ProgressDialog(this);

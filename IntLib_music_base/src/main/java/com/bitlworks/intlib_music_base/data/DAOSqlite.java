@@ -442,10 +442,10 @@ public class DAOSqlite {
 	sql = "CREATE TABLE new_info("
 				+"info_id INTEGER primary key,"
 				+"album_id INTEGER ,"
-				+"main_subject TEXT,"
-				+"time TEXT,"
-				+"image_data TEXT,"
-				+"contents TEXT,"
+				+"mainSubjectText TEXT,"
+				+"timeText TEXT,"
+				+"subjectImage TEXT,"
+				+"contentText TEXT,"
 				+"link_url TEXT );";
 	*/
 	synchronized public ArrayList<VONewInfo> getnewInfoList(int album_id) {
@@ -455,8 +455,8 @@ public class DAOSqlite {
 
 		SQLiteDatabase db = DBHelper.getReadableDatabase();
 		Cursor cursor = db.rawQuery(
-				"SELECT info_id, album_id, main_subject, time,image_data, "
-						+ " contents,link_url FROM new_info "
+				"SELECT info_id, album_id, mainSubjectText, timeText,subjectImage, "
+						+ " contentText,link_url FROM new_info "
 						+ " WHERE album_id="+album_id +" ORDER BY info_id DESC ;", null);
 		while (cursor.moveToNext()) {
 			int i = 0;
@@ -1295,17 +1295,17 @@ synchronized public void insertnewInfoList(ArrayList<VONewInfo> newInfoList) {
 				sql = "CREATE TABLE new_info("
 				+"info_id INTEGER primary key,"
 				+"album_id INTEGER ,"
-				+"main_subject TEXT,"
-				+"time TEXT,"
-				+"image_data TEXT,"
-				+"contents TEXT,"
+				+"mainSubjectText TEXT,"
+				+"timeText TEXT,"
+				+"subjectImage TEXT,"
+				+"contentText TEXT,"
 				+"link_url TEXT );";
 		*/
 	db.beginTransaction();
 	try {
 		db.execSQL("DELETE FROM new_info ;");
 		for (VONewInfo voNewInfo : newInfoList) {
-			String sql = "INSERT INTO new_info(info_id, album_id, main_subject, time, image_data, contents,link_url) "
+			String sql = "INSERT INTO new_info(info_id, album_id, mainSubjectText, timeText, subjectImage, contentText,link_url) "
 					+ " VALUES ("
 					+ voNewInfo.info_id
 					+ ", "

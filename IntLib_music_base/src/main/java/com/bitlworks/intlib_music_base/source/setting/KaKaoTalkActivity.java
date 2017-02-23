@@ -16,6 +16,7 @@ import com.bitlworks.music_resource_hanyang.AlbumValue;
 import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
+import com.squareup.picasso.Picasso;
 
 public class KaKaoTalkActivity extends Activity {
 
@@ -45,7 +46,9 @@ public class KaKaoTalkActivity extends Activity {
     }
     final String image_file = in_file;
     String imageSrc = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/disk0/" + image_file;
-    imagePhoto.setImageURI(Uri.parse(imageSrc));
+    Picasso.with(this)
+        .load(imageSrc)
+        .into(imagePhoto);
 
     findViewById(R.id.image_kakao_send).setOnClickListener(new View.OnClickListener() {
       @Override

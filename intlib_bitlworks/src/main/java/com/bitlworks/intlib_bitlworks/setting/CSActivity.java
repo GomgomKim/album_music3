@@ -1,5 +1,6 @@
 package com.bitlworks.intlib_bitlworks.setting;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -8,7 +9,7 @@ import android.view.View;
 
 import com.bitlworks.intlib_bitlworks.R;
 
-public class CSActivity extends AppCompatActivity implements CSFragment.Listener {
+public class CSActivity extends Activity implements CSFragment.Listener {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {

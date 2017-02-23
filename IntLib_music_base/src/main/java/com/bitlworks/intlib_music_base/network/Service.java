@@ -46,7 +46,7 @@ public interface Service {
   Call<JsonArray> getComments(@Query("album_id") int albumId);
 
   @GET("insertComment.php")
-  Call<JsonArray> insertComment(@Query("album_id") int albumId, @Query("user_id") int userId, @Query("user_name") String userName, @Query("contents") String contents);
+  Call<JsonArray> insertComment(@Query("album_id") int albumId, @Query("user_id") int userId, @Query("user_name") String userName, @Query("contentText") String contents);
 
   @GET("DelCommentList.php")
   Call<JsonArray> deleteComment(@Query("a_id") int albumId, @Query("c_id") int commentId);

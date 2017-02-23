@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.bitlworks.intlib_bitlworks.CommonUtils;
 import com.bitlworks.intlib_bitlworks.R;
-import com.bitlworks.intlib_bitlworks.auth.RegisterFragment;
 
 public class CSFragment extends Fragment {
 
@@ -34,7 +33,7 @@ public class CSFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_cs, container, false);
+    final View view = inflater.inflate(R.layout.fragment_cs, container, false);
 
     TextView currentVersionText = (TextView) view.findViewById(R.id.text_current_version);
     currentVersionText.setText(CommonUtils.getAppVersionName(getActivity()));
@@ -86,7 +85,7 @@ public class CSFragment extends Fragment {
             }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-
+            // noting
           }
         }).show();
       }

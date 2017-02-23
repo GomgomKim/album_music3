@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bitlworks.intlib_bitlworks.setting.CSActivity;
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
-import com.bitlworks.intlib_bitlworks.setting.CSActivity;
 import com.bitlworks.intlib_music_base.source.setting.NewInfoActivity;
 import com.bitlworks.intlib_music_base.source.setting.ProInviteDialog;
 
@@ -19,6 +19,9 @@ public class SettingView extends LinearLayout {
     super(context);
     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = li.inflate(R.layout.layout_setting, this, true);
+
+    TextView albumIntroText = (TextView) findViewById(R.id.text_album_intro);
+    albumIntroText.setText(StaticValues.album.album_intro);
 
     TextView newInfoText = (TextView) v.findViewById(R.id.text_new_info);
     newInfoText.setOnClickListener(new OnClickListener() {

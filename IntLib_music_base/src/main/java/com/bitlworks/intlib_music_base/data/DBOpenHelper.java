@@ -230,10 +230,10 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 		sql = "CREATE TABLE new_info("
 				+"info_id INTEGER primary key,"
 				+"album_id INTEGER ,"
-				+"main_subject TEXT,"
-				+"time TEXT,"
-				+"image_data TEXT,"
-				+"contents TEXT,"
+				+"mainSubjectText TEXT,"
+				+"timeText TEXT,"
+				+"subjectImage TEXT,"
+				+"contentText TEXT,"
 				+"link_url TEXT );";
 				//+"mobile_music_id INTEGER );";
 

@@ -99,11 +99,9 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:scaleType="fitStart"
             android:src="@drawable/temp_register"/>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -114,35 +112,29 @@
         android:orientation="vertical"
         android:visibility="gone">
 
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="인증번호 입력"/>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="#eee"
+            android:orientation="vertical"
+            android:padding="1dp">
 
-            <TextView
+            <EditText
+                android:id="@+id/edt_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="인증번호 입력"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:background="#eee"
-                android:orientation="vertical"
-                android:padding="1dp">
-
-                <EditText
-                    android:id="@+id/edt_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#fff"
-                    android:hint="인증번호 입력하세요."
-                    android:inputType="number"
-                    android:maxLength="4"
-                    android:padding="4dp"/>
-            </LinearLayout>
+                android:background="#fff"
+                android:hint="인증번호 입력하세요."
+                android:inputType="number"
+                android:maxLength="4"
+                android:padding="4dp"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -152,31 +144,22 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:orientation="vertical"
         android:visibility="gone">
 
-
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="wrap_content"
+            android:text="고객 확인을 위한 실명 입력 (1~20자)"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="고객 확인을 위한 실명 입력 (1~20자)"/>
-
-            <EditText
-                android:id="@+id/edittext_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:maxLength="20"
-                android:maxLines="1"
-                android:padding="4dp"/>
-        </LinearLayout>
-
+        <EditText
+            android:id="@+id/edittext_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:padding="4dp"/>
 
     </LinearLayout>
 

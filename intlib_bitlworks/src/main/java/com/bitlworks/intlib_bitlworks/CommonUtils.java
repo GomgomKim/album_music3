@@ -11,8 +11,6 @@ import android.net.NetworkInfo.State;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
 
-import com.bitlworks.intlib_bitlworks.gcm.GcmRegistration;
-
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -269,10 +267,7 @@ public class CommonUtils {
       throw new RuntimeException(e);
     }
   }
-  public static String registerGCMid(Context context, String uuid, String appver) {
-    GcmRegistration gr = new GcmRegistration(context);
-    return gr.registerGCM(uuid, appver);
-  }
+
 
   /**
    * API KEY

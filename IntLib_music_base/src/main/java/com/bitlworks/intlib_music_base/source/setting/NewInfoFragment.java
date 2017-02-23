@@ -32,7 +32,6 @@ import retrofit2.Response;
 public class NewInfoFragment extends Fragment {
 
   private Listener listener;
-  private ArrayList<VONewInfo> newInfos = new ArrayList<>();
   private NewInfoAdapter adapter;
 
   public static Fragment newInstance() {
@@ -50,19 +49,17 @@ public class NewInfoFragment extends Fragment {
                            Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_new_info, container, false);
 
-    // TODO: NewInfo 추가기능 만들기
+    // TODO: NewInfo 추가/삭제 기능 만들기
 
     ListView newInfoListView = (ListView) view.findViewById(com.bitlworks.intlib_music_base.R.id.list_new_info);
-    adapter = new NewInfoAdapter(getActivity(), newInfos);
+    adapter = new NewInfoAdapter(getActivity(), StaticValues.newInfos);
     newInfoListView.setAdapter(adapter);
     newInfoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        listener.clickNewInfo(newInfos.get(i));
+        listener.clickNewInfo(StaticValues.newInfos.get(i));
       }
     });
-
-    getNewInfos();
     return view;
   }
 
@@ -98,42 +95,4 @@ public class NewInfoFragment extends Fragment {
     void clickNewInfo(VONewInfo item);
   }
 
-  private void getNewInfos() {
-    final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-    progressDialog.setCancelable(false);
-    progressDialog.show();
-
-    Call<JsonArray> call = MusicClient.getInstance().getService().getNewInfos(AlbumValue.album_id);
-    call.enqueue(
-        new Callback<JsonArray>() {
-          @Override
-          public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
-            progressDialog.dismiss();
-            ArrayList<VONewInfo> newInfos = new ArrayList<>();
-            JsonArray array = response.body().getAsJsonArray();
-            for (JsonElement object : array) {
-              VONewInfo info = new VONewInfo(
-                  object.getAsJsonObject().get("info_id").getAsInt(),
-                  object.getAsJsonObject().get("album_id").getAsInt(),
-                  object.getAsJsonObject().get("main_subject").getAsString(),
-                  object.getAsJsonObject().get("time").getAsString(),
-                  object.getAsJsonObject().get("image_data").getAsString(),
-                  object.getAsJsonObject().get("contents").getAsString(),
-                  object.getAsJsonObject().get("link_url").getAsString());
-              newInfos.add(info);
-            }
-
-            newInfos.addAll(newInfos);
-            DAOSqlite.getInstance(getActivity()).insertnewInfoList(newInfos);
-            adapter.notifyDataSetChanged();
-          }
-
-          @Override
-          public void onFailure(Call<JsonArray> call, Throwable t) {
-            progressDialog.dismiss();
-            Log.e("onFailure", t.getMessage());
-          }
-        }
-    );
-  }
 }

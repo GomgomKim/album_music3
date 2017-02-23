@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package com.bitlworks.intlib_bitlworks.gcm;
+package com.bitlworks.intlib_music_base.gcm;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.RingtoneManager;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.bitlworks.intlib_music_base.R;
+import com.bitlworks.intlib_music_base.StaticValues;
+import com.bitlworks.intlib_music_base.source.ready.AuthCheckActivity;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.bitlworks.intlib_bitlworks.StaticValues;
 
 import java.util.List;
 
@@ -105,23 +110,20 @@ public class GcmIntentService extends IntentService {
         StaticValues.NOTIFICATION_FLAG = 100;
         String notiMsg = extras.getString("message");
         StaticValues.NOTIFICATION_MESSAGE = notiMsg;
-        // TODO: 메시지 받았을 때 처리
-//        if (StaticValues.pagerMainActivity == null) {
-//          sendNotification(notiMsg);
-//        } else {
-//
-//          ((Activity) StaticValues.pagerMainActivity).runOnUiThread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//              //notifyDataSetChanged here or update your UI on different thread
-//              if (StaticValues.pagerMainActivity.listener != null) {
-//                StaticValues.pagerMainActivity.listener.updateCommentList();
-//              }
-//            }
-//          });
+        if (StaticValues.pagerMainActivity == null) {
+          sendNotification(notiMsg);
+        } else {
+          StaticValues.pagerMainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              if (StaticValues.pagerMainActivity.listener != null) {
+                StaticValues.pagerMainActivity.listener.updateCommentList();
+              }
+            }
+          });
 
-//        }
+
+        }
 
       }
     }
@@ -130,29 +132,29 @@ public class GcmIntentService extends IntentService {
   }
 
   private void sendNotification(final String notiMsg) {
-//    final String[] _msg_array = notiMsg.split("<@>");
-//    // Message Parsing
-//    final String messageTitle = _msg_array[1].trim();
-//    final String messageContents = _msg_array[2].trim();
-//    mNotificationManager = (NotificationManager)
-//        this.getSystemService(Context.NOTIFICATION_SERVICE);
-//    Intent intent = new Intent(this, AuthCheckActivity.class);
-//    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
-//
-//    NotificationCompat.Builder mBuilder =
-//        new NotificationCompat.Builder(this)
-//            .setSmallIcon(R.drawable.gallery_icon)
-//            .setContentTitle(messageTitle)
-//            .setStyle(new NotificationCompat.BigTextStyle().bigText(messageContents))
-//            .setContentText(messageContents)
-//            .setAutoCancel(true)
-//            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-//
-//    mBuilder.setContentIntent(contentIntent);
-//    mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-//
-//    ///////////////////////////////////
-//    StaticValues.unread_count++;
-//    setBadge(this, StaticValues.unread_count);
+    final String[] _msg_array = notiMsg.split("<@>");
+    // Message Parsing
+    final String messageTitle = _msg_array[1].trim();
+    final String messageContents = _msg_array[2].trim();
+    mNotificationManager = (NotificationManager)
+        this.getSystemService(Context.NOTIFICATION_SERVICE);
+    Intent intent = new Intent(this, AuthCheckActivity.class);
+    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+    NotificationCompat.Builder mBuilder =
+        new NotificationCompat.Builder(this)
+            .setSmallIcon(R.mipmap.icon)
+            .setContentTitle(messageTitle)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(messageContents))
+            .setContentText(messageContents)
+            .setAutoCancel(true)
+            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+    mBuilder.setContentIntent(contentIntent);
+    mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+    ///////////////////////////////////
+    StaticValues.unread_count++;
+    setBadge(this, StaticValues.unread_count);
   }
 }

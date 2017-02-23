@@ -17,12 +17,10 @@ public class TermActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_term);
-    WebView webView = (WebView) findViewById(R.id.webview);
-    webView.setWebViewClient(new WebViewClient());
-    webView.getSettings().setUseWideViewPort(true);
-    webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-    webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-    webView.loadUrl("http://studiogallery.bitlworks.co.kr/term.html");
+    WebView agreementWebView1 = (WebView) findViewById(R.id.webview_agreement1);
+    agreementWebView1.loadUrl("http://wedding.bitlworks.co.kr/wedding/agreement1.html");
+    WebView agreementWebView2 = (WebView) findViewById(R.id.webview_agreement2);
+    agreementWebView2.loadUrl("http://wedding.bitlworks.co.kr/wedding/agreement2.html");
 
     findViewById(R.id.btn_ok).setOnClickListener(new OnClickListener() {
       @Override

@@ -16,6 +16,7 @@ import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.DAOSqlite;
 import com.bitlworks.intlib_music_base.data.DataNetUtils;
 import com.bitlworks.intlib_music_base.data.VOUser;
+import com.bitlworks.intlib_music_base.gcm.GcmRegistration;
 import com.google.gson.JsonObject;
 import com.bitlworks.intlib_bitlworks.CommonUtils;
 
@@ -44,7 +45,7 @@ public class AuthFragment extends Fragment {
 
     String uuid = CommonUtils.getDevicesUUID(getActivity());
     String appver = String.valueOf(CommonUtils.getAppVersion(getActivity()));
-    String regID = CommonUtils.registerGCMid(getActivity(), uuid, appver);
+    String regID = registerGCMid(getActivity(), uuid, appver);
     updateRegid(uuid, appver, regID);
     // TODO: AppVersion 확인 후 다운로드받게 하기
 //    new AlertDialog.Builder(AuthCheckActivity.this)
@@ -65,6 +66,11 @@ public class AuthFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_authcheck, container, false);
+  }
+
+ private String registerGCMid(Context context, String uuid, String appver) {
+    GcmRegistration gr = new GcmRegistration(context);
+    return gr.registerGCM(uuid, appver);
   }
 
   private void startOfflineMode() {
@@ -107,7 +113,7 @@ public class AuthFragment extends Fragment {
 
       @Override
       public void onFailure(Call<JsonObject> call, Throwable t) {
-        Log.e("onFailure", t.getMessage());
+        Log.e("onFailure", "updateRegid: " + t.getMessage());
       }
     });
   }

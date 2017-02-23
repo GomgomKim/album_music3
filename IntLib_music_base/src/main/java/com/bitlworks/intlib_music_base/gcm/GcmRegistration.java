@@ -1,4 +1,4 @@
-package com.bitlworks.intlib_bitlworks.gcm;
+package com.bitlworks.intlib_music_base.gcm;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,7 +19,6 @@ public class GcmRegistration {
   private static final String TAG = "GCMLog";
   private static final String APP_VERSION = "1";
   private static final String GOOGLE_PROJECT_ID = "1043490216464";
-  // server api key = AIzaSyBm8uJapffq_Yu8M3ypjWqNpxWpStiHC4E
   private Context CONTEXT;
   private GoogleCloudMessaging gcm;
   private String regId, uuid, appver;

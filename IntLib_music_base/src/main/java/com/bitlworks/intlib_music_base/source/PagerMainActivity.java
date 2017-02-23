@@ -6,10 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -29,13 +27,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitlworks.intlib_bitlworks.CommonUtils;
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.VOSong;
 import com.bitlworks.intlib_music_base.data.VOdisk;
 import com.bitlworks.intlib_music_base.source.ready.LoadingActivity;
 import com.bitlworks.music_resource_hanyang.AlbumValue;
-import com.bitlworks.intlib_bitlworks.CommonUtils;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 public class PagerMainActivity extends AppCompatActivity implements
@@ -44,9 +42,9 @@ public class PagerMainActivity extends AppCompatActivity implements
     DiskAdapter.AlbumListListener,
     SongAdapter.SongListListener {
 
+  public Listener listener;
   private MusicService musicService;
   private MusicNotification musicNotification;
-  private Listener listener;
   private ImageView playSongButton;
   private SeekBar songProgressBar;
 
@@ -73,7 +71,7 @@ public class PagerMainActivity extends AppCompatActivity implements
       songProgressBar.setProgress(progress);
 
       if (progress == 100) {
-        viewPager.setCurrentItem(StaticValues.playIndex + 1);
+        viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
         return;
       }
       handler.postDelayed(this, 100);
@@ -261,6 +259,7 @@ public class PagerMainActivity extends AppCompatActivity implements
   public void onBackPressed() {
     if (listener != null) {
       listener.onBackPressed();
+      return;
     }
 
     if (songListView.getVisibility() == View.VISIBLE) {
@@ -355,10 +354,9 @@ public class PagerMainActivity extends AppCompatActivity implements
   }
 
 
-
   @Override
   public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-
+    // noting
   }
 
   /**
@@ -378,7 +376,7 @@ public class PagerMainActivity extends AppCompatActivity implements
     int totalDuration = musicService.getDuration();
     int currentPosition = CommonUtils.progressToTimer(seekBar.getProgress(), totalDuration);
     musicService.seekTo(currentPosition);
-    startUpdatingProgress();
+    startUpdatingProgress(false);
   }
 
   private void initActionBar() {
@@ -407,7 +405,7 @@ public class PagerMainActivity extends AppCompatActivity implements
     singerText.setText(song.msg1);
     songMakerText.setText(song.msg2);
     togglePlayerButton(false);
-    startUpdatingProgress();
+    startUpdatingProgress(true);
     musicNotification.updateName(song.song_name);
   }
 
@@ -424,9 +422,11 @@ public class PagerMainActivity extends AppCompatActivity implements
         ? StaticValues.songList.size() + 4 : StaticValues.songList.size() + 5;
   }
 
-  private void startUpdatingProgress() {
-    songProgressBar.setProgress(0);
-    songProgressBar.setMax(100);
+  private void startUpdatingProgress(boolean isReset) {
+    if (isReset) {
+      songProgressBar.setProgress(0);
+      songProgressBar.setMax(100);
+    }
     handler.removeCallbacks(updateProgressRunnable);
     handler.postDelayed(updateProgressRunnable, 100);
   }
@@ -461,7 +461,11 @@ public class PagerMainActivity extends AppCompatActivity implements
 
   @Override
   public void onPageSelected(int position) {
-    if (position == 0 || position == 1 || position == 2 || position == getPageCount() - 2 || position == getPageCount() - 1) {
+    if (position == 0
+        || position == 1
+        || (!AlbumValue.isSingle && position == 2)
+        || position == getPageCount() - 2
+        || position == getPageCount() - 1) {
       songInfoView.setVisibility(View.GONE);
       return;
     }
@@ -491,13 +495,13 @@ public class PagerMainActivity extends AppCompatActivity implements
       final View v;
       if (position == 0) {
         v = new HomeView(PagerMainActivity.this);
-      } else if (position == 1) {
+      } else if (!AlbumValue.isSingle && position == 1) {
         v = new DiskListView(PagerMainActivity.this, PagerMainActivity.this);
-      } else if (position == 2) {
+      } else if ((!AlbumValue.isSingle && position == 2) || (AlbumValue.isSingle && position == 1)) {
         v = new SongListView(PagerMainActivity.this, PagerMainActivity.this, PagerMainActivity.this);
       } else if (position == getPageCount() - 2) {
         v = new CommentView(PagerMainActivity.this);
-        listener = (CommentView) v;
+        listener = (Listener) v;
       } else if (position == getPageCount() - 1) {
         // 설정
         v = new SettingView(PagerMainActivity.this);

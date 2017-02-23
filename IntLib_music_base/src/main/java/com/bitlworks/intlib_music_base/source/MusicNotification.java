@@ -21,10 +21,10 @@ public class MusicNotification {
     this.parent = parent;
     nBuilder = new NotificationCompat.Builder(parent)
         .setContentTitle("Mobile Music")
-        .setSmallIcon(R.drawable.gallery_icon)
+        .setSmallIcon(R.mipmap.icon)
         .setOngoing(true);
 
-    remoteView = new RemoteViews(parent.getPackageName(), R.layout.notificationview);
+    remoteView = new RemoteViews(parent.getPackageName(), R.layout.layout_notification);
     String title = StaticValues.album == null
         ? "앨범 존재하지 않음" : StaticValues.album.album_name;
     remoteView.setTextViewText(R.id.text_album_name, title);
