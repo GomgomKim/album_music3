@@ -70,7 +70,7 @@ public class MusicService extends Service implements
       rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
     }
     rootPath += "bitlworks/mobilemusic/";
-    File file = new File(rootPath + StaticValues.songList.get(index).song_file_name);
+    File file = new File(rootPath + StaticValues.songs.get(index).song_file_name);
     Uri uri = Uri.fromFile(file);
     try {
       mediaPlayer.setDataSource(context, uri);

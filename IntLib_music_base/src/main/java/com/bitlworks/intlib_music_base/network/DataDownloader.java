@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
  * 앨범 데이터를 다운로드 하는 클래스
  * 내부 저장소는 sdcard/bitlworks/mobilemusic를 기본
  **/
-public class DataDownloader { // 일종의 Logic class
+public class DataDownloader {
   public DataDownloader(Context c, final Handler mHandler) {
 
     // 경로 정하기
@@ -36,21 +36,20 @@ public class DataDownloader { // 일종의 Logic class
 
     Message msg = new Message();
     msg.what = 0;
-    msg.arg1 = StaticValues.photoList.size() + StaticValues.songList.size();
+    msg.arg1 = StaticValues.photos.size() + StaticValues.songs.size();
     if (mHandler != null) mHandler.sendMessage(msg);
 
 
-    int firstPhotoCount = 0;
-    for (int i = 0; i < StaticValues.photoList.size(); i++) {
+    for (int i = 0; i < StaticValues.photos.size(); i++) {
       String url = "";
-      if (StaticValues.photoList.get(i).type == 1) {
+      if (StaticValues.photos.get(i).type == 1) {
         url = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/" + StaticValues.selectedDisk.disk_id + "/photo/"
-            + StaticValues.photoList.get(i).photo_file_name;
+            + StaticValues.photos.get(i).photo_file_name;
       } else {
         url = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/disk0/"
-            + StaticValues.photoList.get(i).photo_file_name;
+            + StaticValues.photos.get(i).photo_file_name;
       }
-      String f_name = StaticValues.photoList.get(i).photo_file_name;
+      String f_name = StaticValues.photos.get(i).photo_file_name;
 
       String CurrentString = f_name;
       String[] separated = CurrentString.split("/");
@@ -62,15 +61,13 @@ public class DataDownloader { // 일종의 Logic class
           checkFolder(local_path);
         }
       }
-      final String LocalPath = rootPath + StaticValues.photoList.get(i).photo_file_name;
+      final String LocalPath = rootPath + StaticValues.photos.get(i).photo_file_name;
       executorService.execute(new DownloadRunable(url, LocalPath, mHandler));
-
-      firstPhotoCount++;
 
     }
-    for (int i = 0; i < StaticValues.songList.size(); i++) {
-      String url = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/" + StaticValues.selectedDisk.disk_id + "/mp3/" + StaticValues.songList.get(i).song_file_name;
-      String f_name = StaticValues.songList.get(i).song_file_name;
+    for (int i = 0; i < StaticValues.songs.size(); i++) {
+      String url = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/" + StaticValues.selectedDisk.disk_id + "/mp3/" + StaticValues.songs.get(i).song_file_name;
+      String f_name = StaticValues.songs.get(i).song_file_name;
       String CurrentString = f_name;
       String[] separated = CurrentString.split("/");
       if (separated.length > 1) {
@@ -81,9 +78,8 @@ public class DataDownloader { // 일종의 Logic class
         }
       }
 
-      final String LocalPath = rootPath + StaticValues.songList.get(i).song_file_name;
+      final String LocalPath = rootPath + StaticValues.songs.get(i).song_file_name;
       executorService.execute(new DownloadRunable(url, LocalPath, mHandler));
-      firstPhotoCount++;
     }
 
     executorService.shutdown();

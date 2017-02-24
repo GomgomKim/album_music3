@@ -1,6 +1,5 @@
 package com.bitlworks.intlib_music_base.source.ready;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,18 +12,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitlworks.intlib_bitlworks.CommonUtils;
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.MusicClient;
 import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.DAOSqlite;
-import com.bitlworks.intlib_music_base.data.DataNetUtils;
 import com.bitlworks.intlib_music_base.data.VOAlbum;
 import com.bitlworks.intlib_music_base.data.VOComment;
 import com.bitlworks.intlib_music_base.data.VONewInfo;
-import com.bitlworks.intlib_music_base.data.VOPhotoM;
+import com.bitlworks.intlib_music_base.data.VOPhoto;
 import com.bitlworks.intlib_music_base.data.VOSong;
 import com.bitlworks.intlib_music_base.data.VOVideo;
-import com.bitlworks.intlib_music_base.data.VOdisk;
+import com.bitlworks.intlib_music_base.data.VODisk;
 import com.bitlworks.intlib_music_base.network.DataDownloader;
 import com.bitlworks.intlib_music_base.source.PagerMainActivity;
 import com.bitlworks.music_resource_hanyang.AlbumValue;
@@ -39,17 +38,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-/**
- * 시작시 로딩 클래스 1. 가입 및 인증 작업 : 서버에 인증 요청 / 서버에서 id와 권한 받기 2. 앨범 메타 데이터 확인 및 다운로드
- * 3. wifi 상태 묻고 앨범 사진 & 동영상 데이터 다운로드 4. 오프라인 모드일 경우 처리
- */
-@SuppressLint("HandlerLeak")
 public class LoadingActivity extends Activity {
 
-  TextView tvLog;
-  DAOSqlite sqlDAO;
-  ProgressBar progressBar;
-  boolean isCancel = false;
+  private TextView tvLog;
+  private DAOSqlite sqlDAO;
+  private ProgressBar progressBar;
+  private boolean isCancel = false;
 
   public int downloadedCount = 0;
   public int totalCount = 1;
@@ -63,8 +57,9 @@ public class LoadingActivity extends Activity {
     tvLog = (TextView) findViewById(R.id.tv_log);
     progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
-    if (getIntent().getSerializableExtra("DISK") == null) {
-      if (!DataNetUtils.isNetworkConnect(LoadingActivity.this)) {
+    VODisk disk = (VODisk) getIntent().getSerializableExtra("DISK");
+    if (disk == null) {
+      if (!CommonUtils.isNetworkConnect(LoadingActivity.this)) {
         startOfflineMode();
         return;
       }
@@ -72,13 +67,12 @@ public class LoadingActivity extends Activity {
       return;
     }
 
-    getDiskData((VOdisk) getIntent().getSerializableExtra("DISK"));
+    getDiskData(disk);
   }
 
-  public void getDiskData(VOdisk disk) {
+  public void getDiskData(VODisk disk) {
     StaticValues.selectedDisk = disk;
-    DataNetUtils.setSelectedDiskId(LoadingActivity.this, StaticValues.selectedDisk.disk_id);
-    if (!DataNetUtils.isNetworkConnect(LoadingActivity.this)) {
+    if (!CommonUtils.isNetworkConnect(LoadingActivity.this)) {
       startOfflineMode();
       return;
     }
@@ -109,7 +103,7 @@ public class LoadingActivity extends Activity {
                 object.get("album_invitemsg").getAsString(),
                 object.get("album_inviteurl").getAsString());
             StaticValues.album = album;
-            sqlDAO.insertalbum(StaticValues.album);
+            sqlDAO.insertAlbum(StaticValues.album);
             getComments();
           }
 
@@ -145,8 +139,8 @@ public class LoadingActivity extends Activity {
               comments.add(comment);
             }
 
-            StaticValues.commentList.addAll(comments);
-            sqlDAO.insertcommentList(StaticValues.commentList);
+            StaticValues.comments.addAll(comments);
+            sqlDAO.insertComments(StaticValues.comments);
             getVideos();
           }
 
@@ -182,8 +176,8 @@ public class LoadingActivity extends Activity {
               videos.add(video);
             }
 
-            StaticValues.videoList.addAll(videos);
-            sqlDAO.insertvideoList(StaticValues.videoList);
+            StaticValues.videos.addAll(videos);
+            sqlDAO.insertVideos(StaticValues.videos);
             getNewInfos();
           }
 
@@ -221,7 +215,7 @@ public class LoadingActivity extends Activity {
             }
 
             StaticValues.newInfos.addAll(newInfos);
-            sqlDAO.insertnewInfoList(newInfos);
+            sqlDAO.insertNewInofs(newInfos);
             getDisks();
           }
 
@@ -246,10 +240,10 @@ public class LoadingActivity extends Activity {
           @Override
           public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
             progressDialog.dismiss();
-            ArrayList<VOdisk> disks = new ArrayList<>();
+            ArrayList<VODisk> disks = new ArrayList<>();
             JsonArray array = response.body().getAsJsonArray();
             for (JsonElement object : array) {
-              VOdisk disk = new VOdisk(
+              VODisk disk = new VODisk(
                   object.getAsJsonObject().get("disk_id").getAsInt(),
                   object.getAsJsonObject().get("disk_name").getAsString(),
                   object.getAsJsonObject().get("album_id").getAsInt());
@@ -262,8 +256,8 @@ public class LoadingActivity extends Activity {
               return;
             }
 
-            StaticValues.diskList.addAll(disks);
-            sqlDAO.insertDiskList(StaticValues.diskList);
+            StaticValues.disks.addAll(disks);
+            sqlDAO.insertDisks(StaticValues.disks);
             getDiskData(disks.get(0));
           }
 
@@ -304,9 +298,9 @@ public class LoadingActivity extends Activity {
               songs.add(song);
             }
 
-            StaticValues.songList.clear();
-            StaticValues.songList.addAll(songs);
-            sqlDAO.insertsongList(StaticValues.songList, StaticValues.selectedDisk.disk_id);
+            StaticValues.songs.clear();
+            StaticValues.songs.addAll(songs);
+            sqlDAO.insertSongs(StaticValues.songs, StaticValues.selectedDisk.disk_id);
             getPhotos();
           }
 
@@ -329,10 +323,10 @@ public class LoadingActivity extends Activity {
           @Override
           public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
             progressDialog.dismiss();
-            ArrayList<VOPhotoM> photos = new ArrayList<>();
+            ArrayList<VOPhoto> photos = new ArrayList<>();
             JsonArray array = response.body().getAsJsonArray();
             for (JsonElement object : array) {
-              VOPhotoM photo = new VOPhotoM(
+              VOPhoto photo = new VOPhoto(
                   object.getAsJsonObject().get("photo_id").getAsInt(),
                   object.getAsJsonObject().get("disk_id").getAsInt(),
                   object.getAsJsonObject().get("song_video_id").getAsInt(),
@@ -343,9 +337,9 @@ public class LoadingActivity extends Activity {
               photos.add(photo);
             }
 
-            StaticValues.photoList.clear();
-            StaticValues.photoList.addAll(photos);
-            sqlDAO.insertPhotoMList(StaticValues.photoList, StaticValues.selectedDisk.disk_id, StaticValues.album.album_id);
+            StaticValues.photos.clear();
+            StaticValues.photos.addAll(photos);
+            sqlDAO.insertPhotos(StaticValues.photos, StaticValues.selectedDisk.disk_id, StaticValues.album.album_id);
             new DataDownloader(getApplicationContext(), netHandlerPhotoDonwAfter);
           }
 
@@ -356,7 +350,6 @@ public class LoadingActivity extends Activity {
         }
     );
   }
-
 
 
 
@@ -421,14 +414,14 @@ public class LoadingActivity extends Activity {
 
 
   private void startOfflineMode() {
-
-    StaticValues.user = sqlDAO.getUser();
-    StaticValues.album = sqlDAO.getalbum();
-    StaticValues.photoList = sqlDAO.getphotoList(StaticValues.selectedDisk.disk_id, StaticValues.album.album_id);
-    StaticValues.songList = sqlDAO.getsongList(StaticValues.selectedDisk.disk_id);
-    StaticValues.videoList = sqlDAO.getvideoList(StaticValues.album.album_id);
-    StaticValues.commentList = sqlDAO.getcommentList(StaticValues.album.album_id);
-    StaticValues.singerList = sqlDAO.getsingerList();
+    StaticValues.album = sqlDAO.getAlbum();
+    StaticValues.disks = sqlDAO.getDisks();
+    StaticValues.selectedDisk = StaticValues.disks.get(0);
+    StaticValues.photos = sqlDAO.getPhotos(StaticValues.selectedDisk.disk_id, StaticValues.album.album_id);
+    StaticValues.songs = sqlDAO.getSongs(StaticValues.selectedDisk.disk_id);
+    StaticValues.videos = sqlDAO.getVideos(StaticValues.album.album_id);
+    StaticValues.comments = sqlDAO.getComments(StaticValues.album.album_id);
+    StaticValues.newInfos = sqlDAO.getNewInfos(StaticValues.album.album_id);
 
     nextActivity();
   }
@@ -442,7 +435,6 @@ public class LoadingActivity extends Activity {
   public void onBackPressed() {
     if (isCancel)
       super.onBackPressed();
-    return;
   }
 
   @Override

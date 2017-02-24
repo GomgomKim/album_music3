@@ -31,7 +31,7 @@ import com.bitlworks.intlib_bitlworks.CommonUtils;
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.VOSong;
-import com.bitlworks.intlib_music_base.data.VOdisk;
+import com.bitlworks.intlib_music_base.data.VODisk;
 import com.bitlworks.intlib_music_base.source.ready.LoadingActivity;
 import com.bitlworks.music_resource_hanyang.AlbumValue;
 import com.tsengvn.typekit.TypekitContextWrapper;
@@ -103,7 +103,7 @@ public class PagerMainActivity extends AppCompatActivity implements
       }
 
       if (intent.getAction().equals("next")) {
-        if (StaticValues.playIndex == StaticValues.songList.size() - 1) {
+        if (StaticValues.playIndex == StaticValues.songs.size() - 1) {
           return;
         }
         viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
@@ -127,14 +127,14 @@ public class PagerMainActivity extends AppCompatActivity implements
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     setContentView(R.layout.activity_mainpager);
 
-    if (StaticValues.songList.size() == 0) {
+    if (StaticValues.songs.size() == 0) {
       finish();
     }
 
     musicService = new MusicService(this);
     musicService.startMusic(0);
     musicNotification = new MusicNotification(this);
-    musicNotification.updateName(StaticValues.songList.get(0).song_name);
+    musicNotification.updateName(StaticValues.songs.get(0).song_name);
 
     IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction("play");
@@ -171,7 +171,7 @@ public class PagerMainActivity extends AppCompatActivity implements
     findViewById(R.id.song_button_next).setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (StaticValues.playIndex == StaticValues.songList.size() - 1) {
+        if (StaticValues.playIndex == StaticValues.songs.size() - 1) {
           return;
         }
         viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
@@ -213,7 +213,7 @@ public class PagerMainActivity extends AppCompatActivity implements
     songListView = findViewById(R.id.view_song_list);
     ListView songList = (ListView) findViewById(R.id.list_song);
     songListView.setVisibility(View.INVISIBLE);
-    SongAdapter songAdapter = new SongAdapter(PagerMainActivity.this, StaticValues.songList);
+    SongAdapter songAdapter = new SongAdapter(PagerMainActivity.this, StaticValues.songs);
     songAdapter.setListener(this);
     songList.setAdapter(songAdapter);
     ImageView songListImage = (ImageView) findViewById(R.id.image_song_list);
@@ -329,7 +329,7 @@ public class PagerMainActivity extends AppCompatActivity implements
   }
 
   @Override
-  public void onClickDisk(VOdisk disk) {
+  public void onClickDisk(VODisk disk) {
     int id = disk.disk_id;
     if (id == StaticValues.selectedDisk.disk_id) {
       Toast.makeText(this, "이미 선택된 디스크입니다.", Toast.LENGTH_SHORT).show();
@@ -398,7 +398,7 @@ public class PagerMainActivity extends AppCompatActivity implements
     lyricsView.setVisibility(View.GONE);
     songListView.setVisibility(View.GONE);
 
-    VOSong song = StaticValues.songList.get(songIndex);
+    VOSong song = StaticValues.songs.get(songIndex);
     songNameText.setText(song.song_name);
     lyrics.setText(song.song_lyric);
     lyricSongNameText.setText(song.song_name);
@@ -419,7 +419,7 @@ public class PagerMainActivity extends AppCompatActivity implements
 
   private int getPageCount() {
     return AlbumValue.isSingle
-        ? StaticValues.songList.size() + 4 : StaticValues.songList.size() + 5;
+        ? StaticValues.songs.size() + 4 : StaticValues.songs.size() + 5;
   }
 
   private void startUpdatingProgress(boolean isReset) {

@@ -22,11 +22,11 @@ public class MusicView extends LinearLayout {
 
     String in_file = "";
     int check_count = 0;
-    for (int i = 0; i < StaticValues.photoList.size(); i++) {
-      if (StaticValues.photoList.get(i).type == 1) {
+    for (int i = 0; i < StaticValues.photos.size(); i++) {
+      if (StaticValues.photos.get(i).type == 1) {
         //check_count++;
         if (check_count == index) {
-          in_file = StaticValues.photoList.get(i).photo_file_name;
+          in_file = StaticValues.photos.get(i).photo_file_name;
           break;
         }
         check_count++;

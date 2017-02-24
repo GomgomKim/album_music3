@@ -46,9 +46,9 @@ public class CommentView extends LinearLayout implements
     addView(v);
 
     String in_file = "";
-    for (int i = 0; i < StaticValues.photoList.size(); i++) {
-      if (StaticValues.photoList.get(i).type == 3 && StaticValues.photoList.get(i).photo_order == 4) {
-        in_file = StaticValues.photoList.get(i).photo_file_name;
+    for (int i = 0; i < StaticValues.photos.size(); i++) {
+      if (StaticValues.photos.get(i).type == 3 && StaticValues.photos.get(i).photo_order == 4) {
+        in_file = StaticValues.photos.get(i).photo_file_name;
         break;
       }
     }
@@ -58,7 +58,7 @@ public class CommentView extends LinearLayout implements
     }
     rootPath += "bitlworks/";
     rootPath += "mobilemusic/";
-    final String LocalPath = rootPath + in_file;// StaticValues.photoList.get(0).photo_file_name;
+    final String LocalPath = rootPath + in_file;// StaticValues.photos.get(0).photo_file_name;
     File file = new File(LocalPath);
     Drawable d = Drawable.createFromPath(file.getAbsolutePath());
     v.setBackground(d);
@@ -86,7 +86,7 @@ public class CommentView extends LinearLayout implements
     });
 
     final ListView commentListView = (ListView) findViewById(R.id.lv_comments);
-    commentAdapter = new CommentAdapter(getContext(), StaticValues.commentList);
+    commentAdapter = new CommentAdapter(getContext(), StaticValues.comments);
     commentAdapter.setListener(this);
     commentListView.setAdapter(commentAdapter);
 
@@ -161,7 +161,7 @@ public class CommentView extends LinearLayout implements
               comments.add(comment);
             }
 
-            StaticValues.commentList.addAll(comments);
+            StaticValues.comments.addAll(comments);
             commentAdapter.notifyDataSetChanged();
           }
 
@@ -197,7 +197,7 @@ public class CommentView extends LinearLayout implements
               comments.add(comment);
             }
 
-            StaticValues.commentList.addAll(comments);
+            StaticValues.comments.addAll(comments);
             commentAdapter.notifyDataSetChanged();
           }
 
@@ -233,7 +233,7 @@ public class CommentView extends LinearLayout implements
               comments.add(comment);
             }
 
-            StaticValues.commentList.addAll(comments);
+            StaticValues.comments.addAll(comments);
             commentAdapter.notifyDataSetChanged();
           }
 

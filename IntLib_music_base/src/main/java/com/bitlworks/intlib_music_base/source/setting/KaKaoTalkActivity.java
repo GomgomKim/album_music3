@@ -1,7 +1,6 @@
 package com.bitlworks.intlib_music_base.source.setting;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,9 +37,9 @@ public class KaKaoTalkActivity extends Activity {
 
     final ImageView imagePhoto = (ImageView) findViewById(R.id.iv_photo);
     String in_file = "";
-    for (int i = 0; i < StaticValues.photoList.size(); i++) {
-      if (StaticValues.photoList.get(i).type == 3 && StaticValues.photoList.get(i).photo_order == 100) {
-        in_file = StaticValues.photoList.get(i).photo_file_name;
+    for (int i = 0; i < StaticValues.photos.size(); i++) {
+      if (StaticValues.photos.get(i).type == 3 && StaticValues.photos.get(i).photo_order == 100) {
+        in_file = StaticValues.photos.get(i).photo_file_name;
         break;
       }
     }

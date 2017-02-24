@@ -20,7 +20,7 @@ public class DiskListView extends LinearLayout {
 
     ListView diskListView = (ListView) findViewById(R.id.list_disk);
     DiskAdapter adapter =
-        new DiskAdapter(getContext(), StaticValues.diskList, DiskAdapter.IMAGE_TYPE.LARGE);
+        new DiskAdapter(getContext(), StaticValues.disks, DiskAdapter.IMAGE_TYPE.LARGE);
     adapter.setListener(listener);
     diskListView.setAdapter(adapter);
   }

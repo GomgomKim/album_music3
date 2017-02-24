@@ -14,7 +14,6 @@ import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.MusicClient;
 import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.DAOSqlite;
-import com.bitlworks.intlib_music_base.data.DataNetUtils;
 import com.bitlworks.intlib_music_base.data.VOUser;
 import com.bitlworks.intlib_music_base.gcm.GcmRegistration;
 import com.google.gson.JsonObject;
@@ -38,7 +37,7 @@ public class AuthFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sqlDAO = DAOSqlite.getInstance(getActivity());
-    if (!DataNetUtils.isNetworkConnect(getActivity())) {
+    if (!CommonUtils.isNetworkConnect(getActivity())) {
       startOfflineMode();
       return;
     }
@@ -75,11 +74,6 @@ public class AuthFragment extends Fragment {
 
   private void startOfflineMode() {
     StaticValues.user = sqlDAO.getUser();
-    StaticValues.album = sqlDAO.getalbum();
-    StaticValues.diskList = sqlDAO.getdiskList();
-    StaticValues.selectedDisk = StaticValues.diskList.get(0);
-    DataNetUtils.setSelectedDiskId(getActivity(), StaticValues.selectedDisk.disk_id);
-
     listener.finishAuth();
   }
 

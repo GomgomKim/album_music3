@@ -92,15 +92,6 @@ public class AuthCheckActivity extends Activity implements
       @Override
       public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
         progressDialog.dismiss();
-        if (response.body().equals("1")) {
-          Toast.makeText(
-              AuthCheckActivity.this,
-              "닉네임이 중복됩니다. 다른 닉네임을 사용해 주세요.",
-              Toast.LENGTH_SHORT)
-              .show();
-          return;
-        }
-
         StaticValues.user.user_name = name;
         Intent i = new Intent(AuthCheckActivity.this, AuthCheckActivity.class);
         startActivity(i);

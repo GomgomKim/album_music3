@@ -23,9 +23,9 @@ public class HomeView extends LinearLayout {
 
     ImageView homeImage = (ImageView) v.findViewById(R.id.image_home);
     String in_file = "";
-    for (int i = 0; i < StaticValues.photoList.size(); i++) {
-      if (StaticValues.photoList.get(i).type == 3 && StaticValues.photoList.get(i).photo_order == 1) {
-        in_file = StaticValues.photoList.get(i).photo_file_name;
+    for (int i = 0; i < StaticValues.photos.size(); i++) {
+      if (StaticValues.photos.get(i).type == 3 && StaticValues.photos.get(i).photo_order == 1) {
+        in_file = StaticValues.photos.get(i).photo_file_name;
         break;
       }
     }

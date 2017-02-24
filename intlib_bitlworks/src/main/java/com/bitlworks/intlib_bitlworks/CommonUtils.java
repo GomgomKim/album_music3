@@ -132,94 +132,6 @@ public class CommonUtils {
   }
 
 
-  /**
-   * 프리퍼런스 getter
-   **/
-  public static String getStringPref(Context context, String name, String def) {
-    SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-    return prefs.getString(name, def);
-  }
-
-  /**
-   * 프리퍼런스 setter
-   **/
-  public static void setStringPref(Context context, String name, String value) {
-    SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-    Editor ed = prefs.edit();
-    ed.putString(name, value);
-    ed.commit();
-  }
-
-  /**
-   * SharedPreferences에 내 아이디 getter
-   **/
-  public static int getMyID(Context context) {
-    return Integer.parseInt(
-        getStringPref(context, "USER_ID", "-1"));
-  }
-
-  /**
-   * SharedPreferences에 내 아이디 setter
-   **/
-  public static void setMyID(Context context, int no) {
-    setStringPref(context, "USER_ID", no + "");
-  }
-
-
-  /**
-   * 내부 저장 경로 자동으로 만들어주는 메소드
-   **/
-  public static String getInternalStorePath() {
-    // 경로 정하기
-    String rootPath = "/mnt/sdcard/";
-    // 내부 저장소 경로 구하기
-    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-      rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
-    }
-    // 폴더 존재 확인 및 생성
-    rootPath += "bitlworks/studiogallery";
-    return rootPath;
-  }
-
-  /**
-   * 인터넷에 연결되어 있나?
-   **/
-  public static boolean isNetworkConnect(Activity a) {
-    ConnectivityManager connect = (ConnectivityManager) a.getSystemService(Context.CONNECTIVITY_SERVICE);
-    if (connect.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) == null) {
-      if (connect.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == State.CONNECTED) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if (connect.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == State.CONNECTED ||
-          connect.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == State.CONNECTED) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  /**
-   * 유니크한 ID 맹글기
-   **/
-  public static String getDevicesUUID(Context mContext) {
-    final TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-
-    final String tmDevice, tmSerial, androidId;
-    tmDevice = "" + tm.getDeviceId();
-    tmSerial = "" + tm.getSimSerialNumber();
-    androidId = "" + android.provider.Settings.Secure.getString(mContext.getContentResolver(),
-        android.provider.Settings.Secure.ANDROID_ID);
-
-    UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-    String deviceId = deviceUuid.toString();
-
-    return deviceId;
-  }
-
   public static String getMyNumber(Context context, String string) {
     String res = "";
     TelephonyManager telephone = (TelephonyManager) context.getSystemService("phone");
@@ -239,13 +151,108 @@ public class CommonUtils {
     return res;
   }
 
+  /**
+   * 인증 확인 : 프리퍼런스에 저장된 값을 찾아온다
+   **/
+  public static boolean isAuthCreated(Context context) {
+    String id = getStringPref(context, "User.id", null);
+    if (id != null)
+      return true;
+    return false;
+  }
+
+  /**
+   * 인증 생성 : 프리퍼런스에 값을 저장한다
+   **/
+  public static void createAuth(Context context, String id, String mobile) {
+    setStringPref(context, "USER_ID", id);
+    setStringPref(context, "USER_MOBILE", mobile);
+  }
+
+  /**
+   * 프리퍼런스 getter
+   **/
+  public static String getStringPref(Context context, String name, String def) {
+    SharedPreferences prefs = context.getSharedPreferences(
+        context.getPackageName(), Context.MODE_PRIVATE);
+    return prefs.getString(name, def);
+  }
+
+  /**
+   * 프리퍼런스 setter
+   **/
+  public static void setStringPref(Context context, String name, String value) {
+    SharedPreferences prefs = context.getSharedPreferences(
+        context.getPackageName(), Context.MODE_PRIVATE);
+    Editor ed = prefs.edit();
+    ed.putString(name, value);
+    ed.commit();
+  }
+
+  /**
+   * SharedPreferences에 내 아이디 getter
+   **/
+  public static int getMyID(Context context) {
+    return Integer.parseInt(getStringPref(context, "USER_ID", "-1"));
+  }
+
+  /**
+   * SharedPreferences에 내 아이디 setter
+   **/
+  public static void setMyID(Context context, int no) {
+    setStringPref(context, "USER_ID", no + "");
+  }
+
+  /**
+   * 내부 저장 경로 자동으로 만들어주는 메소드
+   **/
+  public static String getInternalStorePath() {
+    // 경로 정하기
+    String rootPath = "/mnt/sdcard/";
+    // 내부 저장소 경로 구하기
+    if (Environment.getExternalStorageState().equals(
+        Environment.MEDIA_MOUNTED)) {
+      rootPath = Environment.getExternalStorageDirectory()
+          .getAbsolutePath() + "/";
+    }
+    // 폴더 존재 확인 및 생성
+    rootPath += "bitlworks/wedding/";
+    return rootPath;
+  }
+
+  /**
+   * 인터넷에 연결되어 있나?
+   **/
+  public static boolean isNetworkConnect(Activity a) {
+    ConnectivityManager connect = (ConnectivityManager) a
+        .getSystemService(Context.CONNECTIVITY_SERVICE);
+    if (connect.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) == null) {
+      if (connect.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+          .getState() == State.CONNECTED) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (connect.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+          .getState() == State.CONNECTED
+          || connect.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+          .getState() == State.CONNECTED) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+
   public static void setLatestInstallableVersion(Context context,
                                                  String version) {
-    setStringPref(context, "version", version);
+    setStringPref(context, "VERSION", version);
   }
 
   public static String getLatestInstallableVersion(Context context) {
-    return getStringPref(context, "version", "1.0");
+    return getStringPref(context, "VERSION", "1.0");
   }
 
   public static String getAppVersionName(Context context) {
@@ -268,12 +275,22 @@ public class CommonUtils {
     }
   }
 
-
   /**
-   * API KEY
+   * 유니크한 ID 맹글기
    **/
-  public static String getApikey(Context c) {
-    return getDevicesUUID(c);
+  public static String getDevicesUUID(Context mContext) {
+    final TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+
+    final String tmDevice, tmSerial, androidId;
+    tmDevice = "" + tm.getDeviceId();
+    tmSerial = "" + tm.getSimSerialNumber();
+    androidId = "" + android.provider.Settings.Secure.getString(mContext.getContentResolver(),
+        android.provider.Settings.Secure.ANDROID_ID);
+
+    UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+    String deviceId = deviceUuid.toString();
+
+    return deviceId;
   }
 
 }

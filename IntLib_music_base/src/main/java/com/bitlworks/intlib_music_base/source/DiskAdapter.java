@@ -9,15 +9,15 @@ import android.widget.ImageView;
 
 
 import com.bitlworks.intlib_music_base.R;
-import com.bitlworks.intlib_music_base.data.VOdisk;
+import com.bitlworks.intlib_music_base.data.VODisk;
 
 import java.util.ArrayList;
 
 
-public class DiskAdapter extends ArrayAdapter<VOdisk> {
+public class DiskAdapter extends ArrayAdapter<VODisk> {
 
   public interface AlbumListListener {
-    void onClickDisk(VOdisk disk);
+    void onClickDisk(VODisk disk);
   }
 
   public enum IMAGE_TYPE {
@@ -30,7 +30,7 @@ public class DiskAdapter extends ArrayAdapter<VOdisk> {
   private AlbumListListener listener;
   private IMAGE_TYPE imageType;
 
-  public DiskAdapter(Context context, ArrayList<VOdisk> arrayList, IMAGE_TYPE imageType) {
+  public DiskAdapter(Context context, ArrayList<VODisk> arrayList, IMAGE_TYPE imageType) {
     super(context, 0, arrayList);
     this.inflater = LayoutInflater.from(context);
     this.imageType = imageType;
@@ -55,7 +55,7 @@ public class DiskAdapter extends ArrayAdapter<VOdisk> {
       viewHolder = (ViewHolder) convertView.getTag();
     }
 
-    final VOdisk item = getItem(position);
+    final VODisk item = getItem(position);
     int drawableId;
     if (imageType == IMAGE_TYPE.LARGE) {
       switch (position) {
@@ -104,7 +104,7 @@ public class DiskAdapter extends ArrayAdapter<VOdisk> {
   }
 
   @Override
-  public VOdisk getItem(int position) {
+  public VODisk getItem(int position) {
     return super.getItem(position);
   }
 

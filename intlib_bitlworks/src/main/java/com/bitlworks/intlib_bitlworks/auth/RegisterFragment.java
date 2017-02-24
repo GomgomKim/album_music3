@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.bitlworks.intlib_bitlworks.CommonUtils;
 import com.bitlworks.intlib_bitlworks.R;
+import com.bitlworks.intlib_bitlworks.StaticValues;
 
 import java.util.Random;
 
@@ -43,6 +44,7 @@ public class RegisterFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    StaticValues.registerFragment = this;
   }
 
   @Override

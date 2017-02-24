@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
-import com.bitlworks.intlib_music_base.data.VOdisk;
+import com.bitlworks.intlib_music_base.data.VODisk;
 
 import java.util.ArrayList;
 
@@ -42,8 +42,8 @@ public class SongListView extends LinearLayout {
 
     ListView diskListView = (ListView) findViewById(R.id.list_disk);
 
-    ArrayList<VOdisk> otherDiskList = new ArrayList<>();
-    for (VOdisk disk : StaticValues.diskList) {
+    ArrayList<VODisk> otherDiskList = new ArrayList<>();
+    for (VODisk disk : StaticValues.disks) {
       if (disk.disk_id == StaticValues.selectedDisk.disk_id) {
         continue;
       }
@@ -55,7 +55,7 @@ public class SongListView extends LinearLayout {
     diskListView.setAdapter(diskAdapter);
 
     ListView songListView = (ListView) findViewById(R.id.list_song);
-    SongAdapter songAdapter = new SongAdapter(getContext(), StaticValues.songList);
+    SongAdapter songAdapter = new SongAdapter(getContext(), StaticValues.songs);
     songAdapter.setListener(songListListener);
     songListView.setAdapter(songAdapter);
   }
