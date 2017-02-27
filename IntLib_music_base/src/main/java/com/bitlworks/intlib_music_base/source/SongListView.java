@@ -25,10 +25,9 @@ public class SongListView extends LinearLayout {
 
   private void initView(DiskAdapter.AlbumListListener albumListListener,
                         SongAdapter.SongListListener songListListener) {
-    String infService = Context.LAYOUT_INFLATER_SERVICE;
-    LayoutInflater li = (LayoutInflater) getContext().getSystemService(infService);
-    View v = li.inflate(R.layout.layout_song_list, this, false);
-    addView(v);
+
+    LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View v = li.inflate(R.layout.layout_song_list, this, true);
 
     ImageView selectedDiskImage = (ImageView) v.findViewById(R.id.image_selected_disk);
     String diskName = StaticValues.selectedDisk.disk_name;

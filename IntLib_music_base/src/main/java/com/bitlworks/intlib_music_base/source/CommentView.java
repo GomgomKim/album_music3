@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bitlworks.intlib_music_base.MusicClient;
+import com.bitlworks.intlib_music_base.MusicUtils;
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.VOComment;
@@ -36,14 +37,8 @@ public class CommentView extends LinearLayout implements
 
   public CommentView(Context context) {
     super(context);
-    initView();
-  }
-
-  private void initView() {
-    String infService = Context.LAYOUT_INFLATER_SERVICE;
-    LayoutInflater li = (LayoutInflater) getContext().getSystemService(infService);
-    View v = li.inflate(R.layout.layout_comment, this, false);
-    addView(v);
+    LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View v = li.inflate(R.layout.layout_comment, this, true);
 
     String in_file = "";
     for (int i = 0; i < StaticValues.photos.size(); i++) {
@@ -52,12 +47,7 @@ public class CommentView extends LinearLayout implements
         break;
       }
     }
-    String rootPath = "/mnt/sdcard/";
-    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-      rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
-    }
-    rootPath += "bitlworks/";
-    rootPath += "mobilemusic/";
+    String rootPath = MusicUtils.getAlbumPath(context);
     final String LocalPath = rootPath + in_file;// StaticValues.photos.get(0).photo_file_name;
     File file = new File(LocalPath);
     Drawable d = Drawable.createFromPath(file.getAbsolutePath());
@@ -91,11 +81,8 @@ public class CommentView extends LinearLayout implements
     commentListView.setAdapter(commentAdapter);
 
     final EditText nameEditText = (EditText) v.findViewById(R.id.edittext_name);
-//    nameEditText.setTypeface(ff2);
-
     nameEditText.setText("");
     final EditText commentEditText = (EditText) v.findViewById(R.id.edittext_comment);
-//    commentEditText.setTypeface(ff2);
     v.findViewById(R.id.button_send).setOnClickListener(new OnClickListener() {
 
       @Override

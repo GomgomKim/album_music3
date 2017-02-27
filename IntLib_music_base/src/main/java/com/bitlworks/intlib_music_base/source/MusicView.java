@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bitlworks.intlib_music_base.MusicUtils;
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
 
@@ -33,13 +34,7 @@ public class MusicView extends LinearLayout {
       }
     }
 
-    String rootPath = "/mnt/sdcard/";
-    // 내부 저장소 경로 구하기
-    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-      rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
-    }
-    // 폴더 존재 확인 및 생성
-    rootPath += "bitlworks/mobilemusic/";
+    String rootPath = MusicUtils.getAlbumPath(context);
     final String LocalPath = rootPath + in_file;
     File file = new File(LocalPath);
     Uri uri = Uri.fromFile(file);

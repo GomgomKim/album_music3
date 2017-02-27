@@ -1,9 +1,12 @@
 package com.bitlworks.intlib_music_base.source.ready;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +21,10 @@ import com.bitlworks.music_resource_hanyang.AlbumValue;
 import com.google.gson.JsonObject;
 import com.bitlworks.intlib_bitlworks.CommonUtils;
 import com.bitlworks.intlib_bitlworks.auth.RegisterFragment;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +38,29 @@ public class AuthCheckActivity extends Activity implements
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_authcheck);
+    new TedPermission(this)
+        .setPermissionListener(new PermissionListener() {
+          @Override
+          public void onPermissionGranted() {
+          }
+
+          @Override
+          public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            new AlertDialog.Builder(AuthCheckActivity.this)
+                .setTitle("앱 종료")
+                .setMessage("권한이 설정되지 않아 앱을 종료합니다.")
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                    AuthCheckActivity.this.finish();
+                  }
+                })
+                .create().show();
+          }
+        })
+        .setDeniedMessage("권한 거부 시 앱을 사용할 수 없습니다.\n\n권한을 변경해주세요 [Setting] > [Permission]")
+        .setPermissions(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE)
+        .check();
 
     int userId = CommonUtils.getMyID(AuthCheckActivity.this);
     if (userId < 1) {
