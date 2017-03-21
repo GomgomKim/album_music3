@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,7 +27,7 @@ import com.bitlworks.intlib_music_base.data.VOVideo;
 import com.bitlworks.intlib_music_base.data.VODisk;
 import com.bitlworks.intlib_music_base.network.DataDownloader;
 import com.bitlworks.intlib_music_base.source.PagerMainActivity;
-import com.bitlworks.music_resource_hanyang.AlbumValue;
+import com.bitlworks.music_resource.AlbumValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -45,8 +46,6 @@ public class LoadingActivity extends Activity {
   private ProgressBar progressBar;
   private boolean isCancel = false;
 
-  public int downloadedCount = 0;
-  public int totalCount = 1;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +100,13 @@ public class LoadingActivity extends Activity {
                 object.get("album_intro").getAsString(),
                 object.get("album_time").getAsString(),
                 object.get("album_invitemsg").getAsString(),
-                object.get("album_inviteurl").getAsString());
+                object.get("album_inviteurl").getAsString(),
+                object.get("album_cover_name").getAsString(),
+                object.get("album_disk_bg_name").getAsString(),
+                object.get("album_title_image").getAsString(),
+                object.get("album_main_image").getAsString(),
+                Color.parseColor(object.get("album_primary_color").getAsString())
+            );
             StaticValues.album = album;
             sqlDAO.insertAlbum(StaticValues.album);
             getComments();
@@ -359,6 +364,8 @@ public class LoadingActivity extends Activity {
   Handler netHandlerPhotoDonwAfter = new Handler() {
     private final String LOG_TAG_NAVI = "<netHandlerPhotoDonwAfter.Handler>";
 
+    public int downloadedCount = 0;
+    public int totalCount = 1;
 
     public void handleMessage(Message msg) {
       Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " handleMessage()");

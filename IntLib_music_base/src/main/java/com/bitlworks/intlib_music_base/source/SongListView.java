@@ -20,11 +20,6 @@ public class SongListView extends LinearLayout {
                       DiskAdapter.AlbumListListener albumListListener,
                       SongAdapter.SongListListener songListListener) {
     super(context);
-    initView(albumListListener, songListListener);
-  }
-
-  private void initView(DiskAdapter.AlbumListListener albumListListener,
-                        SongAdapter.SongListListener songListListener) {
 
     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = li.inflate(R.layout.layout_song_list, this, true);

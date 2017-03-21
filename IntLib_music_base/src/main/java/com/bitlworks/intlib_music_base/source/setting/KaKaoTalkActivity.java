@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
-import com.bitlworks.music_resource_hanyang.AlbumValue;
+import com.bitlworks.music_resource.AlbumValue;
 import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;

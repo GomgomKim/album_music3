@@ -31,7 +31,6 @@ public class SmsReceiver  extends BroadcastReceiver {
             .createFromPdu((byte[]) pdusObj[i]);
         final String str = smsMessages[i].getMessageBody();
         StaticValues.registerFragment.reciveSMS(str);
-        StaticValues.registerFragment.getActivity().unregisterReceiver(this);
       }
     } // end if
   } // end onReceive();

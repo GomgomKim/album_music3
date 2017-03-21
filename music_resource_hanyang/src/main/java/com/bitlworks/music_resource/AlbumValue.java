@@ -1,4 +1,4 @@
-package com.bitlworks.music_resource_hanyang;
+package com.bitlworks.music_resource;
 
 public class AlbumValue {
   public static final int album_id = 7;

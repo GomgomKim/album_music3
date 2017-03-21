@@ -10,14 +10,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.MusicClient;
 import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.DAOSqlite;
 import com.bitlworks.intlib_music_base.data.VOUser;
-import com.bitlworks.music_resource_hanyang.AlbumValue;
+import com.bitlworks.music_resource.AlbumValue;
 import com.google.gson.JsonObject;
 import com.bitlworks.intlib_bitlworks.CommonUtils;
 import com.bitlworks.intlib_bitlworks.auth.RegisterFragment;

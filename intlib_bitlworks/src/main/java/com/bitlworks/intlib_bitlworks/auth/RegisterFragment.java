@@ -1,8 +1,11 @@
 package com.bitlworks.intlib_bitlworks.auth;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -18,7 +21,10 @@ import android.widget.Toast;
 import com.bitlworks.intlib_bitlworks.CommonUtils;
 import com.bitlworks.intlib_bitlworks.R;
 import com.bitlworks.intlib_bitlworks.StaticValues;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class RegisterFragment extends Fragment {
@@ -68,10 +74,36 @@ public class RegisterFragment extends Fragment {
       }
     });
 
-
     final EditText mobileEditText = (EditText) view.findViewById(R.id.edittext_mobile);
-    mobile = CommonUtils.getMyNumber(getActivity(), "");
-    mobileEditText.setText(mobile);
+    new TedPermission(getActivity())
+        .setPermissionListener(new PermissionListener() {
+          @Override
+          public void onPermissionGranted() {
+            mobile = CommonUtils.getMyNumber(getActivity(), "");
+            mobileEditText.setText(mobile);
+          }
+
+          @Override
+          public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            new AlertDialog.Builder(getActivity())
+                .setTitle("앱 종료")
+                .setMessage("권한이 설정되지 않아 앱을 종료합니다.")
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                    System.exit(0);
+                  }
+                })
+                .create().show();
+          }
+        })
+        .setDeniedMessage("권한 거부 시 앱을 사용할 수 없습니다.\n\n권한을 변경해주세요 [Setting] > [Permission]")
+        .setPermissions(
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.READ_SMS
+        ).check();
     // TODO: 전화번호를 자동으로 가져오지 못한 경우에 email 인증 선택 기능 필요함!!
 
     TextView detailText = (TextView) view.findViewById(R.id.text_detail);
@@ -223,7 +255,11 @@ public class RegisterFragment extends Fragment {
   @Override
   public void onDetach() {
     super.onDetach();
+    StaticValues.registerFragment = null;
     listener = null;
+    if (mSmsReceiver != null) {
+      getActivity().unregisterReceiver(mSmsReceiver);
+    }
   }
 
   /**
@@ -247,14 +283,13 @@ public class RegisterFragment extends Fragment {
   private void sendSMS(String mobile, String message) {
     android.telephony.SmsManager smsManager = android.telephony.SmsManager
         .getDefault();
-    String sendTo = mobile;
-    smsManager.sendTextMessage(sendTo, null, message, null, null);
+    smsManager.sendTextMessage(mobile, null, message, null, null);
   }
 
-  public void reciveSMS(String str) {
+  public void reciveSMS(String sms) {
     if (REGISTER_STEP == FLAG_STEP03 && smsEditText != null) {
-      if (str != null && str.equals(smsAthuMessage)) {
-        smsEditText.setText(str);
+      if (sms != null && sms.equals(smsAthuMessage)) {
+        smsEditText.setText(sms);
       }
     }
   }

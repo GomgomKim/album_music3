@@ -33,7 +33,7 @@ import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.VOSong;
 import com.bitlworks.intlib_music_base.data.VODisk;
 import com.bitlworks.intlib_music_base.source.ready.LoadingActivity;
-import com.bitlworks.music_resource_hanyang.AlbumValue;
+import com.bitlworks.music_resource.AlbumValue;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 public class PagerMainActivity extends AppCompatActivity implements
