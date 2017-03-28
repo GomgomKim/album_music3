@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/playlist_b_background"
                 android:padding="8dp">
 
     <LinearLayout
@@ -24,7 +23,6 @@
             android:layout_width="320dp"
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
-            android:background="@drawable/playlist_b_background_songname"
             android:divider="@null"
             android:padding="10dp"/>
 

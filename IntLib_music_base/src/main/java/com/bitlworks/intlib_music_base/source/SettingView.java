@@ -2,16 +2,22 @@ package com.bitlworks.intlib_music_base.source;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitlworks.intlib_bitlworks.setting.CSActivity;
+import com.bitlworks.intlib_music_base.MusicUtils;
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.source.setting.NewInfoActivity;
 import com.bitlworks.intlib_music_base.source.setting.ProInviteDialog;
+
+import java.io.File;
 
 public class SettingView extends LinearLayout {
 
@@ -19,6 +25,20 @@ public class SettingView extends LinearLayout {
     super(context);
     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = li.inflate(R.layout.layout_setting, this, true);
+
+    File file = new File(MusicUtils.getAlbumPath(context) + "metadata/" + StaticValues.metadata.setting_bg);
+    Drawable d = Drawable.createFromPath(file.getAbsolutePath());
+    v.setBackground(d);
+
+    ImageView titleImage = (ImageView) v.findViewById(R.id.image_title);
+    File titleFile = new File(MusicUtils.getAlbumPath(context) + "metadata/" + StaticValues.metadata.title_image);
+    titleImage.setImageURI(Uri.fromFile(titleFile));
+    titleImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
+    ImageView mainImage = (ImageView) v.findViewById(R.id.image_main);
+    File mainFile = new File(MusicUtils.getAlbumPath(context) + "metadata/" + StaticValues.metadata.main_image);
+    mainImage.setImageURI(Uri.fromFile(mainFile));
+    mainImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
     TextView albumIntroText = (TextView) findViewById(R.id.text_album_intro);
     albumIntroText.setText(StaticValues.album.album_intro);
@@ -31,6 +51,7 @@ public class SettingView extends LinearLayout {
         getContext().startActivity(i);
       }
     });
+    newInfoText.setBackgroundColor(StaticValues.metadata.color);
 
     TextView inviteText = (TextView) v.findViewById(R.id.text_invite);
     inviteText.setOnClickListener(new OnClickListener() {
@@ -40,6 +61,7 @@ public class SettingView extends LinearLayout {
         dialog.show();
       }
     });
+    inviteText.setBackgroundColor(StaticValues.metadata.color);
 
     TextView customerCenterText = (TextView) v.findViewById(R.id.text_customer_center);
     customerCenterText.setOnClickListener(new OnClickListener() {
@@ -49,45 +71,6 @@ public class SettingView extends LinearLayout {
         getContext().startActivity(i);
       }
     });
-  }
-
-  private void initView() {
-//    TextView album_time = (TextView) findViewById(R.id.album_time);
-////    album_time.setTypeface(tf);
-//    album_time.setText(StaticValues.album.album_time);
-//
-//    TextView album_type_c = (TextView) findViewById(R.id.album_type_c);
-////    album_type_c.setTypeface(tf);
-//    album_type_c.setText(StaticValues.album.album_type);
-//
-//    TextView album_type = (TextView) findViewById(R.id.album_type);
-////    album_type.setTypeface(tf);
-//    album_type.setText("앨범유형");
-//
-//    TextView album_song_type_c = (TextView) findViewById(R.id.album_song_type_c);
-////    album_song_type_c.setTypeface(tf);
-//    album_song_type_c.setText(StaticValues.album.album_genre);
-//
-//    TextView album_song_type = (TextView) findViewById(R.id.album_song_type);
-////    album_song_type.setTypeface(tf);
-//    album_song_type.setText("장르");
-//
-//    TextView album_company_type_c = (TextView) findViewById(R.id.album_company_type_c);
-////    album_company_type_c.setTypeface(tf);
-//    album_company_type_c.setText(StaticValues.album.album_company);
-//
-//    TextView album_company_type = (TextView) findViewById(R.id.album_company_type);
-////    album_company_type.setTypeface(tf);
-//    album_company_type.setText("발매사");
-//
-//    TextView album_info_type = (TextView) findViewById(R.id.album_info_type);
-////    album_info_type.setTypeface(tf);
-//    album_info_type.setText("앨범소개");
-//
-//    // 앨범 소개 글
-//    TextView albumIntroText = (TextView) findViewById(R.id.text_album_intro);
-////    albumIntroText.setTypeface(ff);
-//    albumIntroText.setText(StaticValues.album.album_intro);
-
+    customerCenterText.setBackgroundColor(StaticValues.metadata.color);
   }
 }

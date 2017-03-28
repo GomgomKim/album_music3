@@ -44,11 +44,11 @@
                     android:textStyle="bold"/>
 
                 <ImageView
+                    android:id="@+id/image_mini_icon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginTop="16dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/song_woman_background"/>
+                    android:scaleType="fitXY"/>
 
             </LinearLayout>
 
@@ -138,16 +138,21 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="112dp"
-            android:background="@drawable/song_button_playlist_playlistbackground"
             android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:padding="16dp"
             android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/image_title"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"/>
 
             <TextView
                 android:id="@+id/song_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="110dp"
+                android:layout_marginTop="16dp"
                 android:ellipsize="marquee"
                 android:maxLines="1"
                 android:text="DISK 1"
@@ -158,7 +163,7 @@
                 android:id="@+id/list_song"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:divider="@null"/>
         </LinearLayout>
 
@@ -168,7 +173,6 @@
             android:layout_width="match_parent"
             android:layout_height="112dp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/song_background"
             android:orientation="vertical">
 
             <LinearLayout
@@ -182,8 +186,7 @@
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:layout_marginRight="32dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/song_button_playlist_disk1"/>
+                    android:layout_weight="1"/>
 
                 <ImageView
                     android:id="@+id/song_button_prev"
@@ -211,8 +214,7 @@
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:layout_marginLeft="32dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/song_button_lyrics"/>
+                    android:layout_weight="1"/>
             </LinearLayout>
 
             <LinearLayout
@@ -268,8 +270,7 @@
             android:layout_above="@id/view_music_player"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-60dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/song_play_button"/>
+            android:scaleType="fitXY"/>
     </RelativeLayout>
 
 </RelativeLayout>

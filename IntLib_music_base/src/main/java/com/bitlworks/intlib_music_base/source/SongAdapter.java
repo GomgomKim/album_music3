@@ -12,7 +12,6 @@ import com.bitlworks.intlib_music_base.data.VOSong;
 
 import java.util.ArrayList;
 
-
 public class SongAdapter extends ArrayAdapter<VOSong> {
 
   public interface SongListListener {
@@ -37,8 +36,7 @@ public class SongAdapter extends ArrayAdapter<VOSong> {
     if (convertView == null) {
       convertView = inflater.inflate(R.layout.item_song, null);
       viewHolder = new ViewHolder();
-      viewHolder.songNameText = (TextView) convertView.findViewById(R.id.song_name);
-//      viewHolder.songNameText.setTypeface(ff);
+      viewHolder.songNameText = (TextView) convertView.findViewById(R.id.text_song_name);
       convertView.setTag(viewHolder);
     } else {
       viewHolder = (ViewHolder) convertView.getTag();

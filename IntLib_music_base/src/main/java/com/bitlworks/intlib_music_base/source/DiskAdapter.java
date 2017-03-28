@@ -1,16 +1,21 @@
 package com.bitlworks.intlib_music_base.source;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
+import com.bitlworks.intlib_music_base.MusicUtils;
 import com.bitlworks.intlib_music_base.R;
+import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.VODisk;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -49,7 +54,8 @@ public class DiskAdapter extends ArrayAdapter<VODisk> {
         convertView = inflater.inflate(R.layout.item_small_disk, null);
       }
       viewHolder = new ViewHolder();
-      viewHolder.music_name = (ImageView) convertView.findViewById(R.id.song_name);
+      viewHolder.diskImage = (ImageView) convertView.findViewById(R.id.image_disk);
+      viewHolder.diskNameText = (TextView) convertView.findViewById(R.id.text_disk_name);
       convertView.setTag(viewHolder);
     } else {
       viewHolder = (ViewHolder) convertView.getTag();
@@ -58,35 +64,15 @@ public class DiskAdapter extends ArrayAdapter<VODisk> {
     final VODisk item = getItem(position);
     int drawableId;
     if (imageType == IMAGE_TYPE.LARGE) {
-      switch (position) {
-        case 0:
-          drawableId = R.drawable.playlist_button_disk1;
-          break;
-        case 1:
-          drawableId = R.drawable.playlist_button_disk2;
-          break;
-        case 2:
-          drawableId = R.drawable.playlist_button_disk3;
-          break;
-        default:
-          throw new RuntimeException("Unknown position");
-      }
     } else if (imageType == IMAGE_TYPE.SMALL) {
-      if (item.disk_name.equals("A")) {
-        drawableId = R.drawable.playlist_b_button_disk1;
-      } else if (item.disk_name.equals("B")) {
-        drawableId = R.drawable.playlist_b_button_disk2;
-      } else if (item.disk_name.equals("C")) {
-        drawableId = R.drawable.playlist_b_button_disk3;
-      } else {
-        throw new RuntimeException("Unknown position");
-      }
+      File file = new File(MusicUtils.getAlbumPath(getContext()) + "metadata/" + StaticValues.metadata.disk_icon);
+      viewHolder.diskImage.setImageURI(Uri.fromFile(file));
+      viewHolder.diskNameText.setText(item.disk_name);
     } else {
       throw new RuntimeException("Unknown image type");
     }
-    viewHolder.music_name.setImageResource(drawableId);
-    viewHolder.music_name.setTag(item);
-    viewHolder.music_name.setOnClickListener(new View.OnClickListener() {
+    viewHolder.diskImage.setTag(item);
+    viewHolder.diskImage.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         if (listener == null) {
@@ -114,6 +100,7 @@ public class DiskAdapter extends ArrayAdapter<VODisk> {
   }
 
   class ViewHolder {
-    public ImageView music_name = null;
+    public ImageView diskImage = null;
+    public TextView diskNameText = null;
   }
 }

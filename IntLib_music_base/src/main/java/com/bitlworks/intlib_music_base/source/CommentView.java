@@ -3,12 +3,14 @@ package com.bitlworks.intlib_music_base.source;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -40,16 +42,7 @@ public class CommentView extends LinearLayout implements
     LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = li.inflate(R.layout.layout_comment, this, true);
 
-    String in_file = "";
-    for (int i = 0; i < StaticValues.photos.size(); i++) {
-      if (StaticValues.photos.get(i).type == 3 && StaticValues.photos.get(i).photo_order == 4) {
-        in_file = StaticValues.photos.get(i).photo_file_name;
-        break;
-      }
-    }
-    String rootPath = MusicUtils.getAlbumPath(context);
-    final String LocalPath = rootPath + in_file;// StaticValues.photos.get(0).photo_file_name;
-    File file = new File(LocalPath);
+    File file = new File(MusicUtils.getAlbumPath(context) + "metadata/" + StaticValues.metadata.review_bg);
     Drawable d = Drawable.createFromPath(file.getAbsolutePath());
     v.setBackground(d);
 

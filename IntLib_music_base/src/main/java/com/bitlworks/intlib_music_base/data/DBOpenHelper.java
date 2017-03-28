@@ -12,7 +12,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
   private final String LOG_TAG_NAVI = "<DBOpenHelper.class>";
 
   public DBOpenHelper(Context context) {
-    super(context, "WA.db", null, 52);
+    super(context, "WA.db", null, 58);
     Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " DBOpenHelper()");
   }
 
@@ -27,6 +27,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " onUpgrade()");
     db.execSQL("DROP TABLE IF EXISTS user ;");
     db.execSQL("DROP TABLE IF EXISTS album ;");
+    db.execSQL("DROP TABLE IF EXISTS metadata ;");
     db.execSQL("DROP TABLE IF EXISTS disk ;");
     db.execSQL("DROP TABLE IF EXISTS song ;");
     db.execSQL("DROP TABLE IF EXISTS photo ;");
@@ -52,9 +53,29 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         + "album_inviteurl TEXT);";
     db.execSQL(sql);
 
+    sql = "CREATE TABLE metadata("
+        + "album_id INTEGER primary key,"
+        + "album_cover TEXT,"
+        + "disk_bg TEXT,"
+        + "review_bg TEXT,"
+        + "setting_bg TEXT,"
+        + "color INTEGER,"
+        + "title_image TEXT,"
+        + "main_image TEXT,"
+        + "music_player_bg TEXT,"
+        + "song_play_icon TEXT,"
+        + "song_pause_icon TEXT,"
+        + "song_list_icon TEXT,"
+        + "lyrics_icon TEXT,"
+        + "disk_icon TEXT,"
+        + "mini_icon TEXT"
+        + ");";
+    db.execSQL(sql);
+
     sql = "CREATE TABLE disk("
         + "disk_id INTEGER primary key,"
         + "disk_name TEXT,"
+        + "disk_icon TEXT,"
         + "album_id INTEGER);";
 
     db.execSQL(sql);
@@ -62,10 +83,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     sql = "CREATE TABLE photo("
         + "photo_id INTEGER primary key,"
         + "disk_id INTEGER ,"
-        + "song_video_id INTEGER ,"
-        + "type INTEGER ,"
         + "photo_file_name TEXT,"
-        + "album_id INTEGER,"
         + "photo_order INTEGER);";
     db.execSQL(sql);
 
@@ -95,11 +113,10 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     sql = "CREATE TABLE video("
         + "video_id INTEGER primary key,"
-        + "song_id INTEGER ,"
         + "album_id INTEGER ,"
         + "video_file_name TEXT,"
         + "video_name TEXT,"
-        + "photo_id INTEGER);";
+        + "photo_path TEXT);";
     db.execSQL(sql);
 
     sql = "CREATE TABLE comment("

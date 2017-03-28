@@ -4,11 +4,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
+import com.bitlworks.intlib_music_base.MusicUtils;
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
+
+import java.io.File;
 
 public class MusicNotification {
 
@@ -28,6 +32,9 @@ public class MusicNotification {
     String title = StaticValues.album == null
         ? "앨범 존재하지 않음" : StaticValues.album.album_name;
     remoteView.setTextViewText(R.id.text_album_name, title);
+    File file = new File(MusicUtils.getAlbumPath(parent) + "metadata/" + StaticValues.metadata.song_pause_icon);
+    Uri uri = Uri.fromFile(file);
+    remoteView.setImageViewUri(R.id.button_play_song, uri);
     setListeners(remoteView);
     nBuilder.setContent(remoteView);
     nManager = (NotificationManager) parent.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -35,14 +42,18 @@ public class MusicNotification {
   }
 
   public void updatePause() {
-    remoteView.setImageViewResource(R.id.button_play_song, R.drawable.song_play_button);
+    File file = new File(MusicUtils.getAlbumPath(parent) + "metadata/" + StaticValues.metadata.song_play_icon);
+    Uri uri = Uri.fromFile(file);
+    remoteView.setImageViewUri(R.id.button_play_song,uri);
     nBuilder.setContent(remoteView);
     nManager = (NotificationManager) parent.getSystemService(Context.NOTIFICATION_SERVICE);
     nManager.notify(StaticValues.NOTIFICATION_ID, nBuilder.build());
   }
 
   public void updatePlay() {
-    remoteView.setImageViewResource(R.id.button_play_song, R.drawable.song_pause_button);
+    File file = new File(MusicUtils.getAlbumPath(parent) + "metadata/" + StaticValues.metadata.song_pause_icon);
+    Uri uri = Uri.fromFile(file);
+    remoteView.setImageViewUri(R.id.button_play_song,uri);
     nBuilder.setContent(remoteView);
     nManager = (NotificationManager) parent.getSystemService(Context.NOTIFICATION_SERVICE);
     nManager.notify(StaticValues.NOTIFICATION_ID, nBuilder.build());

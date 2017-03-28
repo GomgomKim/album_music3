@@ -27,11 +27,14 @@ public interface Service {
   @GET("GetAlbumInfo.php")
   Call<JsonObject> getAlbum(@Query("album_id") int albumId);
 
+  @GET("GetMetadata.php")
+  Call<JsonObject> getMetadata(@Query("album_id") int albumId);
+
   @GET("getMusicAlbumList.php")
   Call<JsonArray> getDisks(@Query("album_id") int albumId);
 
   @GET("GetPhotoList.php")
-  Call<JsonArray> getPhotos(@Query("album_id") int albumId, @Query("disk_id") int diskId);
+  Call<JsonArray> getPhotos(@Query("disk_id") int diskId);
 
   @GET("GetNewInfoList.php")
   Call<JsonArray> getNewInfos(@Query("album_id") int albumId);

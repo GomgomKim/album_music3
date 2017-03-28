@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -28,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitlworks.intlib_bitlworks.CommonUtils;
+import com.bitlworks.intlib_music_base.MusicUtils;
 import com.bitlworks.intlib_music_base.R;
 import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.VOSong;
@@ -35,6 +38,8 @@ import com.bitlworks.intlib_music_base.data.VODisk;
 import com.bitlworks.intlib_music_base.source.ready.LoadingActivity;
 import com.bitlworks.music_resource.AlbumValue;
 import com.tsengvn.typekit.TypekitContextWrapper;
+
+import java.io.File;
 
 public class PagerMainActivity extends AppCompatActivity implements
     SeekBar.OnSeekBarChangeListener,
@@ -149,10 +154,19 @@ public class PagerMainActivity extends AppCompatActivity implements
     viewPager.addOnPageChangeListener(this);
 
     songInfoView = findViewById(R.id.view_song_info);
+    ImageView miniIconImage = (ImageView) findViewById(R.id.image_mini_icon);
+    File file = new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.mini_icon);
+    miniIconImage.setImageURI(Uri.fromFile(file));
+    miniIconImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
     TextView song_title = (TextView) findViewById(R.id.song_title);
     songNameText = (TextView) findViewById(R.id.text_song_name);
     singerText = (TextView) findViewById(R.id.text_singer);
     songMakerText = (TextView) findViewById(R.id.text_song_maker);
+
+    File musicPlayerFile = new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.music_player_bg);
+    Drawable d = Drawable.createFromPath(musicPlayerFile.getAbsolutePath());
+    findViewById(R.id.view_music_player).setBackground(d);
     songProgressBar = (SeekBar) findViewById(R.id.songProgressBar);
     songProgressBar.setOnSeekBarChangeListener(this);
     songProgressBar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
@@ -197,7 +211,10 @@ public class PagerMainActivity extends AppCompatActivity implements
     lyricsView = findViewById(R.id.view_lyric);
     lyrics = (TextView) findViewById(R.id.song_lyric_text);
     lyricSongNameText = (TextView) findViewById(R.id.text_song_name_lyric);
-    findViewById(R.id.view_song_lyric).setOnClickListener(new OnClickListener() {
+    ImageView songLyricView = (ImageView) findViewById(R.id.view_song_lyric);
+    File lyricsFile = new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.lyrics_icon);
+    songLyricView.setImageURI(Uri.fromFile(lyricsFile));
+    songLyricView.setOnClickListener(new OnClickListener() {
 
       @Override
       public void onClick(View v) {
@@ -211,12 +228,22 @@ public class PagerMainActivity extends AppCompatActivity implements
     });
 
     songListView = findViewById(R.id.view_song_list);
+    songListView.setBackgroundColor(StaticValues.metadata.color);
+    songListView.setAlpha(1);
+
+    ImageView titleImage = (ImageView) findViewById(R.id.image_title);
+    File titleFile = new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.title_image);
+    titleImage.setImageURI(Uri.fromFile(titleFile));
+    titleImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
     ListView songList = (ListView) findViewById(R.id.list_song);
     songListView.setVisibility(View.INVISIBLE);
     SongAdapter songAdapter = new SongAdapter(PagerMainActivity.this, StaticValues.songs);
     songAdapter.setListener(this);
     songList.setAdapter(songAdapter);
     ImageView songListImage = (ImageView) findViewById(R.id.image_song_list);
+    File songListFile = new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.song_list_icon);
+    songListImage.setImageURI(Uri.fromFile(songListFile));
     songListImage.setOnClickListener(new OnClickListener() {
 
       @Override
@@ -229,17 +256,7 @@ public class PagerMainActivity extends AppCompatActivity implements
       }
     });
 
-    String diskName = StaticValues.selectedDisk.disk_name;
-    if (diskName.equals("A")) {
-      song_title.setText("DISK 1");
-      songListImage.setImageResource(R.drawable.song_button_playlist_disk1);
-    } else if (diskName.equals("B")) {
-      song_title.setText("DISK 2");
-      songListImage.setImageResource(R.drawable.song_button_playlist_disk2);
-    } else if (diskName.equals("C")) {
-      song_title.setText("DISK 3");
-      songListImage.setImageResource(R.drawable.song_button_playlist_disk3);
-    }
+    song_title.setText(StaticValues.selectedDisk.disk_name);
 
     initActionBar();
   }
@@ -391,7 +408,15 @@ public class PagerMainActivity extends AppCompatActivity implements
   }
 
   private void togglePlayerButton(boolean flag) {
-    playSongButton.setImageResource(flag ? R.drawable.song_play_button : R.drawable.song_pause_button);
+    Uri uri;
+    if (flag) {
+      File file = new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.song_play_icon);
+      uri = Uri.fromFile(file);
+    } else {
+      File file = new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.song_pause_icon);
+      uri = Uri.fromFile(file);
+    }
+    playSongButton.setImageURI(uri);
   }
 
   private void updateMusicPlayerView(int songIndex) {

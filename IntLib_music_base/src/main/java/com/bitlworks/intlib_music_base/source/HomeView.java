@@ -1,6 +1,7 @@
 package com.bitlworks.intlib_music_base.source;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -22,17 +23,7 @@ public class HomeView extends LinearLayout {
     View v = li.inflate(R.layout.layout_home, this, true);
 
     ImageView homeImage = (ImageView) v.findViewById(R.id.image_home);
-    String in_file = "";
-    for (int i = 0; i < StaticValues.photos.size(); i++) {
-      if (StaticValues.photos.get(i).type == 3 && StaticValues.photos.get(i).photo_order == 1) {
-        in_file = StaticValues.photos.get(i).photo_file_name;
-        break;
-      }
-    }
-    String rootPath = MusicUtils.getAlbumPath(context);
-    final String LocalPath = rootPath + in_file;
-
-    File file = new File(LocalPath);
+    File file = new File(MusicUtils.getAlbumPath(context) + "metadata/" + StaticValues.metadata.album_cover);
     Uri uri = Uri.fromFile(file);
     homeImage.setImageURI(uri);
     homeImage.setScaleType(ImageView.ScaleType.FIT_XY);

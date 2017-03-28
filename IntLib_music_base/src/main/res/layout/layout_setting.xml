@@ -2,22 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@drawable/setting_background"
               android:gravity="center_horizontal"
               android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"/>
+    <ImageView
+        android:id="@+id/image_title"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="24dp"/>
+
+    <ImageView
+        android:id="@+id/image_main"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="8dp"/>
 
     <ScrollView
         android:id="@+id/s_bar"
-        android:layout_width="match_parent"
+        android:layout_width="240dp"
         android:layout_height="0dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,16 +42,15 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_new_info"
-            android:layout_width="200dp"
-            android:layout_height="48dp"
+            android:layout_width="160dp"
+            android:layout_height="36dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/setting_newinfo_button2"
             android:gravity="center"
             android:text="새소식"
             android:textColor="@color/setting_menu_text"
@@ -54,10 +58,9 @@
 
         <TextView
             android:id="@+id/text_invite"
-            android:layout_width="200dp"
-            android:layout_height="48dp"
+            android:layout_width="160dp"
+            android:layout_height="36dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/setting_newinfo_button2"
             android:gravity="center"
             android:text="초대하기"
             android:textColor="@color/setting_menu_text"
@@ -65,84 +68,14 @@
 
         <TextView
             android:id="@+id/text_customer_center"
-            android:layout_width="200dp"
-            android:layout_height="48dp"
+            android:layout_width="160dp"
+            android:layout_height="36dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/setting_newinfo_button2"
             android:gravity="center"
             android:text="고객센터"
             android:textColor="@color/setting_menu_text"
             android:textSize="@dimen/setting_menu_text_size"/>
 
     </LinearLayout>
-
-
-    <!-- 쓰이지 않지만 남겨두는 것들 -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0">
-
-        <ImageView
-            android:id="@+id/image101"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/setting_final"
-            android:visibility="gone"/>
-
-        <FrameLayout
-            android:id="@+id/frame101"
-            android:layout_width="400dp"
-            android:layout_height="450dp"/>
-
-        <TextView
-            android:id="@+id/album_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/album_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/album_song_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/album_company_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/album_type_c"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/album_song_type_c"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/album_company_type_c"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-
-        <TextView
-            android:id="@+id/album_info_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-    </FrameLayout>
 </LinearLayout>
 

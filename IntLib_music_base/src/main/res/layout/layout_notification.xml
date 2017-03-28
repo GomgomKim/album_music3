@@ -58,8 +58,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="8dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/song_pause_button"/>
+            android:scaleType="fitXY"/>
 
         <ImageView
             android:id="@+id/button_song_next"

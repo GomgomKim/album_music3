@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 
+import com.bitlworks.intlib_music_base.MusicUtils;
 import com.bitlworks.intlib_music_base.StaticValues;
 
 import java.io.File;
@@ -65,11 +66,7 @@ public class MusicService extends Service implements
     }
     StaticValues.playIndex = index;
     mediaPlayer.reset();
-    String rootPath = "/mnt/sdcard/";
-    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-      rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
-    }
-    rootPath += "bitlworks/mobilemusic/";
+    String rootPath = MusicUtils.getAlbumPath(context) + StaticValues.selectedDisk.disk_id +"/mp3/";
     File file = new File(rootPath + StaticValues.songs.get(index).song_file_name);
     Uri uri = Uri.fromFile(file);
     try {

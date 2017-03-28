@@ -20,6 +20,7 @@ import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.DAOSqlite;
 import com.bitlworks.intlib_music_base.data.VOAlbum;
 import com.bitlworks.intlib_music_base.data.VOComment;
+import com.bitlworks.intlib_music_base.data.VOMetadata;
 import com.bitlworks.intlib_music_base.data.VONewInfo;
 import com.bitlworks.intlib_music_base.data.VOPhoto;
 import com.bitlworks.intlib_music_base.data.VOSong;
@@ -100,15 +101,52 @@ public class LoadingActivity extends Activity {
                 object.get("album_intro").getAsString(),
                 object.get("album_time").getAsString(),
                 object.get("album_invitemsg").getAsString(),
-                object.get("album_inviteurl").getAsString(),
-                object.get("album_cover_name").getAsString(),
-                object.get("album_disk_bg_name").getAsString(),
-                object.get("album_title_image").getAsString(),
-                object.get("album_main_image").getAsString(),
-                Color.parseColor(object.get("album_primary_color").getAsString())
+                object.get("album_inviteurl").getAsString()
             );
             StaticValues.album = album;
             sqlDAO.insertAlbum(StaticValues.album);
+            getMetadata();
+          }
+
+          @Override
+          public void onFailure(Call<JsonObject> call, Throwable t) {
+            Log.e("onFailure", t.getMessage());
+          }
+        }
+    );
+  }
+
+  private void getMetadata() {
+    final ProgressDialog progressDialog = new ProgressDialog(this);
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+
+    Call<JsonObject> call = MusicClient.getInstance().getService().getMetadata(AlbumValue.album_id);
+    call.enqueue(
+        new Callback<JsonObject>() {
+          @Override
+          public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            progressDialog.dismiss();
+            JsonObject object = response.body().getAsJsonObject();
+            VOMetadata metadata = new VOMetadata(
+                object.get("album_id").getAsInt(),
+                object.get("album_cover").getAsString(),
+                object.get("disk_bg").getAsString(),
+                object.get("review_bg").getAsString(),
+                object.get("setting_bg").getAsString(),
+                Color.parseColor(object.get("color").getAsString()),
+                object.get("title_image").getAsString(),
+                object.get("main_image").getAsString(),
+                object.get("music_player_bg").getAsString(),
+                object.get("song_play_icon").getAsString(),
+                object.get("song_pause_icon").getAsString(),
+                object.get("song_list_icon").getAsString(),
+                object.get("lyrics_icon").getAsString(),
+                object.get("disk_icon").getAsString(),
+                object.get("mini_icon").getAsString()
+            );
+            StaticValues.metadata = metadata;
+            sqlDAO.insertMetadata(StaticValues.metadata);
             getComments();
           }
 
@@ -144,6 +182,7 @@ public class LoadingActivity extends Activity {
               comments.add(comment);
             }
 
+            StaticValues.comments.clear();
             StaticValues.comments.addAll(comments);
             sqlDAO.insertComments(StaticValues.comments);
             getVideos();
@@ -173,14 +212,14 @@ public class LoadingActivity extends Activity {
             for (JsonElement object : array) {
               VOVideo video = new VOVideo(
                   object.getAsJsonObject().get("video_id").getAsInt(),
-                  object.getAsJsonObject().get("song_id").getAsInt(),
                   object.getAsJsonObject().get("album_id").getAsInt(),
                   object.getAsJsonObject().get("video_file_name").getAsString(),
                   object.getAsJsonObject().get("video_name").getAsString(),
-                  object.getAsJsonObject().get("photo_id").getAsInt());
+                  object.getAsJsonObject().get("photo_path").getAsString());
               videos.add(video);
             }
 
+            StaticValues.videos.clear();
             StaticValues.videos.addAll(videos);
             sqlDAO.insertVideos(StaticValues.videos);
             getNewInfos();
@@ -219,6 +258,7 @@ public class LoadingActivity extends Activity {
               newInfos.add(info);
             }
 
+            StaticValues.newInfos.clear();
             StaticValues.newInfos.addAll(newInfos);
             sqlDAO.insertNewInofs(newInfos);
             getDisks();
@@ -251,6 +291,7 @@ public class LoadingActivity extends Activity {
               VODisk disk = new VODisk(
                   object.getAsJsonObject().get("disk_id").getAsInt(),
                   object.getAsJsonObject().get("disk_name").getAsString(),
+                  object.getAsJsonObject().get("disk_icon").getAsString(),
                   object.getAsJsonObject().get("album_id").getAsInt());
               disks.add(disk);
             }
@@ -261,6 +302,7 @@ public class LoadingActivity extends Activity {
               return;
             }
 
+            StaticValues.disks.clear();
             StaticValues.disks.addAll(disks);
             sqlDAO.insertDisks(StaticValues.disks);
             getDiskData(disks.get(0));
@@ -322,7 +364,7 @@ public class LoadingActivity extends Activity {
     progressDialog.setCancelable(false);
     progressDialog.show();
 
-    Call<JsonArray> call = MusicClient.getInstance().getService().getPhotos(AlbumValue.album_id, StaticValues.selectedDisk.disk_id);
+    Call<JsonArray> call = MusicClient.getInstance().getService().getPhotos(StaticValues.selectedDisk.disk_id);
     call.enqueue(
         new Callback<JsonArray>() {
           @Override
@@ -334,17 +376,14 @@ public class LoadingActivity extends Activity {
               VOPhoto photo = new VOPhoto(
                   object.getAsJsonObject().get("photo_id").getAsInt(),
                   object.getAsJsonObject().get("disk_id").getAsInt(),
-                  object.getAsJsonObject().get("song_video_id").getAsInt(),
-                  object.getAsJsonObject().get("type").getAsInt(),
                   object.getAsJsonObject().get("photo_file_name").getAsString(),
-                  object.getAsJsonObject().get("album_id").getAsInt(),
                   object.getAsJsonObject().get("photo_order").getAsInt());
               photos.add(photo);
             }
 
             StaticValues.photos.clear();
             StaticValues.photos.addAll(photos);
-            sqlDAO.insertPhotos(StaticValues.photos, StaticValues.selectedDisk.disk_id, StaticValues.album.album_id);
+            sqlDAO.insertPhotos(StaticValues.photos, StaticValues.selectedDisk.disk_id);
             new DataDownloader(getApplicationContext(), netHandlerPhotoDonwAfter);
           }
 
@@ -364,8 +403,8 @@ public class LoadingActivity extends Activity {
   Handler netHandlerPhotoDonwAfter = new Handler() {
     private final String LOG_TAG_NAVI = "<netHandlerPhotoDonwAfter.Handler>";
 
-    public int downloadedCount = 0;
-    public int totalCount = 1;
+    int downloadedCount = 0;
+    int totalCount = 1;
 
     public void handleMessage(Message msg) {
       Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " handleMessage()");

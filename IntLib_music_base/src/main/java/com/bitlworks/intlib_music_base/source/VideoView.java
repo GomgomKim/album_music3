@@ -2,7 +2,6 @@ package com.bitlworks.intlib_music_base.source;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,17 +13,16 @@ import com.bitlworks.intlib_music_base.StaticValues;
 
 import java.io.File;
 
-public class MusicView extends LinearLayout {
+public class VideoView extends LinearLayout {
 
-  public MusicView(Context context, int index) {
+  public VideoView(Context context, int index) {
     super(context);
     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View v = li.inflate(R.layout.layout_music, this, true);
+    View v = li.inflate(R.layout.layout_video, this, true);
 
     File file = new File(MusicUtils.getAlbumPath(context)
-        + StaticValues.selectedDisk.disk_id
-        + "/photo/"
-        + StaticValues.photos.get(index).photo_file_name);
+        + "/video/"
+        + StaticValues.videos.get(index).photoPath);
     Uri uri = Uri.fromFile(file);
 
     ImageView homeImage = (ImageView) v.findViewById(R.id.image_music);

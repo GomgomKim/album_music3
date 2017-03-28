@@ -36,15 +36,10 @@ public class KaKaoTalkActivity extends Activity {
     inviteText.setText(StaticValues.album.album_invitemsg);
 
     final ImageView imagePhoto = (ImageView) findViewById(R.id.iv_photo);
-    String in_file = "";
-    for (int i = 0; i < StaticValues.photos.size(); i++) {
-      if (StaticValues.photos.get(i).type == 3 && StaticValues.photos.get(i).photo_order == 100) {
-        in_file = StaticValues.photos.get(i).photo_file_name;
-        break;
-      }
-    }
-    final String image_file = in_file;
-    String imageSrc = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/disk0/" + image_file;
+    String imageSrc = "http://music.bitlworks.co.kr/mobilemusic/image_home/"
+        + StaticValues.album.album_id
+        + "/metadata/"
+        + StaticValues.metadata.main_image;
     Picasso.with(this)
         .load(imageSrc)
         .into(imagePhoto);
@@ -70,7 +65,11 @@ public class KaKaoTalkActivity extends Activity {
           Long tsLong = System.currentTimeMillis() / 1000;
           String ts = tsLong.toString();
 
-          String imageSrc = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/disk0/" + image_file + "?timestamp=" + ts;
+          String imageSrc = "http://music.bitlworks.co.kr/mobilemusic/image_home/"
+              + StaticValues.album.album_id
+              + "/metadata/"
+              + StaticValues.metadata.main_image
+              + "?timestamp=" + ts;
           int width = 300;
           int height = width * hh / ww;
           kakaoTalkLinkMessageBuilder.addImage(imageSrc, width, height);

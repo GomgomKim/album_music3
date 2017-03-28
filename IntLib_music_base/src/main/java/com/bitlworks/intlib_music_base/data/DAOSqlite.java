@@ -35,17 +35,7 @@ public class DAOSqlite {
     SQLiteDatabase db = DBHelper.getWritableDatabase();
 
     db.execSQL("DELETE FROM user ;");
-/*
-"CREATE TABLE user("
-				+"user_id INTEGER primary key,"
-				+"user_name TEXT ,"
-				+"mobile_music_id INTEGER ,"
-				+"user_phone_number TEXT,"
-				+"user_appver TEXT,"
-				+"user_uuid TEXT,"
-				+"user_regid TEXT,"
-				+"os_type INTEGER);";
-	*/
+
     String sql = "INSERT OR REPLACE INTO user(user_id, user_name, album_id, user_phone_number, user_appver,"
         + "user_uuid, user_regid, os_type, user_level) VALUES ("
         + voUser.user_id
@@ -100,7 +90,8 @@ public class DAOSqlite {
 
     db.execSQL("DELETE FROM album ;");
     String sql = "INSERT OR REPLACE INTO album(album_id, album_name, singer_id_list, album_type, album_genre,"
-        + "album_company, album_intro, album_time, album_invitemsg, album_inviteurl) VALUES ("
+        + "album_company, album_intro, album_time, album_invitemsg, album_inviteurl"
+        + " ) VALUES ("
         + voalbum.album_id
         + ", '"
         + voalbum.album_name
@@ -120,7 +111,7 @@ public class DAOSqlite {
         + voalbum.album_invitemsg
         + "', '"
         + voalbum.album_inviteurl
-        + "' );";
+        + "');";
     db.execSQL(sql);
 
     db.close();
@@ -147,7 +138,90 @@ public class DAOSqlite {
           cursor.getString(i++),
           cursor.getString(i++),
           cursor.getString(i++),
-          cursor.getString(i++));
+          cursor.getString(i++)
+     );
+    }
+    cursor.close();
+    db.close();
+
+    return result;
+  }
+
+  synchronized public void insertMetadata(VOMetadata metadata) {
+    Log.i(StaticValues.LOG_TAG,
+        LOG_TAG_NAVI + " metadata (" + metadata.album_id + ")");
+    SQLiteDatabase db = DBHelper.getWritableDatabase();
+
+    db.execSQL("DELETE FROM metadata ;");
+    String sql = "INSERT OR REPLACE INTO metadata(album_id, "
+        + "album_cover, disk_bg, review_bg, setting_bg, color, title_image, main_image, " +
+        "music_player_bg, song_play_icon, song_pause_icon, song_list_icon, lyrics_icon," +
+        "disk_icon, mini_icon"
+        + " ) VALUES ("
+        + metadata.album_id
+        + ", '"
+        + metadata.album_cover
+        + "','"
+        + metadata.disk_bg
+        + "', '"
+        + metadata.review_bg
+        + "', '"
+        + metadata.setting_bg
+        + "', '"
+        + metadata.color
+        + "', '"
+        + metadata.title_image
+        + "', '"
+        + metadata.main_image
+        + "', '"
+        + metadata.music_player_bg
+        + "', '"
+        + metadata.song_play_icon
+        + "', '"
+        + metadata.song_pause_icon
+        + "', '"
+        + metadata.song_list_icon
+        + "', '"
+        + metadata.lyrics_icon
+        + "', '"
+        + metadata.disk_icon
+        + "', '"
+        + metadata.mini_icon
+        + " ');";
+    db.execSQL(sql);
+
+    db.close();
+  }
+
+  synchronized public VOMetadata getMetadata() {
+    Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " getAlbum()");
+    VOMetadata result = null;
+
+    SQLiteDatabase db = DBHelper.getReadableDatabase();
+    Cursor cursor = db.rawQuery(
+        "SELECT album_id,album_cover, disk_bg, review_bg, setting_bg, color, title_image, main_image, " +
+            "music_player_bg, song_play_icon, song_pause_icon, song_list_icon, lyrics_icon, " +
+            "disk_icon, mini_icon"
+            + " FROM album;", null);
+    while (cursor.moveToNext()) {
+      int i = 0;
+      result = new VOMetadata(
+          cursor.getInt(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getInt(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++)
+         );
     }
     cursor.close();
     db.close();
@@ -163,13 +237,14 @@ public class DAOSqlite {
     try {
       db.execSQL("DELETE FROM disk ;");
       for (VODisk vodisk : diskList) {
-        String sql = "INSERT INTO disk(disk_id,album_id, disk_name)"
-            + "VALUES ("
+        String sql = "INSERT INTO disk(disk_id, album_id, disk_name, disk_icon) VALUES ("
             + vodisk.disk_id
             + ", "
             + vodisk.album_id
             + ", '"
             + vodisk.disk_name
+            + "', '"
+            + vodisk.disk_icon
             + "' );";
         db.execSQL(sql);
       }
@@ -187,13 +262,13 @@ public class DAOSqlite {
 
     SQLiteDatabase db = DBHelper.getReadableDatabase();
     Cursor cursor = db.rawQuery(
-        "SELECT disk_id, disk_name, album_id"
+        "SELECT disk_id, disk_name, disk_icon, album_id"
             + " FROM disk "
             + "  ;", null);
     //int disk_id, String disk_name, int album_id
     while (cursor.moveToNext()) {
       int i = 0;
-      VODisk vo = new VODisk(cursor.getInt(i++), cursor.getString(i++), cursor.getInt(i++));
+      VODisk vo = new VODisk(cursor.getInt(i++), cursor.getString(i++), cursor.getString(i++),  cursor.getInt(i++));
       result.add(vo);
     }
     cursor.close();
@@ -263,28 +338,21 @@ public class DAOSqlite {
     return result;
   }
 
-  synchronized public void insertPhotos(ArrayList<VOPhoto> photoList, int disk_id, int album_id) {
+  synchronized public void insertPhotos(ArrayList<VOPhoto> photoList, int disk_id) {
     Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " insertPhotoList ("
         + photoList.size() + ")");
     SQLiteDatabase db = DBHelper.getWritableDatabase();
     db.beginTransaction();
     try {
-      db.execSQL("DELETE FROM photo WHERE disk_id=" + disk_id + " OR (album_id=" + album_id + " AND type=3);");
+      db.execSQL("DELETE FROM photo WHERE disk_id=" + disk_id + ";");
       for (VOPhoto voPhoto : photoList) {
-        String sql = "INSERT INTO photo(photo_id, disk_id, song_video_id, type, photo_file_name "
-            + ", album_id, photo_order) VALUES ("
+        String sql = "INSERT INTO photo(photo_id, disk_id, photo_file_name, photo_order) VALUES ("
             + voPhoto.photo_id
             + ", "
             + voPhoto.disk_id
-            + ", "
-            + voPhoto.song_video_id
-            + ", "
-            + voPhoto.type
             + ", '"
             + voPhoto.photo_file_name
             + "', "
-            + voPhoto.album_id
-            + ", "
             + voPhoto.photo_order
             + " );";
         db.execSQL(sql);
@@ -303,13 +371,15 @@ public class DAOSqlite {
 
     SQLiteDatabase db = DBHelper.getReadableDatabase();
     Cursor cursor = db.rawQuery(
-        "SELECT photo_id, disk_id, song_video_id, type, "
-            + " photo_file_name, album_id, photo_order FROM photo "
-            + " WHERE disk_id=" + disk_id + " OR (album_id=" + album_id + " AND type=3) ORDER BY photo_order ASC ;", null);
+        "SELECT photo_id, disk_id, photo_file_name, photo_order FROM photo "
+            + " WHERE disk_id=" + disk_id + " ORDER BY photo_order ASC ;", null);
     while (cursor.moveToNext()) {
       int i = 0;
-      VOPhoto vo = new VOPhoto(cursor.getInt(i++), cursor.getInt(i++), cursor.getInt(i++), cursor.getInt(i++),
-          cursor.getString(i++), cursor.getInt(i++), cursor.getInt(i++));
+      VOPhoto vo = new VOPhoto(
+          cursor.getInt(i++),
+          cursor.getInt(i++),
+          cursor.getString(i++),
+          cursor.getInt(i++));
       result.add(vo);
     }
     cursor.close();
@@ -326,20 +396,18 @@ public class DAOSqlite {
     try {
       db.execSQL("DELETE FROM video ;");
       for (VOVideo voVideo : videoList) {
-        String sql = "INSERT INTO video(video_id, song_id, album_id, video_file_name,video_name, photo_id) "
+        String sql = "INSERT INTO video(video_id, album_id, video_file_name, video_name, photo_path) "
             + " VALUES ("
             + voVideo.video_id
-            + ", "
-            + voVideo.song_id
             + ", "
             + voVideo.album_id
             + ", '"
             + voVideo.video_file_name
             + "', '"
             + voVideo.video_name
-            + "', "
-            + voVideo.photo_id
-            + " );";
+            + "', '"
+            + voVideo.photoPath
+            + " ');";
         db.execSQL(sql);
       }
       db.setTransactionSuccessful();
@@ -356,13 +424,17 @@ public class DAOSqlite {
 
     SQLiteDatabase db = DBHelper.getReadableDatabase();
     Cursor cursor = db.rawQuery(
-        "SELECT video_id, song_id, album_id, video_file_name, "
-            + " video_name,photo_id FROM video "
+        "SELECT video_id, album_id, video_file_name, "
+            + " video_name, photo_path FROM video "
             + " WHERE album_id=" + album_id + " ORDER BY video_id ASC;", null);
     while (cursor.moveToNext()) {
       int i = 0;
-      VOVideo vo = new VOVideo(cursor.getInt(i++), cursor.getInt(i++), cursor.getInt(i++), cursor.getString(i++), cursor.getString(i++),
-          cursor.getInt(i++));
+      VOVideo vo = new VOVideo(
+          cursor.getInt(i++),
+          cursor.getInt(i++),
+          cursor.getString(i++),
+          cursor.getString(i++),
+          cursor.getString(i++));
       result.add(vo);
     }
     cursor.close();
