@@ -6,6 +6,7 @@ public class VOAlbum {
     public String album_name;
     public String singer_id_list;
     public String album_type;
+    public String image_type;
     public String album_genre;
     public String album_company;
     public String album_intro;
@@ -14,7 +15,7 @@ public class VOAlbum {
     public String album_inviteurl;
 
     public VOAlbum(int album_id, String album_name, String singer_id_list,
-                   String album_type, String album_genre, String album_company,
+                   String album_type, String image_type, String album_genre, String album_company,
                    String album_intro, String album_time,
                    String album_invitemsg, String album_inviteurl) {
 
@@ -23,6 +24,7 @@ public class VOAlbum {
         this.singer_id_list = singer_id_list;
 
         this.album_type = album_type;
+        this.image_type = image_type;
         this.album_genre = album_genre;
         this.album_company = album_company;
         this.album_intro = album_intro;

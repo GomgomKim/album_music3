@@ -89,7 +89,7 @@ public class DAOSqlite {
     SQLiteDatabase db = DBHelper.getWritableDatabase();
 
     db.execSQL("DELETE FROM album ;");
-    String sql = "INSERT OR REPLACE INTO album(album_id, album_name, singer_id_list, album_type, album_genre,"
+    String sql = "INSERT OR REPLACE INTO album(album_id, album_name, singer_id_list, album_type, image_type, album_genre,"
         + "album_company, album_intro, album_time, album_invitemsg, album_inviteurl"
         + " ) VALUES ("
         + voalbum.album_id
@@ -99,6 +99,8 @@ public class DAOSqlite {
         + voalbum.singer_id_list
         + "', '"
         + voalbum.album_type
+        + "', '"
+        + voalbum.image_type
         + "', '"
         + voalbum.album_genre
         + "', '"
@@ -123,13 +125,14 @@ public class DAOSqlite {
 
     SQLiteDatabase db = DBHelper.getReadableDatabase();
     Cursor cursor = db.rawQuery(
-        "SELECT album_id, album_name, singer_id_list, album_type, "
+        "SELECT album_id, album_name, singer_id_list, album_type, image_type, "
             + "album_genre, album_company, album_intro,album_time, album_invitemsg, album_inviteurl"
             + " FROM album;", null);
     while (cursor.moveToNext()) {
       int i = 0;
       result = new VOAlbum(
           cursor.getInt(i++),
+          cursor.getString(i++),
           cursor.getString(i++),
           cursor.getString(i++),
           cursor.getString(i++),

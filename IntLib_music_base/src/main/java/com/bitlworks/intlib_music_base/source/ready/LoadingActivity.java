@@ -96,6 +96,7 @@ public class LoadingActivity extends Activity {
                 object.get("album_name").getAsString(),
                 object.get("singer_id_list").getAsString(),
                 object.get("album_type").getAsString(),
+                object.get("image_type").getAsString(),
                 object.get("album_genre").getAsString(),
                 object.get("album_company").getAsString(),
                 object.get("album_intro").getAsString(),

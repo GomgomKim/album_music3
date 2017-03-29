@@ -3,6 +3,8 @@ package com.bitlworks.intlib_music_base;
 import android.content.Context;
 import android.os.Environment;
 
+import com.bitlworks.intlib_music_base.data.VOAlbum;
+
 import java.io.File;
 
 public class MusicUtils {
@@ -38,5 +40,13 @@ public class MusicUtils {
     if (!dir.exists()) {
       dir.mkdir();
     }
+  }
+
+  public static boolean isSingle(VOAlbum album) {
+    return album.album_type.equals("싱글");
+  }
+
+  public static boolean isTrack(VOAlbum album) {
+    return album.album_type.equals("트랙");
   }
 }

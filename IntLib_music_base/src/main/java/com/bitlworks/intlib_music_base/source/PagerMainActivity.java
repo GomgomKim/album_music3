@@ -367,7 +367,9 @@ public class PagerMainActivity extends AppCompatActivity implements
   @Override
   public void onClickSong(int position) {
     musicService.startMusic(position);
-    viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex));
+    if (MusicUtils.isTrack(StaticValues.album)) {
+      viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex));
+    }
   }
 
 
@@ -435,16 +437,15 @@ public class PagerMainActivity extends AppCompatActivity implements
   }
 
   private int songIndexToPagerIndex(int index) {
-    return AlbumValue.isSingle ? index + 2 : index + 3;
+    return index + 2;
   }
 
   private int pagerIndexToSongIndex(int index) {
-    return AlbumValue.isSingle ? index - 2 : index - 3;
+    return index - 2;
   }
 
   private int getPageCount() {
-    return AlbumValue.isSingle
-        ? StaticValues.songs.size() + 4 : StaticValues.songs.size() + 5;
+    return StaticValues.songs.size() + 4;
   }
 
   private void startUpdatingProgress(boolean isReset) {
@@ -488,15 +489,16 @@ public class PagerMainActivity extends AppCompatActivity implements
   public void onPageSelected(int position) {
     if (position == 0
         || position == 1
-        || (!AlbumValue.isSingle && position == 2)
         || position == getPageCount() - 2
         || position == getPageCount() - 1) {
       songInfoView.setVisibility(View.GONE);
       return;
     }
     songInfoView.setVisibility(View.VISIBLE);
-    updateMusicPlayerView(pagerIndexToSongIndex(position));
-    musicService.startMusic(pagerIndexToSongIndex(position));
+    if (MusicUtils.isTrack(StaticValues.album)) {
+      updateMusicPlayerView(pagerIndexToSongIndex(position));
+      musicService.startMusic(pagerIndexToSongIndex(position));
+    }
   }
 
   @Override
@@ -520,9 +522,7 @@ public class PagerMainActivity extends AppCompatActivity implements
       final View v;
       if (position == 0) {
         v = new HomeView(PagerMainActivity.this);
-      } else if (!AlbumValue.isSingle && position == 1) {
-        v = new DiskListView(PagerMainActivity.this, PagerMainActivity.this);
-      } else if ((!AlbumValue.isSingle && position == 2) || (AlbumValue.isSingle && position == 1)) {
+      } else if (position == 1) {
         v = new SongListView(PagerMainActivity.this, PagerMainActivity.this, PagerMainActivity.this);
       } else if (position == getPageCount() - 2) {
         v = new CommentView(PagerMainActivity.this);
