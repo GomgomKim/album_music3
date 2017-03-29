@@ -6,7 +6,9 @@
       <module fileurl="file://$PROJECT_DIR$/intlib_bitlworks/intlib_bitlworks.iml" filepath="$PROJECT_DIR$/intlib_bitlworks/intlib_bitlworks.iml" />
       <module fileurl="file://$PROJECT_DIR$/IntLib_music_base/intlib_music_base.iml" filepath="$PROJECT_DIR$/IntLib_music_base/intlib_music_base.iml" />
       <module fileurl="file://$PROJECT_DIR$/music_app_hanyang/music_app_hanyang.iml" filepath="$PROJECT_DIR$/music_app_hanyang/music_app_hanyang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/music_app_jasmin/music_app_jasmin.iml" filepath="$PROJECT_DIR$/music_app_jasmin/music_app_jasmin.iml" />
       <module fileurl="file://$PROJECT_DIR$/music_resource_hanyang/music_resource_hanyang.iml" filepath="$PROJECT_DIR$/music_resource_hanyang/music_resource_hanyang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/music_resource_jasmin/music_resource_jasmin.iml" filepath="$PROJECT_DIR$/music_resource_jasmin/music_resource_jasmin.iml" />
     </modules>
   </component>
 </project>

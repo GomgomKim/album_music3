@@ -1,6 +1,7 @@
 package com.bitlworks.intlib_music_base.source.setting;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitlworks.intlib_music_base.MusicUtils;
 import com.bitlworks.intlib_music_base.R;
+import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.VONewInfo;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -41,10 +45,10 @@ public class NewInfoAdapter extends ArrayAdapter<VONewInfo> {
     }
     final VONewInfo item = getItem(position);
     viewHolder.mainSubjectText.setText(item.main_subject);
+
     viewHolder.timeText.setText(item.time);
-    Picasso.with(convertView.getContext())
-        .load(item.link_url)
-        .into(viewHolder.subjectImage);
+    File file = new File(MusicUtils.getAlbumPath(getContext()) + "news/" + item.image_data);
+    viewHolder.subjectImage.setImageURI(Uri.fromFile(file));
     viewHolder.contentText.setText(item.contents);
     return convertView;
   }

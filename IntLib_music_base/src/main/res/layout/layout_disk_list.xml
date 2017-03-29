@@ -15,8 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/playlist_bottom_background"/>
+        android:scaleType="fitXY"/>
 
     <!-- 쓰이지 않는 것 같은데 일단 둠-->
     <TextView

@@ -12,9 +12,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadRunable implements Runnable {
-  final String LOG_TAG_NAVI = "DownloadRunable.calss(Runnable)";
-  String LocalPath, ServerUrl;
-  Handler mHandler;
+  private final String LOG_TAG_NAVI = "DownloadRunable.calss(Runnable)";
+  private String LocalPath, ServerUrl;
+  private Handler mHandler;
 
   public DownloadRunable(String ServerUrl, String LocalPath, Handler h) {
     this.ServerUrl = ServerUrl;
@@ -26,7 +26,6 @@ public class DownloadRunable implements Runnable {
   public void run() {
     try {
       File localFile = new File(LocalPath);
-      long fileSize = localFile.length();
 
       if (localFile.exists()) {
         Log.d("local file check,,,", "hello hyuk,,,,");
@@ -42,7 +41,7 @@ public class DownloadRunable implements Runnable {
       byte[] tmpByte = new byte[len];
       InputStream is = conn.getInputStream();
       File file = new File(LocalPath);
-      if (file.exists() == true) file.delete();
+      if (file.exists()) file.delete();
       FileOutputStream fos = new FileOutputStream(file);
       for (; ; ) {
         Read = is.read(tmpByte);

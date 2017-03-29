@@ -157,7 +157,7 @@ public class DAOSqlite {
 
     db.execSQL("DELETE FROM metadata ;");
     String sql = "INSERT OR REPLACE INTO metadata(album_id, "
-        + "album_cover, disk_bg, review_bg, setting_bg, color, title_image, main_image, " +
+        + "album_cover, disk_bg, review_bg, setting_bg, color, text_color, title_image, main_image, " +
         "music_player_bg, song_play_icon, song_pause_icon, song_list_icon, lyrics_icon," +
         "disk_icon, mini_icon"
         + " ) VALUES ("
@@ -172,6 +172,8 @@ public class DAOSqlite {
         + metadata.setting_bg
         + "', '"
         + metadata.color
+        + "', '"
+        + metadata.text_color
         + "', '"
         + metadata.title_image
         + "', '"
@@ -202,7 +204,7 @@ public class DAOSqlite {
 
     SQLiteDatabase db = DBHelper.getReadableDatabase();
     Cursor cursor = db.rawQuery(
-        "SELECT album_id,album_cover, disk_bg, review_bg, setting_bg, color, title_image, main_image, " +
+        "SELECT album_id,album_cover, disk_bg, review_bg, setting_bg, color, text_color, title_image, main_image, " +
             "music_player_bg, song_play_icon, song_pause_icon, song_list_icon, lyrics_icon, " +
             "disk_icon, mini_icon"
             + " FROM album;", null);
@@ -214,6 +216,7 @@ public class DAOSqlite {
           cursor.getString(i++),
           cursor.getString(i++),
           cursor.getString(i++),
+          cursor.getInt(i++),
           cursor.getInt(i++),
           cursor.getString(i++),
           cursor.getString(i++),

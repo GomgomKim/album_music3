@@ -21,6 +21,7 @@
         android:visibility="gone">
 
         <LinearLayout
+            android:id="@+id/view_track_type"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/view_music_player"
@@ -228,7 +229,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp">
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
                     <!-- Current Duration Label -->
                     <TextView
                         android:id="@+id/songCurrentDurationLabel"
@@ -239,6 +241,22 @@
                         android:textColor="#eeeeee"
                         android:textStyle="bold"/>
                     <!-- Total Duration Label -->
+                    <FrameLayout
+                        android:id="@+id/view_catalog_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/text_mini_song_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="sss"
+                            android:textColor="#eeeeee"
+                            android:textStyle="bold"/>
+
+                    </FrameLayout>
+
                     <TextView
                         android:id="@+id/songTotalDurationLabel"
                         android:layout_width="match_parent"

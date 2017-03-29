@@ -3,6 +3,8 @@ package com.bitlworks.intlib_music_base.source.setting;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -38,12 +40,14 @@ public class NewInfoActivity extends Activity implements NewInfoFragment.Listene
 
   @Override
   public void clickNewInfo(VONewInfo item) {
-    FragmentManager fragmentManager = getFragmentManager();
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    fragmentTransaction
-        .addToBackStack("NewInfoFragment")
-        .add(com.bitlworks.intlib_bitlworks.R.id.view_frame, NewInfoDetailFragment.newInstance(item))
-        .commit();
+    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.link_url));
+    startActivity(intent);
+//    FragmentManager fragmentManager = getFragmentManager();
+//    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//    fragmentTransaction
+//        .addToBackStack("NewInfoFragment")
+//        .add(com.bitlworks.intlib_bitlworks.R.id.view_frame, NewInfoDetailFragment.newInstance(item))
+//        .commit();
   }
 
   @Override

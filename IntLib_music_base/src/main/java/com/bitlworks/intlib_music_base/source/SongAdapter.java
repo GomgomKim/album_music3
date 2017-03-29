@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.bitlworks.intlib_music_base.R;
+import com.bitlworks.intlib_music_base.StaticValues;
 import com.bitlworks.intlib_music_base.data.VOSong;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class SongAdapter extends ArrayAdapter<VOSong> {
       viewHolder = (ViewHolder) convertView.getTag();
     }
     final VOSong item = getItem(position);
+    viewHolder.songNameText.setTextColor(StaticValues.metadata.text_color);
     viewHolder.songNameText.setText((position+1) + "  " + item.msg1 + " - " + item.song_name);
     viewHolder.songNameText.setOnClickListener(new View.OnClickListener() {
 

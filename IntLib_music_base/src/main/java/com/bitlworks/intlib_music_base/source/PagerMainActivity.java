@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,9 +55,9 @@ public class PagerMainActivity extends AppCompatActivity implements
   private SeekBar songProgressBar;
 
   private ViewPager viewPager;
-  private TextView songNameText, singerText, songMakerText;
+  private TextView songNameText, singerText, songMakerText, miniSongNameText;
   private TextView lyrics, lyricSongNameText;
-  private View songInfoView, lyricsView, songListView;
+  private View songInfoView, trackTypeView, catalogTypeView, lyricsView, songListView;
   private TextView songCurrentDurationText;
   private TextView songTotalDurationText;
   private Handler handler = new Handler();
@@ -76,8 +77,12 @@ public class PagerMainActivity extends AppCompatActivity implements
       songProgressBar.setProgress(progress);
 
       if (progress == 100) {
-        viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
-        return;
+        if (MusicUtils.isTrack(StaticValues.album)) {
+          viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
+          return;
+        }
+        updateMusicPlayerView(StaticValues.playIndex + 1);
+        musicService.startMusic(StaticValues.playIndex + 1);
       }
       handler.postDelayed(this, 100);
     }
@@ -103,7 +108,12 @@ public class PagerMainActivity extends AppCompatActivity implements
         if (StaticValues.playIndex == 0) {
           return;
         }
-        viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex - 1));
+        if (MusicUtils.isTrack(StaticValues.album)) {
+          viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex - 1));
+          return;
+        }
+        updateMusicPlayerView(StaticValues.playIndex - 1);
+        musicService.startMusic(StaticValues.playIndex - 1);
         return;
       }
 
@@ -111,7 +121,12 @@ public class PagerMainActivity extends AppCompatActivity implements
         if (StaticValues.playIndex == StaticValues.songs.size() - 1) {
           return;
         }
-        viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
+        if (MusicUtils.isTrack(StaticValues.album)) {
+          viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
+          return;
+        }
+        updateMusicPlayerView(StaticValues.playIndex + 1);
+        musicService.startMusic(StaticValues.playIndex + 1);
       }
 
       if (intent.getAction().equals("end")) {
@@ -154,6 +169,8 @@ public class PagerMainActivity extends AppCompatActivity implements
     viewPager.addOnPageChangeListener(this);
 
     songInfoView = findViewById(R.id.view_song_info);
+    trackTypeView = findViewById(R.id.view_track_type);
+    catalogTypeView = findViewById(R.id.view_catalog_type);
     ImageView miniIconImage = (ImageView) findViewById(R.id.image_mini_icon);
     File file = new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.mini_icon);
     miniIconImage.setImageURI(Uri.fromFile(file));
@@ -163,6 +180,7 @@ public class PagerMainActivity extends AppCompatActivity implements
     songNameText = (TextView) findViewById(R.id.text_song_name);
     singerText = (TextView) findViewById(R.id.text_singer);
     songMakerText = (TextView) findViewById(R.id.text_song_maker);
+    miniSongNameText = (TextView) findViewById(R.id.text_mini_song_name);
 
     File musicPlayerFile = new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.music_player_bg);
     Drawable d = Drawable.createFromPath(musicPlayerFile.getAbsolutePath());
@@ -179,7 +197,13 @@ public class PagerMainActivity extends AppCompatActivity implements
         if (StaticValues.playIndex == 0) {
           return;
         }
-        viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex - 1));
+        if (MusicUtils.isTrack(StaticValues.album)) {
+          viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex - 1));
+          return;
+        }
+
+        updateMusicPlayerView(StaticValues.playIndex - 1);
+        musicService.startMusic(StaticValues.playIndex - 1);
       }
     });
     findViewById(R.id.song_button_next).setOnClickListener(new OnClickListener() {
@@ -188,10 +212,17 @@ public class PagerMainActivity extends AppCompatActivity implements
         if (StaticValues.playIndex == StaticValues.songs.size() - 1) {
           return;
         }
-        viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
+        if (MusicUtils.isTrack(StaticValues.album)) {
+          viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex + 1));
+          return;
+        }
+        updateMusicPlayerView(StaticValues.playIndex + 1);
+        musicService.startMusic(StaticValues.playIndex + 1);
       }
     });
     playSongButton = (ImageView) findViewById(R.id.button_play_song);
+    playSongButton.setImageURI(Uri.fromFile(new File(MusicUtils.getAlbumPath(this) + "metadata/" + StaticValues.metadata.song_pause_icon)));
+
     playSongButton.setOnClickListener(new OnClickListener() {
 
       @Override
@@ -258,6 +289,7 @@ public class PagerMainActivity extends AppCompatActivity implements
 
     song_title.setText(StaticValues.selectedDisk.disk_name);
 
+    updateMusicPlayerView(0);
     initActionBar();
   }
 
@@ -315,16 +347,16 @@ public class PagerMainActivity extends AppCompatActivity implements
   public boolean onOptionsItemSelected(android.view.MenuItem item) {
     int i = item.getItemId();
     if (i == R.id.menu_home) {
-      songInfoView.setVisibility(View.GONE);
+      setSongInfoView(false);
       viewPager.setCurrentItem(0);
     } else if (i == R.id.menu_song_list) {
-      songInfoView.setVisibility(View.GONE);
+      setSongInfoView(false);
       viewPager.setCurrentItem(1);
     } else if (i == R.id.menu_guest_book) {
-      songInfoView.setVisibility(View.GONE);
+      setSongInfoView(false);
       viewPager.setCurrentItem(getPageCount() - 2);
     } else if (i == R.id.menu_setting) {
-      songInfoView.setVisibility(View.GONE);
+      setSongInfoView(false);
       viewPager.setCurrentItem(getPageCount() - 1);
     } else if (i == R.id.menu_sound) {
       if (musicService.isSoundOn) {
@@ -340,7 +372,7 @@ public class PagerMainActivity extends AppCompatActivity implements
         e.getLocalizedMessage();
       }
     } else {
-      throw new RuntimeException("Unknown menu type");
+      onBackPressed();
     }
     return super.onOptionsItemSelected(item);
   }
@@ -369,6 +401,8 @@ public class PagerMainActivity extends AppCompatActivity implements
     musicService.startMusic(position);
     if (MusicUtils.isTrack(StaticValues.album)) {
       viewPager.setCurrentItem(songIndexToPagerIndex(StaticValues.playIndex));
+    } else {
+      updateMusicPlayerView(position);
     }
   }
 
@@ -401,7 +435,9 @@ public class PagerMainActivity extends AppCompatActivity implements
   private void initActionBar() {
     ActionBar actionBar = getSupportActionBar();
     actionBar.setTitle("");
-    actionBar.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.home_bar_background));
+    ColorDrawable drawable = new ColorDrawable(StaticValues.metadata.color);
+    drawable.setAlpha(200);
+    actionBar.setBackgroundDrawable(drawable);
     actionBar.setLogo(null);
     actionBar.setDisplayHomeAsUpEnabled(true);
     actionBar.setHomeButtonEnabled(true);
@@ -426,11 +462,16 @@ public class PagerMainActivity extends AppCompatActivity implements
     songListView.setVisibility(View.GONE);
 
     VOSong song = StaticValues.songs.get(songIndex);
-    songNameText.setText(song.song_name);
+    if (MusicUtils.isTrack(StaticValues.album)) {
+      songNameText.setText(song.song_name);
+      singerText.setText(song.msg1);
+      songMakerText.setText(song.msg2);
+    } else {
+      miniSongNameText.setText(song.song_name);
+    }
     lyrics.setText(song.song_lyric);
     lyricSongNameText.setText(song.song_name);
-    singerText.setText(song.msg1);
-    songMakerText.setText(song.msg2);
+
     togglePlayerButton(false);
     startUpdatingProgress(true);
     musicNotification.updateName(song.song_name);
@@ -455,6 +496,22 @@ public class PagerMainActivity extends AppCompatActivity implements
     }
     handler.removeCallbacks(updateProgressRunnable);
     handler.postDelayed(updateProgressRunnable, 100);
+  }
+
+  private void setSongInfoView(boolean visible) {
+    if (visible) {
+      songInfoView.setVisibility(View.VISIBLE);
+      if (MusicUtils.isTrack(StaticValues.album)) {
+        trackTypeView.setVisibility(View.VISIBLE);
+        catalogTypeView.setVisibility(View.GONE);
+        return;
+      }
+      trackTypeView.setVisibility(View.GONE);
+      catalogTypeView.setVisibility(View.VISIBLE);
+      return;
+    }
+
+    songInfoView.setVisibility(View.GONE);
   }
 
   private void setActionBar(View view) {
@@ -491,10 +548,10 @@ public class PagerMainActivity extends AppCompatActivity implements
         || position == 1
         || position == getPageCount() - 2
         || position == getPageCount() - 1) {
-      songInfoView.setVisibility(View.GONE);
+      setSongInfoView(false);
       return;
     }
-    songInfoView.setVisibility(View.VISIBLE);
+    setSongInfoView(true);
     if (MusicUtils.isTrack(StaticValues.album)) {
       updateMusicPlayerView(pagerIndexToSongIndex(position));
       musicService.startMusic(pagerIndexToSongIndex(position));

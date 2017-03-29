@@ -33,17 +33,16 @@ public class SettingView extends LinearLayout {
     ImageView titleImage = (ImageView) v.findViewById(R.id.image_title);
     File titleFile = new File(MusicUtils.getAlbumPath(context) + "metadata/" + StaticValues.metadata.title_image);
     titleImage.setImageURI(Uri.fromFile(titleFile));
-    titleImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
     ImageView mainImage = (ImageView) v.findViewById(R.id.image_main);
     File mainFile = new File(MusicUtils.getAlbumPath(context) + "metadata/" + StaticValues.metadata.main_image);
     mainImage.setImageURI(Uri.fromFile(mainFile));
-    mainImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
     TextView albumIntroText = (TextView) findViewById(R.id.text_album_intro);
     albumIntroText.setText(StaticValues.album.album_intro);
 
     TextView newInfoText = (TextView) v.findViewById(R.id.text_new_info);
+    newInfoText.setTextColor(StaticValues.metadata.text_color);
     newInfoText.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -54,6 +53,7 @@ public class SettingView extends LinearLayout {
     newInfoText.setBackgroundColor(StaticValues.metadata.color);
 
     TextView inviteText = (TextView) v.findViewById(R.id.text_invite);
+    inviteText.setTextColor(StaticValues.metadata.text_color);
     inviteText.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -64,6 +64,7 @@ public class SettingView extends LinearLayout {
     inviteText.setBackgroundColor(StaticValues.metadata.color);
 
     TextView customerCenterText = (TextView) v.findViewById(R.id.text_customer_center);
+    customerCenterText.setTextColor(StaticValues.metadata.text_color);
     customerCenterText.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {

@@ -8,6 +8,7 @@ public class VOMetadata {
   public String review_bg;
   public String setting_bg;
   public int color;
+  public int text_color;
   public String title_image;
   public String main_image;
   public String music_player_bg;
@@ -19,7 +20,7 @@ public class VOMetadata {
   public String mini_icon;
 
   public VOMetadata(int album_id,
-                    String album_cover, String disk_bg, String review_bg, String setting_bg, int color,
+                    String album_cover, String disk_bg, String review_bg, String setting_bg, int color, int text_color,
                     String title_image, String main_image,
                     String music_player_bg, String song_play_icon, String song_pause_icon, String song_list_icon, String lyrics_icon,
                     String disk_icon, String mini_icon) {
@@ -30,6 +31,7 @@ public class VOMetadata {
     this.review_bg = review_bg;
     this.setting_bg = setting_bg;
     this.color = color;
+    this.text_color = text_color;
     this.title_image = title_image;
     this.main_image = main_image;
     this.music_player_bg = music_player_bg;

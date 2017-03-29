@@ -12,7 +12,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
   private final String LOG_TAG_NAVI = "<DBOpenHelper.class>";
 
   public DBOpenHelper(Context context) {
-    super(context, "WA.db", null, 59);
+    super(context, "WA.db", null, 60);
     Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " DBOpenHelper()");
   }
 
@@ -61,6 +61,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         + "review_bg TEXT,"
         + "setting_bg TEXT,"
         + "color INTEGER,"
+        + "text_color INTEGER,"
         + "title_image TEXT,"
         + "main_image TEXT,"
         + "music_player_bg TEXT,"

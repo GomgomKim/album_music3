@@ -50,7 +50,7 @@ public class NetThreadFileDownload extends Thread {
       byte[] tmpByte = new byte[len];
       InputStream is = conn.getInputStream();
       File file = new File(LocalPath);
-      if (file.exists() == true) file.delete();
+      if (file.exists()) file.delete();
       FileOutputStream fos = new FileOutputStream(file);
       for (; ; ) {
         Read = is.read(tmpByte);

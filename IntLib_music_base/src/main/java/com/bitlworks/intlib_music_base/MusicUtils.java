@@ -47,6 +47,6 @@ public class MusicUtils {
   }
 
   public static boolean isTrack(VOAlbum album) {
-    return album.album_type.equals("트랙");
+    return album.image_type.equals("트랙");
   }
 }

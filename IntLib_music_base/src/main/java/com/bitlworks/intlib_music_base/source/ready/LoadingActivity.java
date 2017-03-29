@@ -136,6 +136,7 @@ public class LoadingActivity extends Activity {
                 object.get("review_bg").getAsString(),
                 object.get("setting_bg").getAsString(),
                 Color.parseColor(object.get("color").getAsString()),
+                Color.parseColor(object.get("text_color").getAsString()),
                 object.get("title_image").getAsString(),
                 object.get("main_image").getAsString(),
                 object.get("music_player_bg").getAsString(),
@@ -251,10 +252,10 @@ public class LoadingActivity extends Activity {
               VONewInfo info = new VONewInfo(
                   object.getAsJsonObject().get("info_id").getAsInt(),
                   object.getAsJsonObject().get("album_id").getAsInt(),
-                  object.getAsJsonObject().get("mainSubjectText").getAsString(),
-                  object.getAsJsonObject().get("timeText").getAsString(),
-                  object.getAsJsonObject().get("subjectImage").getAsString(),
-                  object.getAsJsonObject().get("contentText").getAsString(),
+                  object.getAsJsonObject().get("main_subject").getAsString(),
+                  object.getAsJsonObject().get("time").getAsString(),
+                  object.getAsJsonObject().get("image_data").getAsString(),
+                  object.getAsJsonObject().get("contents").getAsString(),
                   object.getAsJsonObject().get("link_url").getAsString());
               newInfos.add(info);
             }

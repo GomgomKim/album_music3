@@ -55,7 +55,5 @@ public class SongListView extends LinearLayout {
     SongAdapter songAdapter = new SongAdapter(getContext(), StaticValues.songs);
     songAdapter.setListener(songListListener);
     songListView.setAdapter(songAdapter);
-    songListView.setBackgroundColor(StaticValues.metadata.color);
-
   }
 }
