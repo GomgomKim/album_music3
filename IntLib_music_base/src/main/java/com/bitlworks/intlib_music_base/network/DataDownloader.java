@@ -25,16 +25,22 @@ public class DataDownloader {
 
     Message msg = new Message();
     msg.what = 0;
-    msg.arg1 = StaticValues.videos.size() + StaticValues.newInfos.size() + StaticValues.photos.size() + StaticValues.songs.size() + StaticValues.disks.size();
-    if (updateList.get("METADATA").getAsBoolean()) {
+    msg.arg1 = StaticValues.videos.size() + StaticValues.newInfos.size() + 1;
+    if (updateList.get(StaticValues.METADATA_VERSION).getAsBoolean()) {
       msg.arg1 += 13;
+    }
+    if (updateList.get(StaticValues.SONG_VERSION).getAsBoolean()) {
+      msg.arg1 += StaticValues.songs.size();
+    }
+    if (updateList.get(StaticValues.PHOTO_VERSION).getAsBoolean()) {
+      msg.arg1 += StaticValues.photos.size();
     }
     if (mHandler != null) mHandler.sendMessage(msg);
 
     ExecutorService executorService = Executors.newFixedThreadPool(15);
     String serverUrl = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/";
 
-    if (updateList.get("METADATA").getAsBoolean()) {
+    if (updateList.get(StaticValues.METADATA_VERSION).getAsBoolean()) {
       String metadataUrl = serverUrl + "metadata/";
       String metadataPath = MusicUtils.getAlbumPath(c) + "metadata/";
       try {
@@ -86,25 +92,29 @@ public class DataDownloader {
       e.printStackTrace();
     }
 
-    for (VOPhoto photo : StaticValues.photos) {
-      String url = null;
-      try {
-        url = serverUrl + "photo/" + URLEncoder.encode(photo.photo_file_name, "UTF-8");
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
+    if (updateList.get(StaticValues.SONG_VERSION).getAsBoolean()) {
+      for (VOSong song : StaticValues.songs) {
+        String url = null;
+        try {
+          url = serverUrl + "mp3/" + URLEncoder.encode(song.song_file_name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+          e.printStackTrace();
+        }
+        executorService.execute(new DownloadRunable(url, MusicUtils.getAlbumPath(c) + StaticValues.selectedDisk.disk_id +"/mp3/" + song.song_file_name, mHandler));
       }
-      executorService.execute(new DownloadRunable(url, MusicUtils.getAlbumPath(c) + StaticValues.selectedDisk.disk_id +"/photo/" + photo.photo_file_name, mHandler));
-    }
-    for (VOSong song : StaticValues.songs) {
-      String url = null;
-      try {
-        url = serverUrl + "mp3/" + URLEncoder.encode(song.song_file_name, "UTF-8");
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-      }
-      executorService.execute(new DownloadRunable(url, MusicUtils.getAlbumPath(c) + StaticValues.selectedDisk.disk_id +"/mp3/" + song.song_file_name, mHandler));
     }
 
+    if (updateList.get(StaticValues.PHOTO_VERSION).getAsBoolean()) {
+      for (VOPhoto photo : StaticValues.photos) {
+        String url = null;
+        try {
+          url = serverUrl + "photo/" + URLEncoder.encode(photo.photo_file_name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+          e.printStackTrace();
+        }
+        executorService.execute(new DownloadRunable(url, MusicUtils.getAlbumPath(c) + StaticValues.selectedDisk.disk_id +"/photo/" + photo.photo_file_name, mHandler));
+      }
+    }
     executorService.shutdown();
   }
 }

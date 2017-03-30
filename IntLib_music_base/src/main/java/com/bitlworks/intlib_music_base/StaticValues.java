@@ -39,4 +39,6 @@ public class StaticValues {
 
   // Key
   public static final String METADATA_VERSION = "METADATA_VERSION";
+  public static final String SONG_VERSION = "SONG_VERSION";
+  public static final String PHOTO_VERSION = "PHOTO_VERSION";
 }

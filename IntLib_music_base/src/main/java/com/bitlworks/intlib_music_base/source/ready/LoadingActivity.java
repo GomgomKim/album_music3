@@ -78,6 +78,23 @@ public class LoadingActivity extends Activity {
       startOfflineMode();
       return;
     }
+
+    int songVersion = CommonUtils.getIntPref(LoadingActivity.this, StaticValues.SONG_VERSION, 0);
+    if (songVersion < disk.song_version) {
+      CommonUtils.setIntPref(LoadingActivity.this, StaticValues.SONG_VERSION, disk.song_version);
+      updateList.addProperty(StaticValues.SONG_VERSION, true);
+    } else {
+      updateList.addProperty(StaticValues.SONG_VERSION, false);
+    }
+
+    int photoVersion = CommonUtils.getIntPref(LoadingActivity.this, StaticValues.PHOTO_VERSION, 0);
+    if (photoVersion < disk.photo_version) {
+      CommonUtils.setIntPref(LoadingActivity.this, StaticValues.PHOTO_VERSION, disk.photo_version);
+      updateList.addProperty(StaticValues.PHOTO_VERSION, true);
+    } else {
+      updateList.addProperty(StaticValues.PHOTO_VERSION, false);
+    }
+
     getSongs();
   }
 
@@ -155,9 +172,9 @@ public class LoadingActivity extends Activity {
             int metadataVersion = CommonUtils.getIntPref(LoadingActivity.this, StaticValues.METADATA_VERSION, 0);
             if (metadataVersion < metadata.version) {
               CommonUtils.setIntPref(LoadingActivity.this, StaticValues.METADATA_VERSION, metadata.version);
-              updateList.addProperty("METADATA", true);
+              updateList.addProperty(StaticValues.METADATA_VERSION, true);
             } else {
-              updateList.addProperty("METADATA", false);
+              updateList.addProperty(StaticValues.METADATA_VERSION, false);
             }
 
             sqlDAO.insertMetadata(StaticValues.metadata);
@@ -306,7 +323,9 @@ public class LoadingActivity extends Activity {
                   object.getAsJsonObject().get("disk_id").getAsInt(),
                   object.getAsJsonObject().get("disk_name").getAsString(),
                   object.getAsJsonObject().get("disk_icon").getAsString(),
-                  object.getAsJsonObject().get("album_id").getAsInt());
+                  object.getAsJsonObject().get("album_id").getAsInt(),
+                  object.getAsJsonObject().get("song_version").getAsInt(),
+                  object.getAsJsonObject().get("photo_version").getAsInt());
               disks.add(disk);
             }
 
