@@ -12,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadRunable implements Runnable {
-  private final String LOG_TAG_NAVI = "DownloadRunable.calss(Runnable)";
+  private final String LOG_TAG_NAVI = "DownloadRunnable";
   private String LocalPath, ServerUrl;
   private Handler mHandler;
 
@@ -25,24 +25,24 @@ public class DownloadRunable implements Runnable {
   @Override
   public void run() {
     try {
-      File localFile = new File(LocalPath);
-
-      if (localFile.exists()) {
-        Log.d("local file check,,,", "hello hyuk,,,,");
-        return;
-      }
       // 파일 다운로드
-      URL fileurl;
-      int Read;
-      fileurl = new URL(ServerUrl);
-      HttpURLConnection conn = (HttpURLConnection) fileurl
-          .openConnection();
+      URL fileurl = new URL(ServerUrl);
+      HttpURLConnection conn = (HttpURLConnection) fileurl.openConnection();
       int len = conn.getContentLength();
       byte[] tmpByte = new byte[len];
       InputStream is = conn.getInputStream();
       File file = new File(LocalPath);
-      if (file.exists()) file.delete();
+      if (file.exists()) {
+        if (file.delete()) {
+          Log.d(LOG_TAG_NAVI, LocalPath + ":파일 삭제 완료");
+        } else {
+          Log.d(LOG_TAG_NAVI, LocalPath + ":파일 삭제 실패");
+        }
+      } else {
+        Log.d(LOG_TAG_NAVI, LocalPath + ":파일 존재하지 않음");
+      }
       FileOutputStream fos = new FileOutputStream(file);
+      int Read;
       for (; ; ) {
         Read = is.read(tmpByte);
         if (Read <= 0) {
@@ -56,8 +56,7 @@ public class DownloadRunable implements Runnable {
     } catch (Exception e) {
       Log.e(StaticValues.LOG_TAG, LOG_TAG_NAVI + " Error=" + e.toString());
       // 실패시 다시 다운로드 시도하도록...
-      NetThreadFileDownload downloadThread =
-          new NetThreadFileDownload(ServerUrl, LocalPath, mHandler, 0);
+      NetThreadFileDownload downloadThread = new NetThreadFileDownload(ServerUrl, LocalPath, mHandler, 0);
       if (mHandler != null) mHandler.sendEmptyMessage(3);
       downloadThread.start();
     } finally {

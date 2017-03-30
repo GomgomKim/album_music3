@@ -47,6 +47,8 @@ public class LoadingActivity extends Activity {
   private ProgressBar progressBar;
   private boolean isCancel = false;
 
+  private JsonObject updateList = new JsonObject();
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +152,13 @@ public class LoadingActivity extends Activity {
                 );
             StaticValues.metadata = metadata;
 
-            CommonUtils.getStringPref(this, StaticValues.METADATA_VERSION, 0);
+            int metadataVersion = CommonUtils.getIntPref(LoadingActivity.this, StaticValues.METADATA_VERSION, 0);
+            if (metadataVersion < metadata.version) {
+              CommonUtils.setIntPref(LoadingActivity.this, StaticValues.METADATA_VERSION, metadata.version);
+              updateList.addProperty("METADATA", true);
+            } else {
+              updateList.addProperty("METADATA", false);
+            }
 
             sqlDAO.insertMetadata(StaticValues.metadata);
             getComments();
@@ -390,7 +398,7 @@ public class LoadingActivity extends Activity {
             StaticValues.photos.clear();
             StaticValues.photos.addAll(photos);
             sqlDAO.insertPhotos(StaticValues.photos, StaticValues.selectedDisk.disk_id);
-            new DataDownloader(getApplicationContext(), netHandlerPhotoDonwAfter);
+            new DataDownloader(getApplicationContext(), netHandlerPhotoDonwAfter, updateList);
           }
 
           @Override

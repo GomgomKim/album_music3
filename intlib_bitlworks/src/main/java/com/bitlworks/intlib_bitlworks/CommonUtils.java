@@ -190,6 +190,26 @@ public class CommonUtils {
   }
 
   /**
+   * 프리퍼런스 getter
+   **/
+  public static int getIntPref(Context context, String name, int def) {
+    SharedPreferences prefs = context.getSharedPreferences(
+        context.getPackageName(), Context.MODE_PRIVATE);
+    return prefs.getInt(name, def);
+  }
+
+  /**
+   * 프리퍼런스 setter
+   **/
+  public static void setIntPref(Context context, String name, int value) {
+    SharedPreferences prefs = context.getSharedPreferences(
+        context.getPackageName(), Context.MODE_PRIVATE);
+    Editor ed = prefs.edit();
+    ed.putInt(name, value);
+    ed.commit();
+  }
+
+  /**
    * SharedPreferences에 내 아이디 getter
    **/
   public static int getMyID(Context context) {

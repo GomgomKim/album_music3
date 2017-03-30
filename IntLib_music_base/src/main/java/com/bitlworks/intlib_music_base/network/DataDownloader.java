@@ -11,6 +11,7 @@ import com.bitlworks.intlib_music_base.data.VONewInfo;
 import com.bitlworks.intlib_music_base.data.VOPhoto;
 import com.bitlworks.intlib_music_base.data.VOSong;
 import com.bitlworks.intlib_music_base.data.VOVideo;
+import com.google.gson.JsonObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -18,39 +19,44 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DataDownloader {
-  public DataDownloader(Context c, final Handler mHandler) {
+  public DataDownloader(Context c, final Handler mHandler, JsonObject updateList) {
 
     MusicUtils.initDirectory(c);
 
     Message msg = new Message();
     msg.what = 0;
-    msg.arg1 = 5  + StaticValues.videos.size() + StaticValues.newInfos.size() + StaticValues.photos.size() + StaticValues.songs.size() + StaticValues.disks.size();
+    msg.arg1 = StaticValues.videos.size() + StaticValues.newInfos.size() + StaticValues.photos.size() + StaticValues.songs.size() + StaticValues.disks.size();
+    if (updateList.get("METADATA").getAsBoolean()) {
+      msg.arg1 += 13;
+    }
     if (mHandler != null) mHandler.sendMessage(msg);
 
     ExecutorService executorService = Executors.newFixedThreadPool(15);
-
-
     String serverUrl = "http://music.bitlworks.co.kr/mobilemusic/image_home/" + StaticValues.album.album_id + "/";
 
-    String metadataUrl = serverUrl + "metadata/";
-    String metadataPath = MusicUtils.getAlbumPath(c) + "metadata/";
-    try {
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.album_cover, "UTF-8"), metadataPath + StaticValues.metadata.album_cover, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.disk_bg, "UTF-8"), metadataPath + StaticValues.metadata.disk_bg, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.review_bg, "UTF-8"), metadataPath + StaticValues.metadata.review_bg, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.setting_bg, "UTF-8"), metadataPath + StaticValues.metadata.setting_bg, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.main_image, "UTF-8"), metadataPath + StaticValues.metadata.main_image, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.title_image, "UTF-8"), metadataPath + StaticValues.metadata.title_image, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.music_player_bg, "UTF-8"), metadataPath + StaticValues.metadata.music_player_bg, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.song_play_icon, "UTF-8"), metadataPath + StaticValues.metadata.song_play_icon, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.song_pause_icon, "UTF-8"), metadataPath + StaticValues.metadata.song_pause_icon, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.song_list_icon, "UTF-8"), metadataPath + StaticValues.metadata.song_list_icon, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.lyrics_icon, "UTF-8"), metadataPath + StaticValues.metadata.lyrics_icon, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.disk_icon, "UTF-8"), metadataPath + StaticValues.metadata.disk_icon, mHandler));
-      executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.mini_icon, "UTF-8"), metadataPath + StaticValues.metadata.mini_icon, mHandler));
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
+    if (updateList.get("METADATA").getAsBoolean()) {
+      String metadataUrl = serverUrl + "metadata/";
+      String metadataPath = MusicUtils.getAlbumPath(c) + "metadata/";
+      try {
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.album_cover, "UTF-8"), metadataPath + StaticValues.metadata.album_cover, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.disk_bg, "UTF-8"), metadataPath + StaticValues.metadata.disk_bg, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.review_bg, "UTF-8"), metadataPath + StaticValues.metadata.review_bg, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.setting_bg, "UTF-8"), metadataPath + StaticValues.metadata.setting_bg, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.main_image, "UTF-8"), metadataPath + StaticValues.metadata.main_image, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.title_image, "UTF-8"), metadataPath + StaticValues.metadata.title_image, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.music_player_bg, "UTF-8"), metadataPath + StaticValues.metadata.music_player_bg, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.song_play_icon, "UTF-8"), metadataPath + StaticValues.metadata.song_play_icon, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.song_pause_icon, "UTF-8"), metadataPath + StaticValues.metadata.song_pause_icon, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.song_list_icon, "UTF-8"), metadataPath + StaticValues.metadata.song_list_icon, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.lyrics_icon, "UTF-8"), metadataPath + StaticValues.metadata.lyrics_icon, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.disk_icon, "UTF-8"), metadataPath + StaticValues.metadata.disk_icon, mHandler));
+        executorService.execute(new DownloadRunable(metadataUrl + URLEncoder.encode(StaticValues.metadata.mini_icon, "UTF-8"), metadataPath + StaticValues.metadata.mini_icon, mHandler));
+      } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+      }
     }
+
+
 
     for (VOVideo video : StaticValues.videos) {
       String url = null;
