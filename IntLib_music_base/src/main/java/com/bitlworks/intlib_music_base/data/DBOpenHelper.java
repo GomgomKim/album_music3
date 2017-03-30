@@ -12,7 +12,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
   private final String LOG_TAG_NAVI = "<DBOpenHelper.class>";
 
   public DBOpenHelper(Context context) {
-    super(context, "WA.db", null, 60);
+    super(context, "WA.db", null, 61);
     Log.i(StaticValues.LOG_TAG, LOG_TAG_NAVI + " DBOpenHelper()");
   }
 
@@ -70,7 +70,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         + "song_list_icon TEXT,"
         + "lyrics_icon TEXT,"
         + "disk_icon TEXT,"
-        + "mini_icon TEXT"
+        + "mini_icon TEXT,"
+        + "version INTEGER"
         + ");";
     db.execSQL(sql);
 

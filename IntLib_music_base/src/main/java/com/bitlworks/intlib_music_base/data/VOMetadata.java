@@ -18,12 +18,14 @@ public class VOMetadata {
   public String lyrics_icon;
   public String disk_icon;
   public String mini_icon;
+  public int version;
 
   public VOMetadata(int album_id,
                     String album_cover, String disk_bg, String review_bg, String setting_bg, int color, int text_color,
                     String title_image, String main_image,
                     String music_player_bg, String song_play_icon, String song_pause_icon, String song_list_icon, String lyrics_icon,
-                    String disk_icon, String mini_icon) {
+                    String disk_icon, String mini_icon,
+                    int version) {
 
     this.album_id = album_id;
     this.album_cover = album_cover;
@@ -41,5 +43,6 @@ public class VOMetadata {
     this.disk_icon = disk_icon;
     this.lyrics_icon = lyrics_icon;
     this.mini_icon = mini_icon;
+    this.version = version;
   }
 }

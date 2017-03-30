@@ -36,4 +36,7 @@ public class StaticValues {
   public static int NOTIFICATION_FLAG = -1;
   public static int unread_count = 0;
   public static int first_check = 100;
+
+  // Key
+  public static final String METADATA_VERSION = "METADATA_VERSION";
 }

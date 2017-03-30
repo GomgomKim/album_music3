@@ -145,9 +145,13 @@ public class LoadingActivity extends Activity {
                 object.get("song_list_icon").getAsString(),
                 object.get("lyrics_icon").getAsString(),
                 object.get("disk_icon").getAsString(),
-                object.get("mini_icon").getAsString()
-            );
+                object.get("mini_icon").getAsString(),
+                object.get("version").getAsInt()
+                );
             StaticValues.metadata = metadata;
+
+            CommonUtils.getStringPref(this, StaticValues.METADATA_VERSION, 0);
+
             sqlDAO.insertMetadata(StaticValues.metadata);
             getComments();
           }
