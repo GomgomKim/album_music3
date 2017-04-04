@@ -1,4 +1,4 @@
-package com.bitlworks.music_app_jasmin;
+package com.bitlworks.music_billion_app;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -446,10 +446,7 @@ public class LoadingActivity extends Activity {
         totalCount = msg.arg1;
         progressBar.setMax(totalCount);
         if (totalCount == 0) {
-          Toast.makeText(getApplicationContext(),
-              "앨범 로딩에 문제가 있습니다. 제작사에 문의해 주세요", Toast.LENGTH_SHORT)
-              .show();
-          finish();
+          nextActivity();
         }
       } else if (msg.what == 1) { // 사진 파일 다운로드 시작시
         // addLog("download start ("+downloadingCount+"/"+totalCount+")");

@@ -2,12 +2,15 @@ package com.bitlworks.intlib_music_base;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import com.bitlworks.intlib_music_base.data.VOAlbum;
 
 import java.io.File;
 
 public class MusicUtils {
+  private final static String LOG_TAG_NAVI = "MusicUtils";
+
   public static String getAlbumPath(Context context) {
     String path = context.getFilesDir().getPath();
     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -38,7 +41,11 @@ public class MusicUtils {
   public static void checkFolder(String path) {
     File dir = new File(path);
     if (!dir.exists()) {
-      dir.mkdir();
+      if (dir.mkdir()) {
+        Log.e(LOG_TAG_NAVI, "mkdir 성공 : " + path);
+      } else {
+        Log.e(LOG_TAG_NAVI, "mkdir 실패: " + path);
+      }
     }
   }
 

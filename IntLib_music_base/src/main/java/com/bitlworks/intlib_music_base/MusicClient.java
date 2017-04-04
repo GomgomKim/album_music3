@@ -1,8 +1,8 @@
 package com.bitlworks.intlib_music_base;
 
-import android.app.Application;
 import android.content.Context;
-import android.graphics.Typeface;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 
 import com.bitlworks.intlib_music_base.network.Service;
@@ -11,7 +11,7 @@ import com.tsengvn.typekit.Typekit;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MusicClient extends Application {
+public class MusicClient extends MultiDexApplication {
 
   private static MusicClient instance;
   private Service service;
@@ -27,6 +27,7 @@ public class MusicClient extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
+    MultiDex.install(this);
     instance = this;
     initService();
 

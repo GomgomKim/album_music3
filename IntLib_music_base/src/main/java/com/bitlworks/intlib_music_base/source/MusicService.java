@@ -73,6 +73,7 @@ public class MusicService extends Service implements
       mediaPlayer.setDataSource(context, uri);
     } catch (IOException e) {
       e.printStackTrace();
+      return;
     }
     mediaPlayer.prepareAsync();
   }
