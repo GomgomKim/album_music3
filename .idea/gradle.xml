@@ -11,12 +11,12 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/IntLib_music_base" />
             <option value="$PROJECT_DIR$/intlib_bitlworks" />
-            <option value="$PROJECT_DIR$/music_app_hanyang" />
-            <option value="$PROJECT_DIR$/music_app_jasmin" />
             <option value="$PROJECT_DIR$/music_billion_app" />
             <option value="$PROJECT_DIR$/music_billion_resource" />
-            <option value="$PROJECT_DIR$/music_resource_hanyang" />
-            <option value="$PROJECT_DIR$/music_resource_jasmin" />
+            <option value="$PROJECT_DIR$/music_hanyang_app" />
+            <option value="$PROJECT_DIR$/music_hanyang_resource" />
+            <option value="$PROJECT_DIR$/music_jasmin_app" />
+            <option value="$PROJECT_DIR$/music_jasmin_resource" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
