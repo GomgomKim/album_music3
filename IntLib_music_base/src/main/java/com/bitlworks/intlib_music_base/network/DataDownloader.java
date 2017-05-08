@@ -50,7 +50,7 @@ public class DataDownloader {
         msg.arg1++;
       }
     }
-    if (updateList.get(StaticValues.SONG_VERSION).getAsBoolean()) {
+    if (updateList.get(StaticValues.getSongVersion(StaticValues.selectedDisk.disk_id)).getAsBoolean()) {
       for (VOSong song : StaticValues.songs) {
         if (song.song_file_name.length() == 0) {
           continue;
@@ -58,7 +58,7 @@ public class DataDownloader {
         msg.arg1++;
       }
     }
-    if (updateList.get(StaticValues.PHOTO_VERSION).getAsBoolean()) {
+    if (updateList.get(StaticValues.getPhotoVersion(StaticValues.selectedDisk.disk_id)).getAsBoolean()) {
       for (VOPhoto photo : StaticValues.photos) {
         if (photo.photo_file_name.length() == 0) {
           continue;
@@ -134,7 +134,7 @@ public class DataDownloader {
       }
     }
 
-    if (updateList.get(StaticValues.SONG_VERSION).getAsBoolean()) {
+    if (updateList.get(StaticValues.getSongVersion(StaticValues.selectedDisk.disk_id)).getAsBoolean()) {
       for (VOSong song : StaticValues.songs) {
         if (song.song_file_name.length() == 0) {
           continue;
@@ -149,7 +149,7 @@ public class DataDownloader {
       }
     }
 
-    if (updateList.get(StaticValues.PHOTO_VERSION).getAsBoolean()) {
+    if (updateList.get(StaticValues.getPhotoVersion(StaticValues.selectedDisk.disk_id)).getAsBoolean()) {
       for (VOPhoto photo : StaticValues.photos) {
         if (photo.photo_file_name.length() == 0) {
           continue;

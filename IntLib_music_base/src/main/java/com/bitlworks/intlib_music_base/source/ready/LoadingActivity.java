@@ -79,20 +79,20 @@ public class LoadingActivity extends Activity {
       return;
     }
 
-    int songVersion = CommonUtils.getIntPref(LoadingActivity.this, StaticValues.SONG_VERSION, 0);
+    int songVersion = CommonUtils.getIntPref(LoadingActivity.this, StaticValues.getSongVersion(disk.disk_id), 0);
     if (songVersion < disk.song_version) {
-      CommonUtils.setIntPref(LoadingActivity.this, StaticValues.SONG_VERSION, disk.song_version);
-      updateList.addProperty(StaticValues.SONG_VERSION, true);
+      CommonUtils.setIntPref(LoadingActivity.this, StaticValues.getSongVersion(disk.disk_id), disk.song_version);
+      updateList.addProperty(StaticValues.getSongVersion(disk.disk_id), true);
     } else {
-      updateList.addProperty(StaticValues.SONG_VERSION, false);
+      updateList.addProperty(StaticValues.getSongVersion(disk.disk_id), false);
     }
 
-    int photoVersion = CommonUtils.getIntPref(LoadingActivity.this, StaticValues.PHOTO_VERSION, 0);
+    int photoVersion = CommonUtils.getIntPref(LoadingActivity.this, StaticValues.getPhotoVersion(disk.disk_id), 0);
     if (photoVersion < disk.photo_version) {
-      CommonUtils.setIntPref(LoadingActivity.this, StaticValues.PHOTO_VERSION, disk.photo_version);
-      updateList.addProperty(StaticValues.PHOTO_VERSION, true);
+      CommonUtils.setIntPref(LoadingActivity.this, StaticValues.getPhotoVersion(disk.disk_id), disk.photo_version);
+      updateList.addProperty(StaticValues.getPhotoVersion(disk.disk_id), true);
     } else {
-      updateList.addProperty(StaticValues.PHOTO_VERSION, false);
+      updateList.addProperty(StaticValues.getPhotoVersion(disk.disk_id), false);
     }
 
     getSongs();
